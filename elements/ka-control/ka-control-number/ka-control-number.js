@@ -1,5 +1,7 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 
+require('./ka-control-number.sass');
+
 @customElement('ka-control-number')
 @inject(Element)
 export class KaControlNumber {
@@ -19,14 +21,14 @@ export class KaControlNumber {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-number: missing schema!', schema);
+      console.warn('ka-control-number: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-number: invalid schema provided!', schema);
+        console.error('ka-control-number: invalid schema provided!', schema);
         return;
       }
     }
@@ -42,7 +44,7 @@ export class KaControlNumber {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-number: schema changed!', schema);
+    console.debug('ka-control-number: schema changed!', schema);
     this._schema = schema;
   }
 

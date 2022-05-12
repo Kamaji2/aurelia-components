@@ -1,8 +1,9 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
+
+require('./ka-control-table.sass');
 
 @customElement('ka-control-table')
-@inject(Element, Router)
+@inject(Element)
 export class KaControlsTable {
   @bindable() schema = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
@@ -11,9 +12,8 @@ export class KaControlsTable {
   _value = [];
   newValue = {};
 
-  constructor(element, router) {
+  constructor(element) {
     this.element = element;
-    this.router = router;
   }
 
   attached() {
@@ -21,22 +21,22 @@ export class KaControlsTable {
 
   schemaChanged(schema) {
     if (!schema) {
-      konsole.warn('ka-control-table: missing schema!', schema);
+      console.warn('ka-control-table: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-table: invalid schema provided!', value);
+        console.error('ka-control-table: invalid schema provided!', value);
         return;
       }
     }
     if (!Array.isArray(schema) || !schema.length) {
-      konsole.error('ka-control-table: schema must be an array of objects!', schema);
+      console.error('ka-control-table: schema must be an array of objects!', schema);
       return;
     }
-    konsole.debug('ka-control-table: schema changed!', schema);
+    console.debug('ka-control-table: schema changed!', schema);
     this._schema = schema;
   }
 
@@ -48,12 +48,12 @@ export class KaControlsTable {
       try {
         value = JSON.parse(value);
       } catch (error) {
-        konsole.error('ka-control-table: invalid value provided!', value);
+        console.error('ka-control-table: invalid value provided!', value);
         return;
       }
     }
     if (!Array.isArray(value)) {
-      konsole.error('ka-control-table: value must be an array!', value);
+      console.error('ka-control-table: value must be an array!', value);
       return;
     }
     this._value = value;

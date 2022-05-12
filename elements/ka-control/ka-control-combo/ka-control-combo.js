@@ -1,10 +1,10 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
-import {KaApi} from 'ka-components';
 
+require('./ka-control-combo.sass');
 
 @customElement('ka-control-combo')
-@inject(Element, KaApi)
+@inject(Element)
 export class KaControlCombo {
   // Basic input control properties
   @bindable() schema = null;
@@ -20,9 +20,8 @@ export class KaControlCombo {
   valuestack = [];
   preloadedCombostack = [];
 
-  constructor(element, api) {
+  constructor(element) {
     this.element = element;
-    this.api = api;
 
     this.backdrop = document.createElement('ka-control-backdrop');
     this.backdrop.addEventListener('click', event => { if (event.target === this.backdrop) this.close(); });
@@ -33,26 +32,26 @@ export class KaControlCombo {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-combo: missing schema!', schema);
+      console.warn('ka-control-combo: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-combo: invalid schema provided!', schema);
+        console.error('ka-control-combo: invalid schema provided!', schema);
         return;
       }
     }
     if (!schema.datasource) {
-      konsole.error('ka-control-combo: missing datasource in schema!', schema);
+      console.error('ka-control-combo: missing datasource in schema!', schema);
       return;
     }
     if (typeof schema.datasource === 'string') {
       try {
         schema.datasource = JSON.parse(schema.datasource);
       } catch (error) {
-        konsole.error('ka-control-combo: invalid datasource provided in schema!', schema);
+        console.error('ka-control-combo: invalid datasource provided in schema!', schema);
         return;
       }
     }
@@ -71,7 +70,7 @@ export class KaControlCombo {
       try {
         schema.datasearch = JSON.parse(schema.datasearch);
       } catch (error) {
-        konsole.error('ka-control-combo: invalid datasearch provided in schema!', schema);
+        console.error('ka-control-combo: invalid datasearch provided in schema!', schema);
         return;
       }
     }
@@ -93,7 +92,7 @@ export class KaControlCombo {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-combo: schema changed!', schema);
+    console.debug('ka-control-combo: schema changed!', schema);
     this._schema = schema;
 
     // Deferred value change if needed
@@ -127,7 +126,7 @@ export class KaControlCombo {
   valueChanged(value) {
     if (!this._schema) {
       // Component is not ready for value handling
-      konsole.warn('ka-control-combo: cannot handle value without schema!');
+      console.warn('ka-control-combo: cannot handle value without schema!');
       return;
     }
     // Validate value
@@ -141,23 +140,23 @@ export class KaControlCombo {
         try {
           value = JSON.parse(value);
         } catch (error) {
-          konsole.error('ka-control-combo: invalid value provided!', value);
+          console.error('ka-control-combo: invalid value provided!', value);
           return;
         }
       }
       if (!Array.isArray(value)) {
-        konsole.warn('ka-control-combo: value should be an array! Trying to convert it...', value);
+        console.warn('ka-control-combo: value should be an array! Trying to convert it...', value);
         value = [String(value)];
       }
     } else {
       if (typeof value !== 'string' && typeof value !== 'number') {
-        konsole.error('ka-control-combo: value must be a string or an integer!', value);
+        console.error('ka-control-combo: value must be a string or an integer!', value);
         return;
       }
       value = [String(value)];
     }
 
-    konsole.debug('ka-control-combo: value changed!', value);
+    console.debug('ka-control-combo: value changed!', value);
     this._value = value;
 
     // Build display value
@@ -175,13 +174,13 @@ export class KaControlCombo {
           this.combostack = x.response;
           this.preloadedCombostack = x.response;
         }).catch(x => {
-          konsole.error('ka-control-combo: invalid datasource provided in schema!', this._schema);
+          console.error('ka-control-combo: invalid datasource provided in schema!', this._schema);
         });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
       } else {
-        konsole.error('ka-control-combo: invalid datasource provided in schema!', this._schema);
+        console.error('ka-control-combo: invalid datasource provided in schema!', this._schema);
         return;
       }
     }
@@ -385,7 +384,7 @@ export class KaControlCombo {
     //let dsh = this._schema.datasearch;
 
     if (!dts.table && !dts.url) {
-      konsole.error('ka-control-combo: cannot build query url if datasource is not a table or url!', this._schema.datasource);
+      console.error('ka-control-combo: cannot build query url if datasource is not a table or url!', this._schema.datasource);
       return;
     }
 

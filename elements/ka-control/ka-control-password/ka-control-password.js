@@ -1,5 +1,7 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 
+require('./ka-control-password.sass');
+
 @customElement('ka-control-password')
 @inject(Element)
 export class KaControlPassword {
@@ -19,14 +21,14 @@ export class KaControlPassword {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-password: missing schema!', schema);
+      console.warn('ka-control-password: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-password: invalid schema provided!', schema);
+        console.error('ka-control-password: invalid schema provided!', schema);
         return;
       }
     }
@@ -42,7 +44,7 @@ export class KaControlPassword {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-password: schema changed!', schema);
+    console.debug('ka-control-password: schema changed!', schema);
     this._schema = schema;
   }
 

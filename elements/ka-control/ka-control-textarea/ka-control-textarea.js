@@ -1,5 +1,7 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 
+require('./ka-control-textarea.sass');
+
 @customElement('ka-control-textarea')
 @inject(Element)
 export class KaControlTextarea {
@@ -19,14 +21,14 @@ export class KaControlTextarea {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-textarea: missing schema!', schema);
+      console.warn('ka-control-textarea: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-textarea: invalid schema provided!', schema);
+        console.error('ka-control-textarea: invalid schema provided!', schema);
         return;
       }
     }
@@ -42,7 +44,7 @@ export class KaControlTextarea {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-textarea: schema changed!', schema);
+    console.debug('ka-control-textarea: schema changed!', schema);
     this._schema = schema;
   }
 

@@ -2,6 +2,8 @@ import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 import moment from 'moment';
 import Pikaday from 'pikaday';
 
+require('./ka-control-date.sass');
+
 @customElement('ka-control-date')
 @inject(Element)
 export class KaControlDate {
@@ -37,14 +39,14 @@ export class KaControlDate {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-date: missing schema!', schema);
+      console.warn('ka-control-date: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-date: invalid schema provided!', schema);
+        console.error('ka-control-date: invalid schema provided!', schema);
         return;
       }
     }
@@ -60,7 +62,7 @@ export class KaControlDate {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-date: schema changed!', schema);
+    console.debug('ka-control-date: schema changed!', schema);
     this._schema = schema;
   }
 
@@ -72,19 +74,19 @@ export class controlDateValueConverter {
   toView(value, format = 'DD/MM/YYYY') {
     if (!value) return null;
     if (moment.utc(value).isValid()) {
-      konsole.debug(`ControlDateValueConverter - From ${moment.utc(value)} to view ${moment.utc(value).local().format(format)}`);
+      console.debug(`ControlDateValueConverter - From ${moment.utc(value)} to view ${moment.utc(value).local().format(format)}`);
       return moment.utc(value).local().format(format);
     }
-    konsole.debug(`ControlDateValueConverter - No conversion toView on ${value}`);
+    console.debug(`ControlDateValueConverter - No conversion toView on ${value}`);
     return value;
   }
   fromView(value, format = 'DD/MM/YYYY') {
     if (!value) return null;
     if (moment(value, format).isValid()) {
-      konsole.debug(`ControlDateValueConverter - From view ${moment(value, format)} to ${moment(value, format).utc().format()}`);
+      console.debug(`ControlDateValueConverter - From view ${moment(value, format)} to ${moment(value, format).utc().format()}`);
       return moment(value, format).hour(moment().hour()).minute(moment().minute()).utc().format();
     }
-    konsole.debug(`ControlDateValueConverter - No conversion fromView on ${value}`);
+    console.debug(`ControlDateValueConverter - No conversion fromView on ${value}`);
     return value;
   }
 }

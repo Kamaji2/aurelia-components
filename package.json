@@ -3,8 +3,14 @@
   "description": "Kamaji2 Aurelia Components",
   "author": "Mamoka Srl",
   "version": "1.0.1",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "ssh://github.com/Kamaji2/aurelia-components.git"
+  },
+  "dependencies": {
+    "ka-ckeditor": "0.0.1",
+    "moment": "^2.29.1",
+    "pikaday": "^1.8.2"
   }
 }

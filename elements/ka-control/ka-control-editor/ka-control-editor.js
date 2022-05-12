@@ -1,6 +1,7 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 import ClassicEditor from 'ka-ckeditor';
 
+require('./ka-control-editor.sass');
 
 @customElement('ka-control-editor')
 @inject(Element)
@@ -20,14 +21,14 @@ export class KaControlEditor {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-editor: missing schema!', schema);
+      console.warn('ka-control-editor: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-editor: invalid schema provided!', schema);
+        console.error('ka-control-editor: invalid schema provided!', schema);
         return;
       }
     }
@@ -43,7 +44,7 @@ export class KaControlEditor {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-editor: schema changed!', schema);
+    console.debug('ka-control-editor: schema changed!', schema);
     this._schema = schema;
 
     this.buildEditor();
@@ -51,7 +52,7 @@ export class KaControlEditor {
 
   valueChanged(value) {
     if (!this.editor || this.editorValuePending || this.editor.getData() === value) return;
-    konsole.debug('ka-control-editor: value changed!', value);
+    console.debug('ka-control-editor: value changed!', value);
     this.editorValuePending = true;
     this.editor.setData(value || '');
     setTimeout(() => { this.editorValuePending = false; }, 0);
@@ -115,7 +116,7 @@ export class KaControlEditor {
       editor.model.document.on('change:data', () => { this.value = editor.getData(); });
       this.editor = editor;
     }).catch(error => {
-      konsole.error('There was a problem initializing ckeditor', error );
+      console.error('There was a problem initializing ckeditor', error );
     }).finally(() => {
       this._editor_initialized = true;
     });

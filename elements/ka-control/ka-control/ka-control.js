@@ -1,11 +1,10 @@
 import {inject, customElement, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance} from 'aurelia-framework';
 import {ValidationController, ValidationRules, validateTrigger} from 'aurelia-validation';
-import {Router} from 'aurelia-router';
-import {KaApi} from 'ka-components';
 
+require('./ka-control.sass');
 
 @customElement('ka-control')
-@inject(Element, Router, KaApi, BindingEngine, NewInstance.of(ValidationController))
+@inject(Element, BindingEngine, NewInstance.of(ValidationController))
 export class KaControl {
   // Basic input control properties
   @bindable() schema = null;
@@ -24,10 +23,8 @@ export class KaControl {
   parentResourceName = 'resource';
   buttons = [];
 
-  constructor(element, router, api, binding, validator) {
+  constructor(element, binding, validator) {
     this.element = element;
-    this.router = router;
-    this.api = api;
     this.binding = binding;
     this.validator = validator;
     this.validator.validateTrigger = validateTrigger.manual; // This is because we don't want model to be automatically validated on input blur

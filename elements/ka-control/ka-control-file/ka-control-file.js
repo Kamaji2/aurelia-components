@@ -1,5 +1,7 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 
+require('./ka-control-file.sass');
+
 @customElement('ka-control-file')
 @inject(Element)
 export class KaControlFile {
@@ -21,14 +23,14 @@ export class KaControlFile {
   schemaChanged(schema) {
     // Validate schema
     if (!schema) {
-      konsole.warn('ka-control-file: missing schema!', schema);
+      console.warn('ka-control-file: missing schema!', schema);
       return;
     }
     if (typeof schema === 'string') {
       try {
         schema = JSON.parse(schema);
       } catch (error) {
-        konsole.error('ka-control-file: invalid schema provided!', schema);
+        console.error('ka-control-file: invalid schema provided!', schema);
         return;
       }
     }
@@ -44,12 +46,12 @@ export class KaControlFile {
       } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
     }
 
-    konsole.debug('ka-control-file: schema changed!', schema);
+    console.debug('ka-control-file: schema changed!', schema);
     this._schema = schema;
   }
 
   valueChanged(value) {
-    konsole.debug('ka-control-file: value changed!', value);
+    console.debug('ka-control-file: value changed!', value);
     if (typeof value === 'undefined' || value === '' || (value && !value.length)) value = null;
     this.displayValue = value && value.length && value[0] && value[0].name ? value[0].name : value;
   }
