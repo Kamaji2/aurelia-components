@@ -11,10 +11,10 @@ ka-control-check
     width: 1.4rem
     height: 1.4rem
     background: transparent
-    box-shadow: inset 0 0 0 1px $text-color
+    box-shadow: inset 0 0 0 1px var(--text-color)
     &:checked
-      background-color: $primary-color
-      box-shadow: inset 0 0 0 1px $text-color, inset 0 0 0 3px #fff
+      background-color: var(--primary-color)
+      box-shadow: inset 0 0 0 1px var(--text-color), inset 0 0 0 3px #fff
   .description
     display: inline-block
     padding-left: 1rem
@@ -22,7 +22,7 @@ ka-control-check
     overflow: hidden
     line-height: 3rem
     font-size: 1.4rem
-    color: $text-color
+    color: var(--text-color)
     text-overflow: ellipsis
     white-space: nowrap
     cursor: pointer
