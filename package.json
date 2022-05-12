@@ -1,0 +1,10 @@
+{
+  "name": "aurelia-components",
+  "description": "Kamaji2 Aurelia Components",
+  "author": "Mamoka Srl",
+  "version": "1.0.1",
+  "repository": {
+    "type": "git",
+    "url": "ssh://github.com/Kamaji2/aurelia-components.git"
+  }
+}

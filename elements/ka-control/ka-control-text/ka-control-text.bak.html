@@ -1,0 +1,16 @@
+<template>
+  <!--
+  <div
+    contenteditable="true"
+    textcontent.bind="displayValue"
+    keydown.delegate="keydown()"
+    paste.delegate="paste($event)"
+    class="display-value ${readonly?'readonly':''}">
+  </div>
+  -->
+  <input
+    type="text"
+    value.bind="value"
+    keydown.delegate="keydown()"
+    class="display-value ${readonly?'readonly':''}">
+</template>

@@ -1,0 +1,12 @@
+<template>
+  <label if.bind="label">${label} <span if.bind="required">*</span></label>
+  <compose containerless view.bind="viewStrategy"></compose>
+  <div class="ka-control-buttons">
+    <button class="button-dropdown" tabindex="-1" click.delegate="dropdown()"  if.bind="!readonly && buttons.includes('dropdown')"><i class="far fa-chevron-down"></i></i></button>
+    <button class="button-clear" tabindex="-1" click.delegate="clear()"  if.bind="!readonly && buttons.includes('clear')"><i class="fal fa-times"></i></button>
+  </div>
+  <div class="ka-control-overlay">
+    <div class="ka-control-error" if.bind="!readonly && validator.errors.length"><span repeat.for="error of validator.errors">${error}</span></div>
+    <div class="ka-control-description" if.bind="!readonly && schema.control !=='check' && description">${description}</div>
+  </div>
+</template>

@@ -1,0 +1,10 @@
+<template>
+  <textarea
+    type="text"
+    value.bind="value"
+    disabled.bind="readonly"
+    placeholder.bind="placeholder"
+    keydown.delegate="keydown()"
+    class="display-value ${readonly?'readonly':''}">
+  </textarea>
+</template>

@@ -1,0 +1,21 @@
+<template>
+  <h3 if.bind="label">${label}</h3>
+  <table class="ka-table-like">
+    <thead>
+      <tr>
+        <th repeat.for="schema of _schema">${schema.label || schema.field}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr repeat.for="value of _value">
+        <td repeat.for="schema of _schema"><ka-control schema.bind="schema" value.bind="value[schema.field]" change.delegate="update()"></ka-control></td>
+        <td class="ka-tr-tools"><button class="ka-table-button" click.delegate="remove(value)"><i class="material-icons">delete_outline</i></button></td>
+      </tr>
+      <tr>
+        <td repeat.for="schema of _schema"><ka-control schema.bind="schema" value.bind="newValue[schema.field]"></ka-control></td>
+        <td class="ka-tr-tools"><button class="ka-table-button" click.delegate="add(newValue)"><i class="material-icons">add</i></button></td>
+      </tr>
+    </tbody>
+  </table>
+</template>

@@ -1,0 +1,9 @@
+<template>
+  <input
+    type="text"
+    value.bind="value | controlDate"
+    disabled.bind="readonly"
+    placeholder.bind="placeholder"
+    keydown.delegate="keydown()"
+    class="display-value ${readonly?'readonly':''}">
+</template>

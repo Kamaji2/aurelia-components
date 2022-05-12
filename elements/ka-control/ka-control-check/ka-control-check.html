@@ -1,0 +1,17 @@
+<template>
+
+  <template if.bind="!_schema.datamultiple">
+    <input
+      type="checkbox"
+      checked.bind="value"
+      disabled.bind="readonly"
+      class="${readonly?'readonly':''}"
+      />
+    <div
+      innerhtml.bind="description || _schema.description"
+      click.delegate="click($event)"
+      class="description ${readonly?'readonly':''}">
+    </div>
+  </template>
+
+</template>
