@@ -1,4 +1,6 @@
-import { PLATFORM } from 'aurelia-framework';
+import { PLATFORM } from 'aurelia-pal';
+
+export { ResourceInterface } from './interfaces/resource';
 
 export function configure(config, callback) {
   config = new AureliaComponentsConfiguration(config);

@@ -2,10 +2,10 @@
 
   <div class="item ${readonly?'readonly':''}" repeat.for="value of _value">
     <div class="buttons">
-      <button if.bind="!readonly && $last" click.delegate="add()"><i class="material-icons">add</i></button> 
-      <button if.bind="!readonly && !$first" click.delegate="remove(value)"><i class="material-icons">delete_outline</i></button> 
+      <button if.bind="!readonly && $last" click.delegate="add()"><i class="fa-regular fa-plus"></i></button> 
+      <button if.bind="!readonly && !$first" click.delegate="remove(value)"><i class="fa-regular fa-trash-can"></i></button> 
     </div>
-    <div class="row no-gutters">
+    <div class="row g-0">
       <div class="${schema.class || 'col'}" repeat.for="schema of _schema.datasource.model.schema">
         <label if.bind="schema.label">${schema.label}</label>
         <input

@@ -3,6 +3,7 @@ import moment from 'moment';
 import Pikaday from 'pikaday';
 
 require('./ka-control-date.sass');
+require('../../../node_modules/pikaday/css/pikaday.css');
 
 @customElement('ka-control-date')
 @inject(Element)
