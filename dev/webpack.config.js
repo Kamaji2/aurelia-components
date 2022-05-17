@@ -74,6 +74,7 @@ module.exports = env => {
         }, {
           test: /\.js$/i,
           include: /node_modules\/aurelia-components/,
+          exclude: /ckeditor/,
           use: [{ loader: 'babel-loader' }]
         }
       ]

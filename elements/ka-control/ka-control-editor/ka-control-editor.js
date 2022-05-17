@@ -1,5 +1,5 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
-import ClassicEditor from 'ka-ckeditor';
+import ClassicEditor from './ckeditor';
 
 require('./ka-control-editor.sass');
 
@@ -59,12 +59,15 @@ export class KaControlEditor {
   }
 
   readonlyChanged(readonly) {
-    if (this.editor) this.editor.isReadOnly = readonly;
+    if (!this.editor) return;
+    if (readonly) this.editor.enableReadOnlyMode('ka-control-editor');
+    else this.editor.disableReadOnlyMode('ka-control-editor');
   }
 
   buildEditor() {
     if (this._editor_initialized) return;
     let config = {
+      removePlugins: ['Markdown', 'MediaEmbedToolbar'],
       toolbar: {
         items: [
           'heading',
@@ -83,36 +86,48 @@ export class KaControlEditor {
           'indent',
           'outdent',
           '|',
+          'code',
+          'codeBlock',
+          '|',
           'link',
-          'imageUpload',
           'blockQuote',
           'insertTable',
+          'imageInsert',
           'mediaEmbed',
+          'htmlEmbed',
+          '|',
           'undo',
           'redo',
+          'findAndReplace',
           '|',
-          'code'
+          'sourceEditing'
         ]
       },
       language: 'it',
+      mediaEmbed: {},
       image: {
         toolbar: [
-          'imageTextAlternative',
-          'imageStyle:full',
-          'imageStyle:side'
+          'imageStyle:inline',
+          'imageStyle:block',
+          'imageStyle:side',
+          '|',
+          'toggleImageCaption',
+          'imageTextAlternative'
         ]
       },
       table: {
         contentToolbar: [
           'tableColumn',
           'tableRow',
-          'mergeTableCells'
+          'mergeTableCells',
+          'tableProperties',
+          'tableCellProperties'
         ]
       }
     };
     ClassicEditor.create(this.element, config).then(editor => {
       editor.setData(this.value || '');
-      editor.isReadOnly = this.readonly;
+      if (this.readonly) editor.enableReadOnlyMode('ka-control-editor');
       editor.model.document.on('change:data', () => { this.value = editor.getData(); });
       this.editor = editor;
     }).catch(error => {
