@@ -1,5 +1,6 @@
 import {inject, customElement, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance} from 'aurelia-framework';
 import {ValidationController, ValidationRules, validateTrigger} from 'aurelia-validation';
+import { DateTime } from 'luxon';
 
 require('./ka-control.sass');
 
@@ -66,11 +67,7 @@ export class KaControl {
       .when(self => ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.validationRule)
       .withMessage('${schema.validationRule.withMessage}')
 
-      .ensure('displayValue')
-      .required()
-      .when(self => self.required)
-      .withMessage('Campo obbligatorio')
-      .satisfies((value, self) => value === null || value === '' || ((/^\d{2}\/\d{2}\/\d{4}$/g).test(value) && moment(value, 'DD-MM-YYYY').isValid()))
+      .satisfies((value, self) => value === null || value === '' || DateTime.fromISO(value).isValid)
       .when(self => self.schema.control === 'date' || self.schema.control === 'age')
       .withMessage('Formato data non valido')
       .on(this);

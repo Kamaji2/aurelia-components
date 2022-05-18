@@ -1,5 +1,5 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import Pikaday from 'pikaday';
 
 require('./ka-control-date.sass');
@@ -27,6 +27,7 @@ export class KaControlDate {
       format: 'DD/MM/YYYY',
       firstDay: 1,
       setDefaultDate: false,
+      keyboardInput: false,
       i18n: {
         previousMonth: 'Mese precedente',
         nextMonth: 'Mese seguente',
@@ -72,22 +73,15 @@ export class KaControlDate {
   }
 }
 export class controlDateValueConverter {
-  toView(value, format = 'DD/MM/YYYY') {
-    if (!value) return null;
-    if (moment.utc(value).isValid()) {
-      console.debug(`ControlDateValueConverter - From ${moment.utc(value)} to view ${moment.utc(value).local().format(format)}`);
-      return moment.utc(value).local().format(format);
-    }
-    console.debug(`ControlDateValueConverter - No conversion toView on ${value}`);
-    return value;
+  toView(value, utc) {
+    let date = DateTime.fromISO(value, { setZone: true }).toLocal();
+    if (!date.isValid) return value;
+    return date.toFormat('dd/MM/yyyy');
   }
-  fromView(value, format = 'DD/MM/YYYY') {
-    if (!value) return null;
-    if (moment(value, format).isValid()) {
-      console.debug(`ControlDateValueConverter - From view ${moment(value, format)} to ${moment(value, format).utc().format()}`);
-      return moment(value, format).hour(moment().hour()).minute(moment().minute()).utc().format();
-    }
-    console.debug(`ControlDateValueConverter - No conversion fromView on ${value}`);
-    return value;
+  fromView(value, utc) {
+    let date = DateTime.fromFormat(value, 'dd/MM/yyyy');
+    if (!date.isValid) return value;
+    if (!(utc === false)) date = date.toUTC();
+    return date.toISO();
   }
 }
