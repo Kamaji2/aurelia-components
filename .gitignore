@@ -41,3 +41,5 @@ node_modules
 # Other
 .babelish.token
 translations*.csv
+
+/aurelia-components-tester
