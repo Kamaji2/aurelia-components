@@ -10,8 +10,8 @@
     files.bind="value"
     disabled.bind="readonly">
   <div class="buttons">
-    <button if.bind="!readonly && value" click.delegate="clear()"><i class="material-icons">clear</i></button> 
-    <button if.bind="!readonly && !value" style="pointer-events:none"><i class="material-icons">publish</i></button> 
-    <button if.bind="params.download && value" click.delegate="download()"><i class="material-icons">get_app</i></button>
+    <button if.bind="!readonly && value" click.delegate="clear()"><i class="fa-solid fa-xmark"></i></button>
+    <button if.bind="!readonly && !value" style="pointer-events:none"><i class="fa-solid fa-up-from-line"></i></button> 
+    <button if.bind="params.download && value" click.delegate="download()"><i class="fa-solid fa-down-from-line"></i></button>
   </div>
 </template>
