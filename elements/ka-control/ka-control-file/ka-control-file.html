@@ -10,8 +10,8 @@
     files.bind="value"
     disabled.bind="schema.readonly">
   <div class="buttons">
-    <button if.bind="!schema.readonly && value" click.delegate="clear()"><i class="fa-solid fa-xmark"></i></button>
-    <button if.bind="!schema.readonly && !value" style="pointer-events:none"><i class="fa-solid fa-up-from-line"></i></button> 
-    <button if.bind="schema.params.download && value" click.delegate="download()"><i class="fa-solid fa-down-from-line"></i></button>
+    <button if.bind="!schema.readonly && value" click.delegate="clear()"><i class="fa-regular fa-xmark"></i></button>
+    <button if.bind="!schema.readonly && !value" style="pointer-events:none"><i class="fa-regular fa-arrow-up-from-line"></i></button> 
+    <button if.bind="schema.params.download && value" click.delegate="download()"><i class="fa-regular fa-arrow-down-from-line"></i></button>
   </div>
 </template>
