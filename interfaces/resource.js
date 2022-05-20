@@ -4,6 +4,9 @@ export class ResourceInterface {
   controls = {};
   schema = {};
   data = {};
+  settings = {
+    initializeWithDataset: false
+  };
 
   // API Response data parser functions
   parsers = {
@@ -43,13 +46,20 @@ export class ResourceInterface {
 
   initialize() {
     return new Promise((resolve, reject) => {
-      if (!this.endpoint || !this.client) return reject('missing endpoint or client configuration');
-      if (this.schema && Object.keys(this.schema).length) return resolve();
-      if (!this.client.isKamaji) return reject('missing schema configuration');
-      this.client.get(`datasets/${this.endpoint}`).then(xhr => {
-        xhr.response.forEach(control => { this.schema[control.field] = control; });
-        resolve();
-      }).catch(error => reject(`could not retrieve dataset for ${this.endpoint}`));
+      if (!this.endpoint || !this.client) return reject('missing endpoint or client configuration, interface won\'t be able to call api endpoints');
+      new Promise((resolve, reject) => {
+        if (this.settings.initializeWithDataset) {
+          this.client.get(`datasets/${this.endpoint}`).then(xhr => {
+            let schema = {};
+            xhr.response.forEach(control => { schema[control.field] = control; });
+            this.schema = (this.schema && Object.keys(this.schema).length) ? this.helpers.mergeDeep(schema, this.schema) : schema;
+            resolve();
+          }).catch(error => reject(`could not retrieve dataset for ${this.endpoint}`));
+        } else resolve();
+      }).then(() => {
+        if (this.schema && Object.keys(this.schema).length) return resolve();
+        else return reject('missing schema configuration');
+      }).catch(error => reject(error));
     }).then(() => {
       console.log('[ResourceInterface] Initialized');
     }).catch(error => {
@@ -209,6 +219,21 @@ export class Helpers {
       }
     }
     return Object.entries(data).length ? data : null;
+  }
+  mergeDeep(target, ...sources) {
+    target = JSON.parse(JSON.stringify(target));
+    if (!sources.length) return target;
+    const source = sources.shift();
+    if (this.isObject(target) && this.isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (this.isObject(source[key])) {
+          target[key] = this.mergeDeep(target[key] || {}, source[key]);
+        } else {
+          target[key] = source[key];
+        }
+      });
+    }
+    return this.mergeDeep(target, ...sources);
   }
 }
 
