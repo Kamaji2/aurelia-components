@@ -125,7 +125,7 @@ export class KaControlEditor {
         ]
       }
     };
-    ClassicEditor.create(this.element, config).then(editor => {
+    ClassicEditor.create(this.element.querySelector('div'), config).then(editor => {
       editor.setData(this.value || '');
       if (this.readonly) editor.enableReadOnlyMode('ka-control-editor');
       editor.model.document.on('change:data', () => { this.value = editor.getData(); });
