@@ -32,9 +32,11 @@ export class KaControl {
 
     ValidationRules
       .ensure('value')
+
       .required()
       .when(self => self.required)
       .withMessage('Campo obbligatorio')
+
       .equals(true)
       .when(self => self.schema.control === 'check' && self.required)
       .withMessage('Spunta obbligatoria')
@@ -42,9 +44,11 @@ export class KaControl {
       .satisfies((value, self) => value >= self.schema.min && value <= self.schema.max)
       .when(self => self.schema.control === 'number' && self.schema.min && self.schema.max)
       .withMessage('Il valore deve essere compreso tra ${schema.min} e ${schema.max}')
+
       .satisfies((value, self) => value >= self.schema.min)
       .when(self => self.schema.control === 'number' && self.schema.min && !self.schema.max)
       .withMessage('Il valore deve essere uguale o maggiore di ${schema.min}')
+
       .satisfies((value, self) => value <= self.schema.max)
       .when(self => self.schema.control === 'number' && !self.schema.min && self.schema.max)
       .withMessage('Il valore deve essere minore o uguale a ${schema.max}')
@@ -52,14 +56,19 @@ export class KaControl {
       .satisfies((value, self) => value.length >= self.schema.min && value.length <= self.schema.max)
       .when(self => self.value && ['text', 'textarea', 'password'].includes(self.schema.control) && self.schema.min && self.schema.max)
       .withMessage('Il numero di caratteri deve essere compreso tra ${schema.min} e ${schema.max}')
+      
       .satisfies((value, self) => value.length >= self.schema.min)
       .when(self => self.value && ['text', 'textarea', 'password'].includes(self.schema.control) && self.schema.min && !self.schema.max)
       .withMessage('Il valore deve essere di almeno ${schema.min} caratteri')
+
       .satisfies((value, self) => value.length <= self.schema.max)
       .when(self => self.value && ['text', 'textarea', 'password'].includes(self.schema.control) && !self.schema.min && self.schema.max)
       .withMessage('Il valore non deve superare i ${schema.max} caratteri')
 
-      .satisfies((value, self) => value === null || value === '' || ((self.schema.pattern).test(value)))
+      .satisfies((value, self) => {
+        let pattern = typeof self.schema.pattern === 'string' ? new RegExp(self.schema.pattern) : self.schema.pattern;
+        return value === null || value === '' || pattern.test(value);
+      })
       .when(self => ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.pattern)
       .withMessage('Formato non valido')
 
@@ -70,6 +79,7 @@ export class KaControl {
       .satisfies((value, self) => value === null || value === '' || DateTime.fromISO(value).isValid)
       .when(self => self.schema.control === 'date' || self.schema.control === 'age')
       .withMessage('Formato data non valido')
+
       .on(this);
   }
 
