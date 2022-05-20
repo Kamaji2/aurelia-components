@@ -9,8 +9,6 @@ export class KaControlCombo {
   // Basic input control properties
   @bindable() schema = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
-  // Other input control bindable properties
-  @bindable() readonly = null;
 
   _schema = null;
   _value = null;
@@ -30,30 +28,9 @@ export class KaControlCombo {
   attached() {}
 
   schemaChanged(schema) {
-    // Validate schema
-    if (!schema) {
-      console.warn('ka-control-combo: missing schema!', schema);
-      return;
-    }
-    if (typeof schema === 'string') {
-      try {
-        schema = JSON.parse(schema);
-      } catch (error) {
-        console.error('ka-control-combo: invalid schema provided!', schema);
-        return;
-      }
-    }
     if (!schema.datasource) {
       console.error('ka-control-combo: missing datasource in schema!', schema);
       return;
-    }
-    if (typeof schema.datasource === 'string') {
-      try {
-        schema.datasource = JSON.parse(schema.datasource);
-      } catch (error) {
-        console.error('ka-control-combo: invalid datasource provided in schema!', schema);
-        return;
-      }
     }
     if (Array.isArray(schema.datasource) && !schema.datapreload) {
       schema.datapreload = true; // Force datapreload = true if datasource is array of values
@@ -66,13 +43,6 @@ export class KaControlCombo {
     }
     if (!schema.datasearch) {
       schema.datasearch = {};
-    } else if (typeof schema.datasearch === 'string') {
-      try {
-        schema.datasearch = JSON.parse(schema.datasearch);
-      } catch (error) {
-        console.error('ka-control-combo: invalid datasearch provided in schema!', schema);
-        return;
-      }
     }
     if (!schema.datasearch.operator) {
       schema.datasearch.operator = '^=';
@@ -80,20 +50,6 @@ export class KaControlCombo {
     if (!schema.datasearch.keys) {
       schema.datasearch.keys = schema.datatext;
     }
-
-    // Thisify boolean schema attributes
-    for (let attribute of ['readonly']) {
-      if (this[attribute] === null) {
-        if (this.element.getAttribute(attribute)) {
-          this[attribute] = String(this.element.getAttribute(attribute)).toLowerCase() === 'true';
-        } else if (typeof schema[attribute] !== undefined) {
-          this[attribute] = String(schema[attribute]).toLowerCase() === 'true';
-        }
-      } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
-    }
-
-    console.debug('ka-control-combo: schema changed!', schema);
-    this._schema = schema;
 
     // Deferred value change if needed
     if (this.value && !this._value) this.valueChanged(this.value);
@@ -124,7 +80,7 @@ export class KaControlCombo {
   }
 
   valueChanged(value) {
-    if (!this._schema) {
+    if (!this.schema) {
       // Component is not ready for value handling
       console.warn('ka-control-combo: cannot handle value without schema!');
       return;
@@ -135,7 +91,7 @@ export class KaControlCombo {
     }
     if (value === null) {
       this.valuestack = [];
-    } else if (this._schema.datamultiple === true) {
+    } else if (this.schema.datamultiple === true) {
       if (typeof value === 'string') {
         try {
           value = JSON.parse(value);
@@ -164,8 +120,8 @@ export class KaControlCombo {
   }
 
   buildCombostack() {
-    let dts = this._schema.datasource;
-    let dtp = this._schema.datapreload;
+    let dts = this.schema.datasource;
+    let dtp = this.schema.datapreload;
 
     if (dtp === true || Array.isArray(dts)) {
       if (dts.table || dts.url) {
@@ -174,13 +130,13 @@ export class KaControlCombo {
           this.combostack = x.response;
           this.preloadedCombostack = x.response;
         }).catch(x => {
-          console.error('ka-control-combo: invalid datasource provided in schema!', this._schema);
+          console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
         });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
       } else {
-        console.error('ka-control-combo: invalid datasource provided in schema!', this._schema);
+        console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
         return;
       }
     }
@@ -193,8 +149,8 @@ export class KaControlCombo {
       this._combostack = [];
       return;
     }
-    let dtv = this._schema.datavalue;
-    let dtt = this._schema.datatext;
+    let dtv = this.schema.datavalue;
+    let dtt = this.schema.datatext;
     let combostack = [];
     for (let item of stack) {
       let text = '';
@@ -216,8 +172,8 @@ export class KaControlCombo {
 
   buildValuestack() {
     if (!this._value) return;
-    let dtv = this._schema.datavalue;
-    let dtt = this._schema.datatext;
+    let dtv = this.schema.datavalue;
+    let dtt = this.schema.datatext;
     let values = this._value;
     let valuestack = [];
     let promises = [];
@@ -261,7 +217,7 @@ export class KaControlCombo {
   }
 
   open($event) {
-    if (this.readonly || ($event && $event.target.tagName === 'I')) return;
+    if (this.schema.readonly || ($event && $event.target.tagName === 'I')) return;
     if (this.opened) return this.close();
     this._combostack.forEach(x => x.selected = this._value && this._value.includes(x.value));
     document.body.appendChild(this.backdrop);
@@ -289,13 +245,13 @@ export class KaControlCombo {
     this.element.appendChild(this.drawer);
     this.drawer.setAttribute('style', '');
     document.body.removeChild(this.backdrop);
-    if (this._schema.datapreload !== true) this.combostack = [];
+    if (this.schema.datapreload !== true) this.combostack = [];
     this.opened = false;
     this.term = null;
   }
   select(item) {
     let value = this._value || [];
-    let multiple = this._schema.datamultiple === true;
+    let multiple = this.schema.datamultiple === true;
     let index = value.indexOf(item.value);
     if (multiple && index > -1) {
       item.selected = false;
@@ -321,10 +277,10 @@ export class KaControlCombo {
   }
 
   search() {
-    let dts = this._schema.datasource;
-    let dtt = this._schema.datatext;
-    let dtp = this._schema.datapreload;
-    let dsh = this._schema.datasearch;
+    let dts = this.schema.datasource;
+    let dtt = this.schema.datatext;
+    let dtp = this.schema.datapreload;
+    let dsh = this.schema.datasearch;
     let term = this.term;
     let filters = [];
 
@@ -377,14 +333,14 @@ export class KaControlCombo {
     }, {});
   }
   buildQueryUrl(params) {
-    let dts = this._schema.datasource;
-    let dtv = this._schema.datavalue;
-    let dtt = this._schema.datatext;
-    let dtf = this._schema.datafilter;
-    //let dsh = this._schema.datasearch;
+    let dts = this.schema.datasource;
+    let dtv = this.schema.datavalue;
+    let dtt = this.schema.datatext;
+    let dtf = this.schema.datafilter;
+    //let dsh = this.schema.datasearch;
 
     if (!dts.table && !dts.url) {
-      console.error('ka-control-combo: cannot build query url if datasource is not a table or url!', this._schema.datasource);
+      console.error('ka-control-combo: cannot build query url if datasource is not a table or url!', this.schema.datasource);
       return;
     }
 
@@ -405,20 +361,6 @@ export class KaControlCombo {
       fields = dtt;
       sort = `+${dtt}`;
     }
-
-    // keys = dsh.keys.match(/\{[a-zA-Z0-9_\.]*?\}/g);
-    // if (keys) {
-    //   keys = keys.map(b=>b.replace(/\{(.*?)\}/g, '$1').replace(/([^\.]*).*/g, '$1'));
-    //   fields = fields.split(',');
-    //   fields = fields.concat(keys.filter(x => fields.indexOf(x) < 0)).join(',');
-    // } else {
-    //   fields = fields.split(',');
-    //   fields = fields.concat([dsh.keys].filter(x => fields.indexOf(x) < 0)).join(',');
-    // }
-
-    //let operator = this.queryOperator ? this.queryOperator : '^=';
-    //operator = this.dataoperator ? this.dataoperator : operator;
-    //params.filters = (params.filters ? '&' : '') + `(${datatext}${operator}${query})`;
     if (dtf) {
       urlParams.filters = (urlParams.filters ? urlParams.filters + '&' : '') + `(${dtf})`;
     }

@@ -1,9 +1,9 @@
 <template>
   <input
     type="text"
-    value.bind="value | controlDate:params.utc"
-    disabled.bind="readonly"
-    placeholder.bind="placeholder"
+    value.bind="value | controlDate:schema.params.utc"
+    disabled.bind="schema.readonly"
+    placeholder.bind="schema.placeholder"
     keydown.delegate="keydown()"
-    class="display-value ${readonly?'readonly':''}">
+    class="display-value ${schema.readonly?'readonly':''}">
 </template>

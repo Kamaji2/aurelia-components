@@ -7,38 +7,28 @@ require('./ka-control.sass');
 @customElement('ka-control')
 @inject(Element, BindingEngine, NewInstance.of(ValidationController))
 export class KaControl {
-  // Basic input control properties
+  @bindable() name = null;
   @bindable() schema = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
-  // Other input control bindable properties
-  @bindable() name = null;
-  @bindable() readonly = null;
-  @bindable() required = null;
-  @bindable() label = null;
-  @bindable() description = null;
-  @bindable() placeholder = '';
-  @bindable() error = null;
-  // Input control specific params property
-  @bindable() params = null;
-  // Other control input properties
-  parentResourceName = 'resource';
-  buttons = [];
+
+  parentResourceName = 'resource'; // default ResourceInterface name to look for in parentContext
+  buttons = []; // array of button identifiers to show on control - supported value are: clear, dropdown
 
   constructor(element, binding, validator) {
     this.element = element;
     this.binding = binding;
     this.validator = validator;
-    this.validator.validateTrigger = validateTrigger.manual; // This is because we don't want model to be automatically validated on input blur
+    this.validator.validateTrigger = validateTrigger.manual; // disable default automatic validation on input blur
 
     ValidationRules
       .ensure('value')
 
       .required()
-      .when(self => self.required)
+      .when(self => self.schema.required)
       .withMessage('Campo obbligatorio')
 
       .equals(true)
-      .when(self => self.schema.control === 'check' && self.required)
+      .when(self => self.schema.control === 'check' && self.schema.required)
       .withMessage('Spunta obbligatoria')
 
       .satisfies((value, self) => value >= self.schema.min && value <= self.schema.max)
@@ -108,21 +98,11 @@ export class KaControl {
 
   schemaChanged(schema) {
     if (!schema) return;
-    this.readonly = this.readonly !== null ? String(this.readonly) === 'true' : String(schema.readonly) === 'true';
-    if (!this.readonly && this.bindedToResource && this.parentContext[this.parentResourceName].readonly !== null) this.readonly = String(this.parentContext[this.parentResourceName].readonly) === 'true';
-    this.required = this.required !== null ? String(this.required) === 'true' : String(schema.required) === 'true';
-    this.label = this.label || schema.label || null;
-    this.placeholder = this.placeholder || schema.placeholder || '';
-    this.description = this.description || schema.description || null;
-    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value & validate" readonly.bind="readonly" placeholder.bind="placeholder" ${schema.control === 'check' ? 'description.bind="description"' : ''} params.bind="params"></ka-control-${schema.control}></template>`);
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value & validate"></ka-control-${schema.control}></template>`);
   }
   valueChanged(value) {
     if (this.bindedToResource && this.parentContext[this.parentResourceName].data && this.checkNested(this.parentContext[this.parentResourceName].data, this.name.split('.'))) eval(`this.parentContext.${this.parentResourceName}.data.${this.name} = value`);
     this.validate();
-  }
-  readonlyChanged() {
-    if (!this.schema) return;
-    if (String(this.schema.readonly) === 'true') this.readonly = true;
   }
 
   validate() {
@@ -197,10 +177,6 @@ export class KaControl {
       // Reset binding if resource schema gets entirely replaced
       this.resourceValueBinding = this.binding.expressionObserver(this, `parentContext.${this.parentResourceName}.data`).subscribe((value) => setDataBinding());
     }
-
-    // Bind to parent resource readonly property
-    if (!this.readonly) this.resourceReadonlyBinding = this.binding.expressionObserver(this, `parentContext.${this.parentResourceName}.readonly`).subscribe((value) => { this.readonly = value; });
-
     this.bindedToResource = true;
   }
   unbindFromResource() {
@@ -208,7 +184,6 @@ export class KaControl {
     if (this.resourceControlValueBinding) this.resourceControlValueBinding.dispose();
     if (this.resourceSchemaBinding) this.resourceSchemaBinding.dispose();
     if (this.resourceValueBinding) this.resourceValueBinding.dispose();
-    if (this.resourceReadonlyBinding) this.resourceReadonlyBinding.dispose();
     this.bindedToResource = false;
   }
   checkNested(obj, levels) {

@@ -2,9 +2,9 @@
   <textarea
     type="text"
     value.bind="value"
-    disabled.bind="readonly"
-    placeholder.bind="placeholder"
+    disabled.bind="schema.readonly"
+    placeholder.bind="schema.placeholder"
     keydown.delegate="keydown()"
-    class="display-value ${readonly?'readonly':''}">
+    class="display-value ${schema.readonly?'readonly':''}">
   </textarea>
 </template>

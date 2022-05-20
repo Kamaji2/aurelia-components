@@ -9,8 +9,6 @@ export class KaControlEditor {
   // Basic input control properties
   @bindable() schema = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
-  // Other input control bindable properties
-  @bindable() readonly = null;
 
   constructor(element) {
     this.element = element;
@@ -19,34 +17,7 @@ export class KaControlEditor {
   attached() {}
 
   schemaChanged(schema) {
-    // Validate schema
-    if (!schema) {
-      console.warn('ka-control-editor: missing schema!', schema);
-      return;
-    }
-    if (typeof schema === 'string') {
-      try {
-        schema = JSON.parse(schema);
-      } catch (error) {
-        console.error('ka-control-editor: invalid schema provided!', schema);
-        return;
-      }
-    }
-
-    // Thisify boolean schema attributes
-    for (let attribute of ['readonly']) {
-      if (this[attribute] === null) {
-        if (this.element.getAttribute(attribute)) {
-          this[attribute] = String(this.element.getAttribute(attribute)).toLowerCase() === 'true';
-        } else if (typeof schema[attribute] !== undefined) {
-          this[attribute] = String(schema[attribute]).toLowerCase() === 'true';
-        }
-      } else this[attribute] = String(this[attribute]).toLowerCase() === 'true';
-    }
-
-    console.debug('ka-control-editor: schema changed!', schema);
-    this._schema = schema;
-
+    this.readonly = schema.readonly || false;
     this.buildEditor();
   }
 
@@ -127,7 +98,7 @@ export class KaControlEditor {
     };
     ClassicEditor.create(this.element.querySelector('div'), config).then(editor => {
       editor.setData(this.value || '');
-      if (this.readonly) editor.enableReadOnlyMode('ka-control-editor');
+      if (this.schema.readonly) editor.enableReadOnlyMode('ka-control-editor');
       editor.model.document.on('change:data', () => { this.value = editor.getData(); });
       this.editor = editor;
     }).catch(error => {

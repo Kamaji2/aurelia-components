@@ -1,11 +1,11 @@
 <template>
-  <div class="display-value ${readonly ? 'readonly' : ''}" click.delegate="open($event)">
+  <div class="display-value ${schema.readonly ? 'readonly' : ''}" click.delegate="open($event)">
     <ul>
-      <li repeat.for="item of valuestack">${item.text}<i class="material-icons" if.bind="_schema.datamultiple === true && !readonly" click.delegate="select(item)">close</i></li>
+      <li repeat.for="item of valuestack">${item.text}<i class="material-icons" if.bind="schema.datamultiple === true && !schema.readonly" click.delegate="select(item)">close</i></li>
     </ul>
   </div>
-  <div ref="drawer" class="${_schema.datamultiple === true ? 'multiple' : ''}" show.bind="opened">
-    <input type="text" if.bind="_schema.datapreload !== true || preloadedCombostack.length > 8" class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()"></input>
+  <div ref="drawer" class="${schema.datamultiple === true ? 'multiple' : ''}" show.bind="opened">
+    <input type="text" if.bind="schema.datapreload !== true || preloadedCombostack.length > 8" class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()"></input>
     <ul>
       <li repeat.for="item of _combostack" click.delegate="select(item)" class="${item.selected?'selected':''}" innerhtml.bind="item.text | kaControlComboHighlight:term"></li>
     </ul>

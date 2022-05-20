@@ -5,10 +5,10 @@ require('./ka-control-table.sass');
 @customElement('ka-control-table')
 @inject(Element)
 export class KaControlsTable {
+  // Basic input control properties
   @bindable() schema = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
-  @bindable() label = null;
-  _schema = null;
+
   _value = [];
   newValue = {};
 
@@ -20,24 +20,10 @@ export class KaControlsTable {
   }
 
   schemaChanged(schema) {
-    if (!schema) {
-      console.warn('ka-control-table: missing schema!', schema);
-      return;
-    }
-    if (typeof schema === 'string') {
-      try {
-        schema = JSON.parse(schema);
-      } catch (error) {
-        console.error('ka-control-table: invalid schema provided!', value);
-        return;
-      }
-    }
     if (!Array.isArray(schema) || !schema.length) {
       console.error('ka-control-table: schema must be an array of objects!', schema);
       return;
     }
-    console.debug('ka-control-table: schema changed!', schema);
-    this._schema = schema;
   }
 
   valueChanged(value) {

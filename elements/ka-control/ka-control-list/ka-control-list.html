@@ -1,23 +1,26 @@
 <template>
 
-  <div class="item ${readonly?'readonly':''}" repeat.for="value of _value">
+  <div class="item ${schema.readonly?'readonly':''}" repeat.for="value of _value">
     <div class="buttons">
-      <button if.bind="!readonly && $last" click.delegate="add()"><i class="fa-regular fa-plus"></i></button> 
-      <button if.bind="!readonly && !$first" click.delegate="remove(value)"><i class="fa-regular fa-trash-can"></i></button> 
+      <button if.bind="!schema.readonly && $last" click.delegate="add()"><i class="fa-regular fa-plus"></i></button> 
+      <button if.bind="!schema.readonly && !$first" click.delegate="remove(value)"><i class="fa-regular fa-trash-can"></i></button> 
     </div>
     <div class="row g-0">
-      <div class="${schema.class || 'col'}" repeat.for="schema of _schema.datasource.model.schema">
-        <label if.bind="schema.label">${schema.label}</label>
-        <input
-          type="text"
-          value.bind="value[schema.field]"
-          disabled.bind="readonly"
-          placeholder.bind="schema.label || schema.field"
-          keydown.delegate="keydown()"
-          change.delegate="change()"
-          ka-tooltip.bind="schema.label"
-          class="display-value ${readonly?'readonly':''}">
-      </div>
+      <template repeat.for="itemSchema of schema.datasource.model.schema">
+        <div class="${itemSchema.class || 'col'}">
+          <label if.bind="itemSchema.label">${itemSchema.label}</label>
+          <input
+            type="text"
+            value.bind="value[itemSchema.field]"
+            disabled.bind="schema.readonly"
+            placeholder.bind="itemSchema.label || itemSchema.field"
+            keydown.delegate="keydown()"
+            change.delegate="change()"
+            ka-tooltip.bind="itemSchema.label"
+            class="display-value ${schema.readonly?'readonly':''}">
+        </div>
+      </template>
+      
     </div>
   </div>
   
