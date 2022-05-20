@@ -54,8 +54,12 @@ export class KaControlCombo {
     // Deferred value change if needed
     if (this.value && !this._value) this.valueChanged(this.value);
 
+    // Set client for api calls
+    if (schema.client) {
+      this.api = schema.client;
+    }
     // Override http client if needed
-    if (schema.datasource.url) {
+    if ((!this.api && schema.datasource.table) || schema.datasource.url) {
       this.api = new HttpClient();
       this.api.configure(x => {
         x.withInterceptor({
