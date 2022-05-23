@@ -31,15 +31,15 @@ export class KaControl {
       .when(self => self.schema.control === 'check' && self.schema.required)
       .withMessage('Spunta obbligatoria')
 
-      .satisfies((value, self) => value >= self.schema.min && value <= self.schema.max)
+      .satisfies((value, self) => parseInt(value, 10) >= parseInt(self.schema.min, 10) && value <= parseInt(self.schema.max, 10))
       .when(self => self.schema.control === 'number' && self.schema.min && self.schema.max)
       .withMessage('Il valore deve essere compreso tra ${schema.min} e ${schema.max}')
 
-      .satisfies((value, self) => value >= self.schema.min)
+      .satisfies((value, self) => parseInt(value, 10) >= parseInt(self.schema.min, 10))
       .when(self => self.schema.control === 'number' && self.schema.min && !self.schema.max)
       .withMessage('Il valore deve essere uguale o maggiore di ${schema.min}')
 
-      .satisfies((value, self) => value <= self.schema.max)
+      .satisfies((value, self) => parseInt(value, 10) <= parseInt(self.schema.max, 10))
       .when(self => self.schema.control === 'number' && !self.schema.min && self.schema.max)
       .withMessage('Il valore deve essere minore o uguale a ${schema.max}')
 
