@@ -22,7 +22,7 @@ export class AureliaComponentsConfiguration {
   }
   useLayout() {
     console.log('%c[kamaji2-aurelia-components] loading layout modules', 'color:#8b64cf;font-size:8px;');
-    //this.config.globalResources([PLATFORM.moduleName('ka-components/ka-layout/ka-layout')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout')]);
   }
   useControls() {
     console.log('%c[kamaji2-aurelia-components] loading control modules', 'color:#8b64cf;font-size:8px;');
@@ -47,4 +47,39 @@ export class AureliaComponentsConfiguration {
   }
 
   apply() {}
+}
+
+export const helpers = {
+  isObject: (object) => {
+    return object instanceof Object && object.constructor === Object;
+  },
+  diffObject: (object1, object2, deep = true) => {
+    // object1 = original data, object2 = modified data
+    let data = {};
+    for (let [k, v] of Object.entries(object1)) {
+      if (typeof object2[k] === 'undefined') continue;
+      if (deep && helpers.isObject(v)) {
+        let value = helpers.diffObject(v, object2[k]);
+        if (value) data[k] = value;
+      } else if (JSON.stringify(v) !== JSON.stringify(object2[k])) {
+        data[k] = object2[k];
+      }
+    }
+    return Object.entries(data).length ? data : null;
+  },
+  deepMerge: (target, ...sources) => {
+    target = JSON.parse(JSON.stringify(target));
+    if (!sources.length) return target;
+    const source = JSON.parse(JSON.stringify(sources.shift()));
+    if (helpers.isObject(target) && helpers.isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (helpers.isObject(source[key])) {
+          target[key] = helpers.deepMerge(target[key] || {}, source[key]);
+        } else {
+          target[key] = source[key];
+        }
+      });
+    }
+    return helpers.deepMerge(target, ...sources);
+  }
 }

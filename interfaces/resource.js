@@ -1,3 +1,5 @@
+import { helpers } from 'aurelia-components';
+
 export class ResourceInterface {
   client = null;
   endpoint = null;
@@ -29,7 +31,6 @@ export class ResourceInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.helpers = new Helpers();
     // Custom events
     this.events = document.createTextNode(null);
     this.events.getSuccess = new CustomEvent('getSuccess', { detail: this });
@@ -52,7 +53,7 @@ export class ResourceInterface {
           this.client.get(`datasets/${this.endpoint}`).then(xhr => {
             let schema = {};
             xhr.response.forEach(control => { schema[control.field] = control; });
-            this.schema = (this.schema && Object.keys(this.schema).length) ? this.helpers.mergeDeep(schema, this.schema) : schema;
+            this.schema = (this.schema && Object.keys(this.schema).length) ? helpers.deepMerge(schema, this.schema) : schema;
             resolve();
           }).catch(error => reject(`could not retrieve dataset for ${this.endpoint}`));
         } else resolve();
@@ -137,13 +138,13 @@ export class ResourceInterface {
   sanitize(data, method) {
     return new Promise((resolve, reject) => {
       data = JSON.parse(JSON.stringify(data));
-      if (method === 'patch' && this._data && Object.keys(this._data).length) data = this.helpers.diffObject(this._data, data, !this.client.isKamaji);
+      if (method === 'patch' && this._data && Object.keys(this._data).length) data = helpers.diffObject(this._data, data, !this.client.isKamaji);
       let promises = [];
       const parseData = (object, path = '') => {
         if (!object) return null;
         for (let key of Object.keys(object)) {
           if (typeof object[key] === 'undefined') continue;
-          if (this.helpers.isObject(object[key])) parseData(object[key], path ? `${path}.${key}` : key);
+          if (helpers.isObject(object[key])) parseData(object[key], path ? `${path}.${key}` : key);
           else promises.push(new Promise(passed => {
             let control = this.controls[path ? `${path}.${key}` : key];
             // Missing corresponding control object
@@ -200,41 +201,6 @@ export class ResourceInterface {
     }
   }
 
-}
-
-export class Helpers {
-  isObject(object) {
-    return object instanceof Object && object.constructor === Object;
-  }
-  diffObject(object1, object2, deep = true) {
-    // object1 = original data, object2 = modified data
-    let data = {};
-    for (let [k, v] of Object.entries(object1)) {
-      if (typeof object2[k] === 'undefined') continue;
-      if (deep && this.isObject(v)) {
-        let value = this.diffObject(v, object2[k]);
-        if (value) data[k] = value;
-      } else if (JSON.stringify(v) !== JSON.stringify(object2[k])) {
-        data[k] = object2[k];
-      }
-    }
-    return Object.entries(data).length ? data : null;
-  }
-  mergeDeep(target, ...sources) {
-    target = JSON.parse(JSON.stringify(target));
-    if (!sources.length) return target;
-    const source = sources.shift();
-    if (this.isObject(target) && this.isObject(source)) {
-      Object.keys(source).forEach(key => {
-        if (this.isObject(source[key])) {
-          target[key] = this.mergeDeep(target[key] || {}, source[key]);
-        } else {
-          target[key] = source[key];
-        }
-      });
-    }
-    return this.mergeDeep(target, ...sources);
-  }
 }
 
 class ResourceError extends Error {
