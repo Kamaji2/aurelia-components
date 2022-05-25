@@ -83,6 +83,7 @@ ka-layout
           text-transform: none
           transition: all 0.5s
           box-shadow: inset 0 1px 0 0 rgba(var(--secondary-color-rgb), 0.1)
+          cursor: pointer
 
           i.collapse, i.expand
             display: none
@@ -120,6 +121,10 @@ ka-layout
             color: rgba(var(--secondary-color-rgb), 0.7)
             //text-transform: uppercase
             transition: transform 0.2s ease-in-out
+          &.expanded, &.collapsed
+            > .item-label
+              width: calc(100% - 3rem)
+              overflow: hidden
           .item-icon + .item-label
             padding-left: 4.5rem
           .item-link
@@ -265,101 +270,160 @@ ka-layout
         top: 0
         opacity: 1
     
-    .ka-layout-toolbar
-      display: flex
-      flex-direction: row
-      align-items: center
-      > button, > .button
-        display: flex
-        flex-direction: column
-        align-items: center
-        justify-content: center
-        appearance: none
-        -moz-appearance: none
-        -webkit-appearance: none
-        outline: none
-        cursor: pointer
-        margin: 0
-        border: 0
-        padding: 0
-        width: $headerHeight
-        height: $headerHeight
-        font-size: 13px
-        font-weight: 700
-        line-height: 1
-        color: rgba(#fff,0.8)
-        text-align: center
-        text-decoration: none
-        background-color: rgba(#000,0.15)
-        box-shadow: inset 2px 0 0 -1px rgba(#fff,0.3)
-        transition: all 0.3s ease-in-out
-        &:first-child
-          box-shadow: none
-        &:hover
-          color: rgba(#fff,1)
-          background-color: rgba(#000,0.25)
-        i
-          display: block
-          font-size: 2.5rem
-        b
-          display: block
-          font-size: 10px
-          font-weight: 300
-          text-transform: uppercase
-          opacity: 0.7
-        i+b
-          height: 0
-          overflow: hidden
-          opacity: 0
-          transition: all 0.3s ease-in-out
-        &:hover i+b
-          margin-top: 5px
-          height: 10px
-          opacity: 0.7
-      > ul[data-subtool]
-        display: none
-        position: fixed
-        top: $headerHeight
-        margin: 0
-        padding: 0
+    nav.ka-layout-toolbar
+      > ul
         list-style: none
-        background-color: var(--primary-color)
-        box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.2)
-        transition: all 0.3s ease-in-out
-        &.visible
-          display: block
-        li
+        display: flex
+        flex-direction: row
+        align-items: center
+        margin: 0
+        padding: 0
+        > li
+          position: relative
+          display: flex
+          flex-direction: column
+          align-items: center
+          justify-content: center
+          cursor: pointer
           margin: 0
+          border: 0
           padding: 0
-          a
+          width: $headerHeight
+          height: $headerHeight
+          font-size: 1.3rem
+          font-weight: 700
+          line-height: 1
+          color: rgba(#fff,0.8)
+          text-align: center
+          text-decoration: none
+          background-color: rgba(#000,0.15)
+          box-shadow: inset 2px 0 0 -1px rgba(#fff,0.3)
+          transition: all 0.3s ease-in-out
+          &:first-child
+            box-shadow: none
+          &:hover
+            color: rgba(#fff,1)
+            background-color: rgba(#000,0.25)
+          > .item-icon
             display: block
-            padding: 0 2rem
-            font-size: 14px
-            font-weight: 500
-            color: rgba(#fff, 0.8)
-            line-height: 40px
-            text-decoration: none
-            background-color: rgba(#000,0.15)
-            box-shadow: inset 0 2px 0 -1px rgba(#fff,0.3)
+            font-size: 2.5rem
+          > .item-label
+            display: block
+            font-size: 10px
+            font-weight: 300
+            text-transform: uppercase
+            opacity: 0.7
+          > .item-icon + .item-label
+            height: 0
+            overflow: hidden
+            opacity: 0
             transition: all 0.3s ease-in-out
-            &:hover
-              color: rgba(#fff,1)
-              background-color: rgba(#000,0.25)
-            .material-icons
+          &:hover > .item-icon + .item-label
+            margin-top: 5px
+            height: 10px
+            opacity: 0.7
+          > .item-link
+            display: block
+            position: absolute
+            top: 0
+            left: 0
+            width: 100%
+            height: 100%
+          > ul[data-subtool]
+            display: none
+            position: fixed
+            top: $headerHeight
+            margin: 0
+            padding: 0
+            list-style: none
+            background-color: var(--primary-color)
+            box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.2)
+            transition: all 0.3s ease-in-out
+            &.visible
               display: block
-              float: left
-              margin-left: -1rem
-              width: 3rem
-              color: inherit
-              line-height: 40px
-              text-align: center
-
-
-  aside+header
+            > li
+              display: block
+              position: relative
+              margin: 0
+              padding: 0
+              min-height: 4rem
+              text-align: left
+              text-decoration: none
+              text-transform: none
+              transition: all 0.5s
+              box-shadow: inset 0 1px 0 0 rgba(var(--secondary-color-rgb), 0.1)
+              cursor: pointer
+              .item-icon
+                display: block
+                position: absolute
+                top: 1rem
+                left: 1rem
+                width: 2.5rem
+                height: 2rem
+                font-size: 2rem
+                text-align: center
+                color: rgba(#fff, 0.8)
+                transition: transform 0.2s ease-in-out
+              .item-label
+                display: block
+                padding: 1.25rem 0 1.25rem 1rem
+                font-size: 1.5rem
+                font-weight: 300
+                line-height: 1.5rem
+                color: rgba(#fff, 0.7)
+                //text-transform: uppercase
+                transition: transform 0.2s ease-in-out
+              .item-icon + .item-label
+                padding-left: 4.5rem
+              .item-link
+                display: block
+                position: absolute
+                top: 0
+                left: 0
+                width: 100%
+                height: 100%
+                &:after
+                  content: " "
+                  position: absolute
+                  top: 0
+                  left: 50%
+                  width: 0
+                  height: 100%
+                  z-index: -1
+                  background: rgba(var(--secondary-color-rgb),0.03)
+                  transform: translate(-50%, 0)
+                  transition: all 0.2s ease-in
+                  opacity: 0
+                &:hover:after
+                  width: 100%
+                  height: 100%
+                  opacity: 1
+              .item-badge
+                display: block
+                position: absolute
+                top: 0
+                right: 0
+                width: 2rem
+                font-size: 0.9rem
+                color: #fff
+                text-align: center
+                &::after
+                  content: " "
+                  display: block
+                  position: absolute
+                  top: calc(50% - 1rem)
+                  left: 0
+                  z-index: -1
+                  border-radius: 50%
+                  width: 2rem
+                  height: 2rem
+                  background-color: var(--primary-color)
+  
+  aside + header
     left: $asideWidth
     transition: all 0.3s ease-in-out
     transition-delay: 0.1s
-  &+router-view
+  & + router-view
     position: fixed
     top: $headerHeight
     right: 0
@@ -373,7 +437,7 @@ ka-layout
     .ka-layout-logo
       background-size: 200%
       transition-delay: 0.3s
-  &.collapsed aside+header
+  &.collapsed aside + header
     padding-left: $headerHeight
     left: 0
     transition-delay: 0s
@@ -383,10 +447,10 @@ ka-layout
 
 @media screen and (max-width: 860px)
 	ka-layout
-    aside+header
+    aside + header
       padding-left: $headerHeight
       left: 0
-    &+router-view
+    & + router-view
       left: 0
 @media screen and (max-width: 620px)
   ka-layout

@@ -75,32 +75,34 @@
       </div>
       <a if.bind="config.profile.href" href="${config.profile.href}">Modifica profilo</a>
     </div>
-    <div class="ka-layout-toolbar">
-      <template repeat.for="item of config.toolbar.items">
-        <template if.bind="authorized(item) && !item.hidden">
 
-          <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
-          <span class="item-label">${item.label}</span>
-          <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
-
-          <a if.bind="item.href" href="${item.href}" class="item-link"></a>
-          <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
-          <a if.bind="!item.href && !item.call" href="#" class="item-link" click.trigger="subtool($index, $event)"></a>
-
-          <ul if.bind="!item.href && !item.call && item.nav" data-subtool="${$index}">
-            <template repeat.for="item of item.nav">
-              <li if.bind="authorized(item)">
-
-                <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
-                <span class="item-label">${item.label}</span>
-                <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
-
-                <a if.bind="item.href" href="${item.href}" class="item-link"></a>
-              </li>
-            </template>
-          </ul>
+    <nav if.bind="config.toolbar.items.length" class="ka-layout-toolbar">
+      <ul>
+        <template repeat.for="item of config.toolbar.items">
+          <li if.bind="authorized(item) && !item.hidden">
+            <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
+            <span class="item-label">${item.label}</span>
+            <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
+  
+            <a if.bind="item.href" href="${item.href}" class="item-link"></a>
+            <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
+            <a if.bind="!item.href && !item.call" href="#" class="item-link" click.trigger="subtool($index, $event)"></a>
+  
+            <ul if.bind="!item.href && !item.call && item.nav" data-subtool="${$index}">
+              <template repeat.for="item of item.nav">
+                <li if.bind="authorized(item)">
+  
+                  <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
+                  <span class="item-label">${item.label}</span>
+                  <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
+  
+                  <a if.bind="item.href" href="${item.href}" class="item-link"></a>
+                </li>
+              </template>
+            </ul>
+          </li>
         </template>
-      </template> 
-    </div>
+      </ul>
+    </nav>
   </header>
 </template>
