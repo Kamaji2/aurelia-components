@@ -1,0 +1,5 @@
+<template>
+  <i if.bind="icon" class="ka-button-icon ${icon}"></i>
+  <span class="ka-button-label"><slot></slot></span>
+  <div if.bind="busy" class="busy"></div>
+</template>

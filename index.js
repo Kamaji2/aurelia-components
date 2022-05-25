@@ -22,12 +22,17 @@ export class AureliaComponentsConfiguration {
   }
   useAll() {
     this.useLayout();
+    this.useButtons();
     this.useControls();
     this.useConverters();
   }
   useLayout() {
     console.log('%c[kamaji2-aurelia-components] loading layout modules', 'color:#8b64cf;font-size:8px;');
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout')]);
+  }
+  useButtons() {
+    console.log('%c[kamaji2-aurelia-components] loading button modules', 'color:#8b64cf;font-size:8px;');
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-button/ka-button')]);
   }
   useControls() {
     console.log('%c[kamaji2-aurelia-components] loading control modules', 'color:#8b64cf;font-size:8px;');
