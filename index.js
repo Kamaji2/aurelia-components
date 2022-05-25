@@ -2,6 +2,11 @@ import { PLATFORM } from 'aurelia-pal';
 
 export { ResourceInterface } from './interfaces/resource';
 
+export { ApiService } from './services/api';
+export { AuthService } from './services/auth';
+export { DialogService } from './services/dialog';
+export { ToastService } from './services/toast';
+
 export function configure(config, callback) {
   config = new AureliaComponentsConfiguration(config);
   if (callback instanceof Function) {
