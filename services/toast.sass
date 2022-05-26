@@ -1,0 +1,112 @@
+.ka-toast
+  display: flex
+  align-items: center
+  position: fixed
+  bottom: 2rem 
+  left: 50%
+  z-index: 2000
+  border: 0
+  border-radius: 5px
+  padding: 2rem
+  overflow: hidden
+  font-size: 1.1rem
+  font-weight: 400
+  line-height: 1.4rem
+  text-align: center
+  text-shadow: 0 0 3px #000
+  color: #e0e0e0
+  background-color: #404040
+  box-shadow: inset 0 0 0 1px rgba(#000, 0.7), 0 0 10px rgba(#000, 0.5)
+  transform: translate(-50%, calc(100% + 3rem))
+  transition: all 0.5s
+  cursor: pointer
+  &.visible
+    transform: translate(-50%, 0)
+  > div 
+    text-align: left
+    > span
+      display: block
+      &:first-of-type
+        font-size: 1.3rem
+        font-weight: 700
+        color: #ffffff
+        & + span
+          margin-top: 0.5rem
+  a
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 2
+    transition: all 0.5s
+    &:hover
+      background-color: rgba(#ffffff, 0.1)
+
+  &::before
+    display: block
+    margin-right: 1rem
+    width: 5rem
+    height: 5rem
+    font-style: normal
+    font-variant: normal
+    font-size: 2rem
+    line-height: 5rem
+    text-align: center
+    text-rendering: auto
+    -webkit-font-smoothing: antialiased
+    color: #ffffff
+    background-color: #202020
+
+  &.ka-toast-loading
+    padding: 0 2rem 0 0
+    &::before
+      margin-right: 0
+      font-family: "Font Awesome 6 Pro"
+      font-weight: 900
+      content: "\f1ce"
+      color: #ffffff
+      background-color: transparent
+      -webkit-animation: fa-spin 2s infinite linear
+      animation: fa-spin 2s infinite linear
+
+  &.ka-toast-error
+    padding: 0 2rem 0 0
+    &::before
+      font-family: "Font Awesome 6 Pro"
+      font-weight: 900
+      content: "\f06a"
+      color: var(--error-color)
+
+  &.ka-toast-success
+    padding: 0 2rem 0 0
+    &::before
+      font-family: "Font Awesome 6 Pro"
+      font-weight: 900
+      content: "\f058"
+      color: var(--success-color)
+  
+  &.ka-toast-warning
+    padding: 0 2rem 0 0
+    color: #ffffff
+    &::before
+      font-family: "Font Awesome 6 Pro"
+      font-weight: 900
+      content: "\f071"
+      color: orange
+
+  &.ka-toast-accent
+    padding: 0 2rem 0 0
+    background-color: var(--accent-color)
+    box-shadow: inset 0 0 0 1px rgba(#000, 0.1), 0 0 10px rgba(#000, 0.5)
+    &::before
+      margin-right: 0
+      font-family: "Font Awesome 6 Pro"
+      font-weight: 900
+      content: "\f071"
+      color: #ffffff
+      background-color: transparent
+
+  &.ka-toast-primary
+    background-color: var(--primary-color)
+    box-shadow: inset 0 0 0 1px rgba(#000, 0.1), 0 0 10px rgba(#000, 0.5)
