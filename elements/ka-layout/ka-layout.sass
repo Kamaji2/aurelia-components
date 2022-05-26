@@ -423,14 +423,6 @@ ka-layout
     left: $asideWidth
     transition: all 0.3s ease-in-out
     transition-delay: 0.1s
-  & + router-view
-    position: fixed
-    top: $headerHeight
-    right: 0
-    bottom: 0
-    left: $asideWidth
-    transition: left 0.3s ease-in-out
-    transition-delay: 0.2s
   
   &.collapsed aside
     transform: translateX(-100%)
@@ -461,3 +453,17 @@ ka-layout
         text-transform: uppercase
       .ka-layout-user
         display: none
+
+ka-layout + router-view
+    position: fixed
+    top: $headerHeight
+    right: 0
+    bottom: 0
+    left: $asideWidth
+    transition: left 0.3s ease-in-out
+    transition-delay: 0.2s
+
+    h2
+    h3
+    h4
+    h5
