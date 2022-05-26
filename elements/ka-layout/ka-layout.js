@@ -19,7 +19,7 @@ export class KaLayout {
     document.addEventListener('click', e => {
       if (e.target.closest('.no-toggle')) return;
       if (e.target.classList.contains('expand') || e.target.classList.contains('collapse')) return;
-      for (let st of this.element.querySelectorAll('[data-subtool]')) { st.classList.remove('visible'); }
+      for (let st of this.element.querySelectorAll('[data-subtool]')) { st.parentElement.classList.remove('visible'); }
       let isBurger = e.target === this.burgerAside || e.target === this.burgerHeader || (e.target.parentElement && (e.target.parentElement === this.burgerAside || e.target.parentElement === this.burgerHeader));
       if (!isBurger && !this._collapsed && window.innerWidth < 860) this.toggle();
     });
@@ -70,7 +70,15 @@ export class KaLayout {
     let subtool = this.element.querySelector(`[data-subtool="${index}"]`);
     if (!subtool) return;
     subtool.style.right = (window.innerWidth - ($event.currentTarget.getBoundingClientRect().left + $event.currentTarget.getBoundingClientRect().width)) + 'px';
-    subtool.classList.toggle('visible');
+
+    // Remove class visible
+    if (this.element.querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`)) {
+      this.element.querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`).forEach(x => { 
+        if (x.parentElement.classList.contains('visible')) x.parentElement.classList.remove('visible');
+      });
+    }
+    // Toggle class visible
+    subtool.parentElement.classList.toggle('visible');
   }
 
   authorized(item) {
