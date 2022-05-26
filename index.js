@@ -92,5 +92,33 @@ export const helpers = {
       });
     }
     return helpers.deepMerge(target, ...sources);
+  },
+  capitalize: (string) => {
+    return (string && string[0].toUpperCase() + string.slice(1)) || "";
+  },
+  routesFromNav: (nav, inherit) => {
+    let routes = [];
+    for (let item of nav) {
+      if (item.moduleId) {
+        let route = {
+          name: item.name || item.href,
+          href: item.href,
+          route: item.route || item.href,
+          title: item.title || item.label || helpers.capitalize(item.name || item.href),
+          moduleId: item.moduleId,
+          activationStrategy: 'replace',
+          settings: {
+            hasLayout: !!item.hasLayout,
+            hasLanguages: !!item.hasLanguages,
+            authRequired: (item.authGroups && item.authGroups.length > 0) || (item.authRoles && item.authRoles.length > 0) || (inherit && inherit.authGroups && inherit.authGroups.length > 0) || (inherit && inherit.authRoles && inherit.authRoles.length > 0) || !!item.authRequired,              
+            authGroups: item.authGroups || null,
+            authRoles: item.authRoles || null
+          }
+        };
+        routes.push(route);
+      }
+      if (item.nav) routes = routes.concat(helpers.parseNavigation(item.nav, item));
+    }
+    return routes;
   }
 }
