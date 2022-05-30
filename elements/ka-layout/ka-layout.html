@@ -28,7 +28,7 @@
             <!-- Level 02 -->
             <ul if.bind="item.nav.length && !item.collapsed">
               <template repeat.for="item of item.nav">
-                <li if.bind="authorized(item) && !item.hidden" class="${item.collapsed === true ? 'collapsed' : item.collapsed === false ? 'expanded' : ''}">                
+                <li if.bind="authorized(item) && !item.hidden" class="${item.collapsed === true ? 'collapsed' : item.collapsed === false ? 'expanded' : ''}">
                   <div>
                     <i class="expand fa-solid fa-chevron-down" click.delegate="expand(item)"></i>
                     <i class="collapse fa-solid fa-chevron-up" click.delegate="collapse(item)"></i>
@@ -46,7 +46,7 @@
                   <!-- Level 03 -->
                   <ul if.bind="item.nav.length && !item.collapsed">
                     <template repeat.for="item of item.nav">
-                      <li if.bind="authorized(item) && !item.hidden">                     
+                      <li if.bind="authorized(item) && !item.hidden">
                         <div>
                           <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
                           <span class="item-label">${item.label}</span>
