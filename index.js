@@ -29,7 +29,8 @@ export class AureliaComponentsConfiguration {
   }
   useLayout() {
     console.log('%c[kamaji2-aurelia-components] loading layout modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout/ka-layout')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout-heading/ka-layout-heading')]);
   }
   useButtons() {
     console.log('%c[kamaji2-aurelia-components] loading button modules', 'color:#8b64cf;font-size:8px;');

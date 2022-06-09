@@ -472,10 +472,10 @@ ka-layout + router-view
   position: fixed
   top: $headerHeight
   left: $asideWidth
+  right: 0
   height: 100%
   transition: left 0.3s ease-in-out
   transition-delay: 0.2s
-@media screen and (max-width: 768px)
-  ka-layout + router-view
-    left: 0
-    width: 100%
+  @media screen and (max-width: 768px)
+      left: 0
+      width: 100%
