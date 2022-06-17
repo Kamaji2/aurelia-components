@@ -1,0 +1,20 @@
+.md-table-sidebar {
+  min-width: 40rem;
+  box-shadow: -10px 0 10px -10px #0000001a;
+  .inputs {
+    > .input { padding: 1rem; }
+  }
+  .close {
+    color: #ED5A23;
+    cursor: pointer;
+    font-size: 2.2rem;
+    padding-right: 1rem;
+    margin-top: 0.5rem;
+  }
+  .buttons { 
+    text-align: right; 
+    margin: 2rem 1rem;
+    .ka-button { margin: 0; }
+    .ka-button + .ka-button { margin-right: 2rem; }
+  }
+}

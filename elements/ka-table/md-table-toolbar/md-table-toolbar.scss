@@ -1,0 +1,86 @@
+md-table-toolbar {
+  position: relative;
+  display: block;
+  background: #fff;
+  box-shadow: inset 0 -1px 0 0 #e0e0e0, inset 0 1px 0 0 #e0e0e0;
+
+  .row {
+    height: 4rem;
+    > .col {
+      padding: 0;
+      &.buttons-left {
+        .toolbar-button + .toolbar-button { box-shadow: -1px 0 0 0 #e0e0e0, 1px 0 0 0 #e0e0e0; margin-left: -1px; }
+        .toolbar-button {
+          position: relative;
+          border: none;
+          padding: 0;
+          margin: 0;
+          background: transparent;
+          color: #40404080;
+          font-family: sans-serif;
+          font-size: 1rem;
+          height: 4rem;
+          width: 4rem;
+          cursor: pointer;
+          transition: all 0.5s;
+          > i {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          &:not(.disabled):hover { color: #404040; background: rgba(237, 90, 35, 0.05); }
+          &:not(.disabled):only-child:hover { box-shadow: 1px 0 0 0 #e0e0e0; }
+      
+          &.search-active {
+            color: #ED5A23;
+            position: relative;
+            .with-filter {
+              position: absolute;
+              top: 0;
+              left: 0;
+              padding: 0 0 2rem 2rem;
+              font-size: 1rem;
+              color: #40404080;
+              &:hover { color: #ED5A23; }
+            }
+          }
+        }
+      }
+      &.buttons-right {
+        .toolbar-button + .toolbar-button { box-shadow: inset 0 1px 0 0 #e0e0e0 }
+      }
+    }  
+  }
+
+  md-table-progressbar {
+    position: absolute;
+    top: 3.85rem;
+    left: 0;
+    width: 100%;
+  }
+}
+
+/* Sidebar */
+.md-table-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1981;
+}
+.md-table-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40rem;
+  background-color: #ffffff;
+  transition: right 500ms;
+  &.off { right: -40rem; }
+}

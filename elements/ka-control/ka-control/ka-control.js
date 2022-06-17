@@ -83,7 +83,7 @@ export class KaControl {
       this.name = name;
     }
     // Bind to ka-resource if any in parentContext
-    if (this.name && this.parentContext[this.parentResourceName]) this.bindToResource();
+    if (this.name && (this.parentContext[this.parentResourceName] || this.parentContext.constructor?.name === 'ResourceInterface')) this.bindToResource();
     // Handle control if not attached to ka-resource
     if (!this.name && this.schema) this.schemaChanged(this.schema);
     // Handle buttons configuration
@@ -101,7 +101,7 @@ export class KaControl {
     this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value & validate"></ka-control-${schema.control}></template>`);
   }
   valueChanged(value) {
-    if (this.bindedToResource && this.parentContext[this.parentResourceName].data && this.checkNested(this.parentContext[this.parentResourceName].data, this.name.split('.'))) eval(`this.parentContext.${this.parentResourceName}.data.${this.name} = value`);
+    if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) eval(`this.bindedResource.data.${this.name} = value`);
     this.validate();
   }
 
@@ -139,8 +139,8 @@ export class KaControl {
   }
 
   bindToResource() {
-    if (!this.parentContext[this.parentResourceName]) return;
-    const resource = this.parentContext[this.parentResourceName];
+    if (!(this.parentContext[this.parentResourceName] || this.parentContext.constructor?.name === 'ResourceInterface')) return;
+    const resource = this.parentContext[this.parentResourceName] ||  this.parentContext;
     // Bind to parent resource controls
     if (resource.controls) {
       resource.controls[this.name] = this;
@@ -153,11 +153,11 @@ export class KaControl {
         if (this.checkNested(resource.schema, this.name.split('.'))) this.schema = eval(`resource.schema.${this.name}`);
         // Set observer for control's schema changes on resource
         if (this.resourceControlSchemaBinding) this.resourceControlSchemaBinding.dispose();
-        this.resourceControlSchemaBinding = this.binding.expressionObserver(this, `parentContext.${this.parentResourceName}.schema.${this.name}`).subscribe((value) => this.schema = value);
+        this.resourceControlSchemaBinding = this.binding.expressionObserver(this, `bindedResource.schema.${this.name}`).subscribe((value) => this.schema = value);
       };
       setSchemaBinding();
       // Reset binding if resource schema gets entirely replaced
-      this.resourceSchemaBinding = this.binding.expressionObserver(this, `parentContext.${this.parentResourceName}.schema`).subscribe((value) => setSchemaBinding());
+      this.resourceSchemaBinding = this.binding.expressionObserver(this, `bindedResource.schema`).subscribe((value) => setSchemaBinding());
     } else if (this.schema) {
       this.schemaChanged(this.schema);
     }
@@ -171,12 +171,13 @@ export class KaControl {
         if (this.checkNested(resource.data, this.name.split('.'))) this.value = eval(`resource.data.${this.name}`);
         // Set observer for control's data changes on resource
         if (this.resourceControlValueBinding) this.resourceControlValueBinding.dispose();
-        this.resourceControlValueBinding = this.binding.expressionObserver(this, `parentContext.${this.parentResourceName}.data.${this.name}`).subscribe((value) => { if (value !== this.value) this.value = value; });
+        this.resourceControlValueBinding = this.binding.expressionObserver(this, `bindedResource.data.${this.name}`).subscribe((value) => { if (value !== this.value) this.value = value; });
       };
       setDataBinding();
       // Reset binding if resource schema gets entirely replaced
-      this.resourceValueBinding = this.binding.expressionObserver(this, `parentContext.${this.parentResourceName}.data`).subscribe((value) => setDataBinding());
+      this.resourceValueBinding = this.binding.expressionObserver(this, `bindedResource.data`).subscribe((value) => setDataBinding());
     }
+    this.bindedResource = resource;
     this.bindedToResource = true;
   }
   unbindFromResource() {
@@ -184,6 +185,7 @@ export class KaControl {
     if (this.resourceControlValueBinding) this.resourceControlValueBinding.dispose();
     if (this.resourceSchemaBinding) this.resourceSchemaBinding.dispose();
     if (this.resourceValueBinding) this.resourceValueBinding.dispose();
+    this.bindedResource = null;
     this.bindedToResource = false;
   }
   checkNested(obj, levels) {

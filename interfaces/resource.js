@@ -1,4 +1,5 @@
 import { helpers } from 'aurelia-components';
+import { v5 as uuidv5 } from 'uuid';
 
 export class ResourceInterface {
   client = null;
@@ -31,7 +32,8 @@ export class ResourceInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    // Custom events
+    this.uuid = uuidv5(location.pathname + ':' + config.endpoint, '2af1d572-a35c-4248-a38e-348c560cd468');
+     // Custom events
     this.events = document.createTextNode(null);
     this.events.getSuccess = new CustomEvent('getSuccess', { detail: this });
     this.events.getFailure = new CustomEvent('getFailure', { detail: this });
@@ -70,9 +72,11 @@ export class ResourceInterface {
 
   async get(id) {
     await this.initialized;
+    this.id = null;
     return this.client.get(`${this.endpoint}/${id}`).then(xhr => {
       this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
       this._data = JSON.parse(JSON.stringify(this.data));
+      this.id = id;
       console.log('[ResourceInterface] GET - Success');
       this.events.dispatchEvent(this.events.getSuccess);
     }).catch(error => {
@@ -95,9 +99,12 @@ export class ResourceInterface {
   }
 
   save(method, id, data) {
+    if (!id && this.id) id = this.id;
+    if (!data && this.data) data = this.data;
+    if (!method) method = id ? 'patch' : 'post';
     return new Promise((resolve, reject) => {
       this.validate().then(() => {
-        this.sanitize(data || this.data, method).then(data => {
+        this.sanitize(data, method).then(data => {
           this.client[method](this.endpoint + (id ? `/${id}` : ''), this.parsers[`${method}Request`](data)).then(xhr => {
             /*
             // Auto update resource data has been commented out as it gets really complex
@@ -119,7 +126,10 @@ export class ResourceInterface {
       this.events.dispatchEvent(this.events[`${method}Success`]);
     }).catch(error => {
       console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
+      // Prepare and dispatch failure event
+      this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
       this.events.dispatchEvent(this.events[`${method}Failure`]);
+      // Prepare and throw custom ResourceError
       if (error.name && ['TypeError', 'SyntaxError'].includes(error.name)) {
         error = { context: 'js', message: `${error.name}: ${error.message}`, detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))) } 
       }

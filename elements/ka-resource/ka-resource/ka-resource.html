@@ -1,0 +1,7 @@
+<template>
+  <require from="./ka-resource.sass"></require>
+  <form autocomplete="off" action="javascript:void(0)">
+    <slot></slot>
+  </form>
+  <ka-resource-toolbar if.bind="interface.toolbar"></ka-resource-toolbar>
+</template>

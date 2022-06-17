@@ -1,6 +1,7 @@
 import { PLATFORM } from 'aurelia-pal';
 
 export { ResourceInterface } from './interfaces/resource';
+export { TableInterface } from './interfaces/table';
 
 export { ApiService } from './services/api';
 export { AuthService } from './services/auth';
@@ -25,6 +26,8 @@ export class AureliaComponentsConfiguration {
     this.useLayout();
     this.useButtons();
     this.useControls();
+    this.useTable();
+    this.useResource();
     this.useConverters();
   }
   useLayout() {
@@ -50,6 +53,15 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-table/ka-control-table')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-text/ka-control-text')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-textarea/ka-control-textarea')]);
+  }
+  useTable() {
+    console.log('%c[kamaji2-aurelia-components] loading table modules', 'color:#8b64cf;font-size:8px;');
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table/ka-table')]);
+  }
+  useResource() {
+    console.log('%c[kamaji2-aurelia-components] loading resource modules', 'color:#8b64cf;font-size:8px;');
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-resource/ka-resource/ka-resource')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-resource/ka-resource-toolbar/ka-resource-toolbar')]);
   }
   useConverters() {
     console.log('%c[kamaji2-aurelia-components] loading value converters', 'color:#8b64cf;font-size:8px;');

@@ -1,0 +1,81 @@
+$borderColor: #e0e0e0
+ka-table
+  display: block
+  overflow: auto
+  table
+    margin: 0
+    border: 0
+    padding: 0
+    border-collapse: collapse
+    border-spacing: 0
+    width: 100%
+    overflow: hidden
+    font-size: 1.4rem
+    color: var(--text-color)
+    thead
+      tr
+        box-shadow: inset 0 1px 0 0 $borderColor, inset 0 -1px 0 0 $borderColor
+        background-color: #ffffff
+      th
+        padding: 1rem
+    tbody
+      tr
+        background-color: #ffffff22
+        box-shadow: inset 0 -1px 0 0 rgba($borderColor, 0.4)
+        &:nth-child(even)
+          background-color: #ffffff66
+        &:hover, &:nth-child(even):hover
+          background-color: rgba(var(--accent-color-rgb), 0.05)
+      td
+        padding: 1rem
+        &.ka-table-tools
+          display: flex
+          justify-content: end
+          padding: 0
+          white-space: nowrap
+
+      .ka-tr-tools
+        .arrow
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, white 25%, white 75%, rgba(255, 255, 255, 0) 100%) !important
+          box-shadow: -5px 0 5px -5px #00000040
+          > .material-icons
+            width: 2.2remx
+
+ka-table td.ka-table-tools button
+  display: inline-block
+  appearance: none
+  outline: none
+  cursor: pointer
+  margin: 0
+  border: 0
+  padding: 0
+  width: 4rem
+  height: 4rem
+  line-height: 4rem
+  color: rgba(var(--text-color-rgb), 0.5)
+  vertical-align: top
+  background: #ffffff
+  box-shadow: -5px 0 5px -5px #00000040, inset -1px 0 0 $borderColor
+  transition: all 0.5s
+
+  &+button
+    box-shadow: inset -1px 0 0 $borderColor
+  &:not(.disabled):hover
+    color: rgba(var(--primary-color-rgb), 0.7)
+  &.primary:not(.disabled)
+    color: rgba(var(--primary-color-rgb), 0.7)
+  &.primary:not(.disabled):hover
+    color: rgba(var(--primary-color-rgb), 1)
+  &:last-of-type
+    box-shadow: 0
+
+  &:focus
+    background-color: inherit
+  &.disabled
+    color: $borderColor
+  &:before
+    font-size: 2rem
+  i
+    font-size: 2rem
+    line-height: inherit
+    color: inherit
