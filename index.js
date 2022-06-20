@@ -130,7 +130,7 @@ export const helpers = {
         };
         routes.push(route);
       }
-      if (item.nav) routes = routes.concat(helpers.parseNavigation(item.nav, item));
+      if (item.nav) routes = routes.concat(helpers.routesFromNav(item.nav, item));
     }
     return routes;
   }
