@@ -2,6 +2,7 @@ import { customElement } from 'aurelia-framework';
 
 @customElement('ka-resource-toolbar')
 export class KaResourceToolbar {
+  /*
   bind(bindingContext) {
     this.interface = bindingContext && bindingContext.interface && bindingContext.interface.constructor?.name === 'ResourceInterface' ? bindingContext.interface : null;
     if (!this.interface) {
@@ -12,4 +13,5 @@ export class KaResourceToolbar {
       return;
     }
   }
+  */
 }

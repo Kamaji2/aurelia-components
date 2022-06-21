@@ -8,6 +8,7 @@ require('./ka-control-combo.sass');
 export class KaControlCombo {
   // Basic input control properties
   @bindable() schema = null;
+  @bindable() client = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
 
   _schema = null;
@@ -27,10 +28,36 @@ export class KaControlCombo {
 
   attached() {}
 
+  clientChanged(client) {
+    this.api = client;
+    // Override http client if needed
+    if ((!this.api && this.schema.datasource.table) || this.schema.datasource.url) {
+      this.api = new HttpClient();
+      this.api.configure(x => {
+        x.withInterceptor({
+          response: msg => {
+            if (msg.responseType === 'json' && typeof msg.response === 'string') {
+              msg.response = JSON.parse(msg.response);
+            }
+            return msg;
+          }
+        });
+      });
+    }
+  }
+
   schemaChanged(schema) {
     if (!schema.datasource) {
       console.error('ka-control-combo: missing datasource in schema!', schema);
       return;
+    }
+    if (typeof schema.datasource === 'string') {
+      try {
+        schema.datasource = JSON.parse(schema.datasource);
+      } catch (error) {
+        console.error('ka-control-combo: invalid datasource provided in schema!', schema);
+        return;
+      }
     }
     if (Array.isArray(schema.datasource) && !schema.datapreload) {
       schema.datapreload = true; // Force datapreload = true if datasource is array of values
@@ -55,24 +82,8 @@ export class KaControlCombo {
     if (this.value && !this._value) this.valueChanged(this.value);
 
     // Set client for api calls
-    if (schema.client) {
-      this.api = schema.client;
-    }
-    // Override http client if needed
-    if ((!this.api && schema.datasource.table) || schema.datasource.url) {
-      this.api = new HttpClient();
-      this.api.configure(x => {
-        x.withInterceptor({
-          response: msg => {
-            if (msg.responseType === 'json' && typeof msg.response === 'string') {
-              msg.response = JSON.parse(msg.response);
-            }
-            return msg;
-          }
-        });
-      });
-    }
-
+    if (schema.client) this.client = schema.client;
+    
     // Element classes
     if (schema.datamultiple === true) {
       this.element.classList.add('multiple');
@@ -117,6 +128,7 @@ export class KaControlCombo {
     }
 
     console.debug('ka-control-combo: value changed!', value);
+    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
     this._value = value;
 
     // Build display value

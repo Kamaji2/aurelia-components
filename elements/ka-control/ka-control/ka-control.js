@@ -9,6 +9,7 @@ require('./ka-control.sass');
 export class KaControl {
   @bindable() name = null;
   @bindable() schema = null;
+  @bindable() client = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
 
   parentResourceName = 'resource'; // default ResourceInterface name to look for in parentContext
@@ -97,8 +98,8 @@ export class KaControl {
   }
 
   schemaChanged(schema) {
-    if (!schema) return;
-    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value & validate"></ka-control-${schema.control}></template>`);
+    if (!schema || !schema.control) return;
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value & validate" client.bind="client"></ka-control-${schema.control}></template>`);
   }
   valueChanged(value) {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) eval(`this.bindedResource.data.${this.name} = value`);

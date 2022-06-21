@@ -114,8 +114,17 @@ ka-button
     width: 3rem
     line-height: inherit
   .ka-button-icon + .ka-button-label
-    //margin-left: -0.5rem
-    padding-left: 0
+    border-left: 1px solid rgba(#ffffff, 0.5)
+    background-color: rgba(#ffffff, 0.1)
+  &.inverted .ka-button-icon + .ka-button-label
+    border-left: 1px solid rgba(var(--primary-color-rgb), 0.3)
+    background-color: rgba(var(--primary-color-rgb), 0.05)
+  &.inverted.secondary .ka-button-icon + .ka-button-label
+    border-left: 1px solid rgba(var(--secondary-color-rgb), 0.3)
+    background-color: rgba(var(--secondary-color-rgb), 0.05)
+  &.inverted.accent .ka-button-icon + .ka-button-label
+    border-left: 1px solid rgba(var(--accent-color-rgb), 0.3)
+    background-color: rgba(var(--accent-color-rgb), 0.05)
   .ka-button-label
     position: relative
     padding: 0 1rem

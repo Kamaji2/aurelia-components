@@ -8,6 +8,7 @@ export class KaResource {
   }
   bind(bindingContext) {
     this.interface = bindingContext && bindingContext.constructor?.name === 'ResourceInterface' ? bindingContext : null;
+    console.log('interface', this.interface);
     if (!this.interface) {
       console.error('ka-resource: missing resource interface!');
       return;

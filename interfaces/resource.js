@@ -1,5 +1,7 @@
 import { helpers } from 'aurelia-components';
 import { v5 as uuidv5 } from 'uuid';
+import { DateTime } from 'luxon';
+
 
 export class ResourceInterface {
   client = null;
@@ -57,7 +59,7 @@ export class ResourceInterface {
             xhr.response.forEach(control => { schema[control.field] = control; });
             this.schema = (this.schema && Object.keys(this.schema).length) ? helpers.deepMerge(schema, this.schema) : schema;
             resolve();
-          }).catch(error => reject(`could not retrieve dataset for ${this.endpoint}`));
+          }).catch(error => { console.error(error); reject(`could not retrieve dataset for ${this.endpoint}`); });
         } else resolve();
       }).then(() => {
         if (this.schema && Object.keys(this.schema).length) return resolve();
@@ -73,12 +75,15 @@ export class ResourceInterface {
   async get(id) {
     await this.initialized;
     this.id = null;
-    return this.client.get(`${this.endpoint}/${id}`).then(xhr => {
+    let data = this.client.isKamaji ? { depth: 0 } : {};
+    return this.client.get(`${this.endpoint}/${id}`, data).then(xhr => {
       this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
       this._data = JSON.parse(JSON.stringify(this.data));
       this.id = id;
       console.log('[ResourceInterface] GET - Success');
-      this.events.dispatchEvent(this.events.getSuccess);
+      // Prepare and dispatch success event
+      this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
+      this.events.dispatchEvent(this.events[`getSuccess`]);
     }).catch(error => {
       console.error('[ResourceInterface] GET - Failure');
       this.events.dispatchEvent(this.events.getFailure);
@@ -114,15 +119,17 @@ export class ResourceInterface {
               this._data = JSON.parse(JSON.stringify(this.data));
             }
             */
-            resolve();
+            resolve(xhr);
           }).catch(error => {
             this.parseError(error);
             reject({ context: 'xhr', message: `${error.statusCode} ${error.statusText}`, detail: error });
           });
         }).catch(error => reject(error));
       }).catch(error => reject(error));
-    }).then(() => {
+    }).then(xhr => {
       console.log(`[ResourceInterface] ${method.toUpperCase()} - Success`);
+      // Prepare and dispatch success event
+      this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
       this.events.dispatchEvent(this.events[`${method}Success`]);
     }).catch(error => {
       console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
@@ -180,6 +187,12 @@ export class ResourceInterface {
             // Format control editor
             if (control.schema.control === 'editor' && object[key] === '') {
               object[key] = null;
+              return passed();
+            }
+            // Format control date
+            if (control.schema.control === 'date' && this.client.isKamaji && object[key]) {
+              let date = DateTime.fromISO(object[key], { setZone: true }).toLocal();
+              object[key] = (date.isValid) ? date.toFormat('yyyy-MM-dd') : object[key];
               return passed();
             }
             object[key] = JSON.parse(JSON.stringify(object[key]));
