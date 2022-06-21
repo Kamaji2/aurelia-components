@@ -65,6 +65,7 @@ export class AureliaComponentsConfiguration {
   }
   useConverters() {
     console.log('%c[kamaji2-aurelia-components] loading value converters', 'color:#8b64cf;font-size:8px;');
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/date')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/datetime')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/striphtml')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/stringify')]);
