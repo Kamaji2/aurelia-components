@@ -195,6 +195,11 @@ export class ResourceInterface {
               object[key] = (date.isValid) ? date.toFormat('yyyy-MM-dd') : object[key];
               return passed();
             }
+            // Format control number
+            if (control.schema.control === 'number' && this.client.isKamaji && object[key]) {
+              object[key] = parseFloat(object[key]) || object[key];
+              return passed();
+            }
             object[key] = JSON.parse(JSON.stringify(object[key]));
             passed();
           }));
