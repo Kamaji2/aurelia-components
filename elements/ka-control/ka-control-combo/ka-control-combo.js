@@ -91,7 +91,7 @@ export class KaControlCombo {
     }
 
     // Build combo items list
-    this.buildCombostack();
+    setTimeout(() => { this.buildCombostack(); }, this.api ? 0 : 100);
   }
 
   valueChanged(value) {
@@ -132,7 +132,8 @@ export class KaControlCombo {
     this._value = value;
 
     // Build display value
-    this.buildValuestack();
+    setTimeout(() => { this.buildValuestack(); }, this.api ? 0 : 100);
+
   }
 
   buildCombostack() {
