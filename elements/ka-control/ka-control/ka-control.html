@@ -1,9 +1,11 @@
 <template>
   <label if.bind="schema.label">${schema.label} <span if.bind="schema.required">*</span></label>
-  <compose containerless view.bind="viewStrategy"></compose>
-  <div class="ka-control-buttons">
-    <button class="button-dropdown" tabindex="-1" click.delegate="dropdown()"  if.bind="!schema.readonly && buttons.includes('dropdown')"><i class="far fa-chevron-down"></i></i></button>
-    <button class="button-clear" tabindex="-1" click.delegate="clear()"  if.bind="!schema.readonly && buttons.includes('clear')"><i class="fal fa-times"></i></button>
+  <div>
+    <compose containerless view.bind="viewStrategy"></compose>
+    <div class="ka-control-buttons">
+      <button class="button-dropdown" tabindex="-1" click.delegate="dropdown()"  if.bind="!schema.readonly && buttons.includes('dropdown')"><i class="far fa-chevron-down"></i></i></button>
+      <button class="button-clear" tabindex="-1" click.delegate="clear()"  if.bind="!schema.readonly && buttons.includes('clear')"><i class="fal fa-times"></i></button>
+    </div>
   </div>
   <div class="ka-control-overlay">
     <div class="ka-control-error" if.bind="!schema.readonly && validator.errors.length"><span repeat.for="error of validator.errors">${error}</span></div>

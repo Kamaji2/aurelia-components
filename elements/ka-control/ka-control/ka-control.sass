@@ -48,9 +48,6 @@ ka-control
   margin: 0.5rem 0
   width: 100%
 
-  display: inline-flex
-  flex-wrap: wrap
-
   font-family: inherit
 
   &:hover .display-value, & .display-value:focus
@@ -59,7 +56,6 @@ ka-control
 
   > label
     display: block
-    flex: 0 0 100%
     margin: 0
     padding: 0
     width: 100%
@@ -74,45 +70,47 @@ ka-control
     overflow: visible
   &.no-label > label
     display: none
-
-  > .ka-control-buttons
-    display: flex
-    button, button:focus
-      -webkit-appearance: none
-      -moz-appearance: none
-      display: block
-      margin: 0
-      outline: 0
-      border: 0
-      border-left: 1px solid #e0e0e0
-      border-radius: 0
-      padding: 0
-      width: 3rem
-      height: 3rem
-      font-size: 1.4rem
-      line-height: 3rem
-      text-align: center
-      background: linear-gradient(0deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)
-      box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.3)
-      transition: all 0.5s
-      .material-icons, i[class*="fa"]
-        font-size: inherit
-        line-height: inherit
-        color: inherit
-      &:hover
-        box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.5)
-        color: var(--primary-color)
-      &:focus, &:focus:hover
-        box-shadow: inset 0 -1px 0 0 rgba(var(--primary-color-rgb), 1)
-    .button-dropdown
-      border-left: 0
-
-  &.error > label
+  &.error > label 
     color: var(--error-color)
   &.error .display-value:not(:focus)
     background-color: #ffffff
     box-shadow: inset 0 -1px 0 0 var(--error-color), inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 0 10px 0 rgba(var(--error-color-rgb), 0.3)
-  
+
+  > div
+    display: flex
+    flex-wrap: wrap
+    > .ka-control-buttons
+      display: flex
+      button, button:focus
+        -webkit-appearance: none
+        -moz-appearance: none
+        display: block
+        margin: 0
+        outline: 0
+        border: 0
+        border-left: 1px solid #e0e0e0
+        border-radius: 0
+        padding: 0
+        width: 3rem
+        height: 3rem
+        font-size: 1.4rem
+        line-height: 3rem
+        text-align: center
+        background: linear-gradient(0deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)
+        box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.3)
+        transition: all 0.5s
+        .material-icons, i[class*="fa"]
+          font-size: inherit
+          line-height: inherit
+          color: inherit
+        &:hover
+          box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.5)
+          color: var(--primary-color)
+        &:focus, &:focus:hover
+          box-shadow: inset 0 -1px 0 0 rgba(var(--primary-color-rgb), 1)
+      .button-dropdown
+        border-left: 0
+
   > .ka-control-overlay
     width: 100%
     .ka-control-error
