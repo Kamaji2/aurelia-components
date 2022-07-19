@@ -52,7 +52,7 @@ export class KaDatetime {
   }
   set dateTime(value) {
     if (this.type === 'date') this.value = value.toFormat('yyyy-MM-dd');
-    else if (this.type === 'datetime') this.value = (!(this.utc === false)) ? value.toUTC().toISO() : value.toISO();
+    else if (this.type === 'datetime') this.value = (!(this.utc === false)) ? value.set({seconds: 0, milliseconds: 0}).toUTC().toISO({ suppressMilliseconds: true }) : value.set({seconds: 0, milliseconds: 0}).toISO({ suppressMilliseconds: true });
     else if (this.type === 'time') this.value = value.toFormat('HH:mm:00');
   }
 

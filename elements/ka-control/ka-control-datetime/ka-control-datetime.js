@@ -43,6 +43,6 @@ export class controlDatetimeValueConverter {
     let date = DateTime.fromFormat(value, 'dd/MM/yyyy HH:mm');
     if (!date.isValid) return value;
     if (!(utc === false)) date = date.toUTC();
-    return date.toISO();
+    return date.set({seconds: 0, milliseconds: 0}).toISO({ suppressMilliseconds: true });
   }
 }

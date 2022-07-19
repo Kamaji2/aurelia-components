@@ -67,9 +67,18 @@ export class KaControl {
       .when(self => ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.validationRule)
       .withMessage('${schema.validationRule.withMessage}')
 
-      .satisfies((value, self) => value === null || value === '' || DateTime.fromISO(value).isValid)
+      .satisfies((value, self) => value === null || value === '' || DateTime.fromFormat(value, 'yyyy-MM-dd').isValid)
       .when(self => self.schema.control === 'date' || self.schema.control === 'age')
       .withMessage('Formato data non valido')
+
+      .satisfies((value, self) => value === null || value === '' || DateTime.fromISO(value).isValid)
+      .when(self => self.schema.control === 'datetime')
+      .withMessage('Formato data/orario non valido')
+
+      .satisfies((value, self) => value === null || value === '' || DateTime.fromFormat(value, 'HH:mm:ss').isValid)
+      .when(self => self.schema.control === 'time')
+      .withMessage('Formato orario non valido')
+      
 
       .on(this);
   }
