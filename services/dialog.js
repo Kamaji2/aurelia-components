@@ -29,7 +29,7 @@ import { DialogController } from 'aurelia-dialog';
 @inlineView(`
   <template>
     <ux-dialog class.bind="class">
-      <ux-dialog-header if.bind="title" innerhtml.bind="title"></ux-dialog-header>
+      <ka-layout-heading if.bind="title" level="3" icon.bind="icon" text.bind="title"></ka-layout-heading>
 
       <ux-dialog-body if.bind="body" innerhtml.bind="body"></ux-dialog-body>
       <ux-dialog-body if.bind="viewModel"><compose view-model.bind="viewModel" model.bind="model"></compose></ux-dialog-body>
