@@ -4,7 +4,7 @@
       <li repeat.for="item of valuestack">${item.text}<i class="material-icons" if.bind="schema.datamultiple === true && !schema.readonly" click.delegate="select(item)">close</i></li>
     </ul>
   </div>
-  <div ref="drawer" class="${schema.datamultiple === true ? 'multiple' : ''}" show.bind="opened">
+  <div ref="drawer" class="ka-control-combo-drawer ${schema.datamultiple === true ? 'multiple' : ''}">
     <input type="text" if.bind="schema.datapreload !== true || preloadedCombostack.length > 8" class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()"></input>
     <ul>
       <li repeat.for="item of _combostack" click.delegate="select(item)" class="${item.selected?'selected':''}" innerhtml.bind="item.text | kaControlComboHighlight:term"></li>

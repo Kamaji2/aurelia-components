@@ -1,5 +1,6 @@
 import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
+import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
 require('./ka-control-combo.sass');
 
@@ -13,7 +14,6 @@ export class KaControlCombo {
 
   _schema = null;
   _value = null;
-  opened = false;
 
   combostack = [];
   valuestack = [];
@@ -22,8 +22,9 @@ export class KaControlCombo {
   constructor(element) {
     this.element = element;
 
-    this.backdrop = document.createElement('ka-control-backdrop');
-    this.backdrop.addEventListener('click', event => { if (event.target === this.backdrop) this.close(); });
+    this.backdrop = new KaControlBackdropService(this.element);
+    //this.backdrop = document.createElement('ka-control-backdrop');
+    //this.backdrop.addEventListener('click', event => { if (event.target === this.backdrop) this.close(); });
   }
 
   attached() {}
@@ -100,8 +101,8 @@ export class KaControlCombo {
       console.warn('ka-control-combo: cannot handle value without schema!');
       return;
     }
-    // Validate value
-    if ((!value && !this._value) || value === JSON.stringify(this._value)) {
+    // Validate value allowing string 'null' value
+    if ((!value && !this._value) || (value !== 'null' && value === JSON.stringify(this._value))) {
       return;
     }
     if (value === null) {
@@ -235,35 +236,14 @@ export class KaControlCombo {
 
   open($event) {
     if (this.schema.readonly || ($event && $event.target.tagName === 'I')) return;
-    if (this.opened) return this.close();
     this._combostack.forEach(x => x.selected = this._value && this._value.includes(x.value));
-    document.body.appendChild(this.backdrop);
-    this.opened = true;
-
-    setTimeout(() => {
-      // Move drawer to backdrop
-      let bounds = this.drawer.getBoundingClientRect();
-      let max_h = this.backdrop.getBoundingClientRect().height;
-      this.backdrop.appendChild(this.drawer);
-      if (bounds.top + 280 > max_h) {
-        this.drawer.style.top = 'auto';
-        this.drawer.style.bottom = ((max_h - bounds.top - 30) + 60) + 'px';
-      } else {
-        this.drawer.style.top = bounds.top + 'px';
-        this.drawer.style.bottom = 'auto';
-      }
-      this.drawer.style.left = bounds.left + 'px';
-      this.drawer.style.width = bounds.width + 'px';
-      // Search input focus
+    this.backdrop.open(this.drawer).then(() => {
       if (this.searchInput) this.searchInput.focus();
-    }, 0);
+    });
   }
   close() {
-    this.element.appendChild(this.drawer);
-    this.drawer.setAttribute('style', '');
-    document.body.removeChild(this.backdrop);
+    this.backdrop.close();
     if (this.schema.datapreload !== true) this.combostack = [];
-    this.opened = false;
     this.term = null;
   }
   select(item) {

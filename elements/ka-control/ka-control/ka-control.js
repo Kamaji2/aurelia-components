@@ -135,7 +135,7 @@ export class KaControl {
   clear() {
     this.value = null;
   }
-  dropdown() {
+  open() {
     if (this.control && this.control.open) this.control.open();
   }
 
