@@ -33,8 +33,8 @@ export class KaControlTime {
 }
 export class controlTimeValueConverter {
   toView(value, utc) {
-    if (!/\d{2}:\d{2}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, 'HH:mm');
+    if (!/\d{2}:\d{2}:\d{2}$/.test(value)) return value;
+    let date = DateTime.fromFormat(value, 'HH:mm:ss');
     if (!date.isValid) return value;
     return date.toFormat('HH:mm');
   }
@@ -42,6 +42,6 @@ export class controlTimeValueConverter {
     if (!/^\d{2}:\d{2}$/.test(value)) return value;
     let date = DateTime.fromFormat(value, 'HH:mm');
     if (!date.isValid) return value;
-    return date.toFormat('HH:mm');
+    return date.toFormat('HH:mm:00');
   }
 }

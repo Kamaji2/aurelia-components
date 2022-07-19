@@ -47,13 +47,13 @@ export class KaDatetime {
     let value = this.value;
     if (this.type === 'date') value = DateTime.fromFormat(value, 'yyyy-MM-dd');
     else if (this.type === 'datetime') value = (!(this.utc === false)) ? DateTime.fromISO(value, { setZone: true }).toLocal() : DateTime.fromISO(value);
-    else if (this.type === 'time') value = DateTime.fromFormat(value, 'HH:mm');
+    else if (this.type === 'time') value = DateTime.fromFormat(value, 'HH:mm:ss');
     return (value && value.isValid) ? value : DateTime.now();
   }
   set dateTime(value) {
     if (this.type === 'date') this.value = value.toFormat('yyyy-MM-dd');
     else if (this.type === 'datetime') this.value = (!(this.utc === false)) ? value.toUTC().toISO() : value.toISO();
-    else if (this.type === 'time') this.value = value.toFormat('HH:mm');
+    else if (this.type === 'time') this.value = value.toFormat('HH:mm:00');
   }
 
   init() {
