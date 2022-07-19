@@ -2,11 +2,11 @@ import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
 import { DateTime } from 'luxon';
 import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
-require('./ka-control-date.sass');
+require('./ka-control-time.sass');
 
-@customElement('ka-control-date')
+@customElement('ka-control-time')
 @inject(Element)
-export class KaControlDate {
+export class KaControlTime {
   // Basic input control properties
   @bindable() schema = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
@@ -31,17 +31,17 @@ export class KaControlDate {
     this.backdrop.close();
   }
 }
-export class controlDateValueConverter {
+export class controlTimeValueConverter {
   toView(value, utc) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, 'yyyy-MM-dd');
+    if (!/\d{2}:\d{2}$/.test(value)) return value;
+    let date = DateTime.fromFormat(value, 'HH:mm');
     if (!date.isValid) return value;
-    return date.toFormat('dd/MM/yyyy');
+    return date.toFormat('HH:mm');
   }
   fromView(value, utc) {
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, 'dd/MM/yyyy');
+    if (!/^\d{2}:\d{2}$/.test(value)) return value;
+    let date = DateTime.fromFormat(value, 'HH:mm');
     if (!date.isValid) return value;
-    return date.toFormat('yyyy-MM-dd');
+    return date.toFormat('HH:mm');
   }
 }

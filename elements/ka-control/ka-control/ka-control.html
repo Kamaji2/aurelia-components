@@ -3,8 +3,13 @@
   <div>
     <compose containerless view.bind="viewStrategy"></compose>
     <div class="ka-control-buttons">
-      <button class="button-dropdown" tabindex="-1" click.delegate="dropdown()"  if.bind="!schema.readonly && buttons.includes('dropdown')"><i class="far fa-chevron-down"></i></i></button>
-      <button class="button-clear" tabindex="-1" click.delegate="clear()"  if.bind="!schema.readonly && buttons.includes('clear')"><i class="fal fa-times"></i></button>
+      <button class="button-dropdown" tabindex="-1" click.delegate="open()"  if.bind="!schema.readonly && buttons.includes('dropdown')">
+        <i if.bind="schema.control === 'combo'" class="fa-light fa-chevron-down"></i>
+        <i if.bind="schema.control === 'date'" class="fa-light fa-calendar"></i>
+        <i if.bind="schema.control === 'time'" class="fa-light fa-clock"></i>
+        <i if.bind="schema.control === 'datetime'" class="fa-light fa-calendar-clock"></i>
+      </button>
+      <button class="button-clear" tabindex="-1" click.delegate="clear()"  if.bind="!schema.readonly && buttons.includes('clear')"><i class="fa-light fa-times"></i></button>
     </div>
   </div>
   <div class="ka-control-overlay">

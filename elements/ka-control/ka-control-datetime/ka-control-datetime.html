@@ -1,12 +1,12 @@
 <template>
   <input
     type="text"
-    value.bind="value | controlDate:schema.params.utc"
+    value.bind="value | controlDatetime:schema.params.utc"
     disabled.bind="schema.readonly"
     placeholder.bind="schema.placeholder || ''"
     keydown.delegate="keydown()"
     class="display-value ${schema.readonly?'readonly':''}">
-  <div ref="drawer" class="ka-control-date-drawer">
-    <ka-datetime type="date" value.bind="value" selected.trigger="close()"></ka-datetime>
+  <div ref="drawer" class="ka-control-datetime-drawer">
+    <ka-datetime type="datetime" value.bind="value" selected.trigger="close()"></ka-datetime>
   </div>
 </template>
