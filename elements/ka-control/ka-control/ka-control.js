@@ -108,7 +108,7 @@ export class KaControl {
 
   schemaChanged(schema) {
     if (!schema || !schema.control) return;
-    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value & validate" client.bind="client"></ka-control-${schema.control}></template>`);
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client"></ka-control-${schema.control}></template>`);
   }
   valueChanged(value) {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) eval(`this.bindedResource.data.${this.name} = value`);
@@ -207,5 +207,10 @@ export class KaControl {
     let level = levels.shift();
     if (!obj.hasOwnProperty(level)) obj[level] = levels.length ? {} : null;
     return levels.length ? this.createNested(obj[level], levels) : null;
+  }
+}
+export class NullifyEmptyValueConverter {
+  fromView(value) {
+    return value === '' ? null : value;
   }
 }

@@ -90,7 +90,6 @@ export class KaDatetime {
     };
   }
   setValues(values) {
-    console.log(values);
     this.dateTime = this.dateTime.set(values);
     if (values.day) setTimeout(() => { this.element.dispatchEvent(new Event('selected', { bubbles: true })); }, 100);
   }
