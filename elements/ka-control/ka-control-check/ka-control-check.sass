@@ -12,9 +12,13 @@ ka-control-check
     height: 1.4rem
     background: transparent
     box-shadow: inset 0 0 0 1px var(--text-color)
+    &:focus
+      box-shadow: inset 0 0 0 1px var(--primary-color), 0 0 10px 0 rgba(var(--primary-color-rgb), 0.3), 0 0 5px 0 rgba(var(--primary-color-rgb), 0.3)
     &:checked
       background-color: var(--primary-color)
       box-shadow: inset 0 0 0 1px var(--text-color), inset 0 0 0 3px #fff
+    &:checked:focus
+      box-shadow: inset 0 0 0 1px var(--primary-color), inset 0 0 0 3px #fff, 0 0 10px 0 rgba(var(--primary-color-rgb), 0.3), 0 0 5px 0 rgba(var(--primary-color-rgb), 0.3)
   .description
     display: inline-block
     padding-left: 1rem

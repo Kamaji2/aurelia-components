@@ -5,5 +5,7 @@
     disabled.bind="schema.readonly"
     placeholder.bind="schema.placeholder || ''"
     keydown.delegate="keydown()"
+    focus.trigger="focus()"
+    blur.trigger="blur()"
     class="display-value ${schema.readonly?'readonly':''}">
 </template>

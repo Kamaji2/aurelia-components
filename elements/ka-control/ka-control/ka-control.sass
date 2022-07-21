@@ -3,8 +3,8 @@
 ka-control-combo,
 ka-control-text,
 ka-control-date,
-ka-control-time,
 ka-control-datetime,
+ka-control-time,
 ka-control-file,
 ka-control-number,
 ka-control-password,
@@ -20,10 +20,11 @@ ka-control-check
     appearance: none
     -moz-appearance: none
     -webkit-appearance: none
+    background: #ffffff
   .display-value, .display-value[disabled]
     outline: none
-    border: 0
-    border-radius: 0
+    border: 1px solid rgba(var(--text-color-rgb), 0.5)
+    border-radius: 2px
     padding: 0 0 0 0.7rem
     width: 100%
     height: 3rem
@@ -31,19 +32,9 @@ ka-control-check
     font-size: 1.4rem
     line-height: 3rem
     color: var(--text-color)
-    background: linear-gradient(0deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)
-    box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.3)
+    box-shadow: inset 0 0 3px rgba(var(--text-color-rgb), 0.3)
     transition: all 0.5s
-    &:hover
-      box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.5), 0 5px 10px -5px rgba(var(--text-color-rgb), 0.3)
-    &:focus, &:focus:hover
-      background: #ffffff
-      box-shadow: inset 0 -1px 0 0 rgba(var(--primary-color-rgb), 1), 0 5px 10px -5px rgba(var(--primary-color-rgb), 0.3)
-    &.readonly, &.readonly:focus, &.readonly:hover
-      padding: 0 0 0 0.1px
-      background: transparent
-      box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.1)
-  
+
 ka-control
   display: inline-block
   position: relative
@@ -51,11 +42,6 @@ ka-control
   width: 100%
   vertical-align: middle
   font-family: inherit
-
-  &:hover .display-value, & .display-value:focus
-    //background-color: #ffffff
-    //box-shadow: inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 0 10px 0 rgba(var(--error-color-rgb), 0.3)
-
   > label
     display: block
     margin: 0
@@ -68,57 +54,64 @@ ka-control
     color: rgba(var(--primary-color-rgb), 0.7)
     white-space: nowrap
     transition: all 0.5s
-  &.show-label-overflow > label
-    overflow: visible
-  &.no-label > label
-    display: none
-  &.error > label 
-    color: var(--error-color)
-  &.error .display-value:not(:focus)
-    background-color: #ffffff
-    box-shadow: inset 0 -1px 0 0 var(--error-color), inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 0 10px 0 rgba(var(--error-color-rgb), 0.3)
-
   > div
     display: flex
     flex-wrap: wrap
-    > .ka-control-buttons
-      display: flex
-      button, button:focus
-        -webkit-appearance: none
-        -moz-appearance: none
-        display: block
-        margin: 0
-        outline: 0
-        border: 0
-        border-left: 1px solid #e0e0e0
-        border-radius: 0
-        padding: 0
-        width: 3rem
-        height: 3rem
-        font-size: 1.4rem
-        line-height: 3rem
-        text-align: center
-        background: linear-gradient(0deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)
-        box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.3)
-        transition: all 0.5s
-        .material-icons, i[class*="fa"]
-          font-size: inherit
-          line-height: inherit
-          color: inherit
-        &:hover
-          box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.5), 0 5px 10px -5px rgba(var(--text-color-rgb), 0.3)
-          color: var(--primary-color)
-        &:focus, &:focus:hover
-          box-shadow: inset 0 -1px 0 0 rgba(var(--primary-color-rgb), 1)
-      .button-dropdown, .button-dropdown:focus
-        border-left: 0
+    transition: all 0.5s
+    background: linear-gradient(0deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)
+    box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.3)
+    &:hover
+      box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.5), 0 5px 10px -5px rgba(var(--text-color-rgb), 0.3)
+  
+  input
+    background: none
+  .display-value, .display-value[disabled]
+    border: 0
+    border-radius: 0
+    box-shadow: none
 
-  > .ka-control-overlay
+  .ka-control-buttons
+    display: flex
+    button, button:focus
+      position: relative
+      appearance: none
+      display: block
+      margin: 0
+      outline: 0
+      border: 0
+      border-radius: 0
+      padding: 0
+      width: 3rem
+      height: 3rem
+      font-size: 1.4rem
+      line-height: 3rem
+      text-align: center
+      background: transparent
+      transition: all 0.5s
+      i
+        font-size: inherit
+        line-height: inherit
+        color: inherit
+        transition: all 0.5s
+    button:hover i
+      transform: scale(0.7)
+    button + button:after
+      content: " "
+      display: block
+      position: absolute
+      top: 0
+      left: 0
+      bottom: 0
+      width: 1px
+      background: linear-gradient(0deg, rgba(var(--text-color-rgb), 0.3) 0%, rgba(var(--text-color-rgb), 0) 100%)
+
+  .ka-control-overlay
     width: 100%
     .ka-control-error
       display: block
       position: absolute
       z-index: 100
+      margin-top: -1px
       border-bottom-left-radius: 3px
       border-bottom-right-radius: 3px
       padding: 0 0.5rem
@@ -130,22 +123,26 @@ ka-control
       color: var(--error-color)
       text-overflow: ellipsis
       white-space: nowrap
-      background-color: lighten(red, 48%)
+      background-color: #ffffff
       box-shadow: 0 5px 10px -5px rgba(0,0,0, 0.2)
+      box-shadow: inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 10px 10px -8px rgba(var(--error-color-rgb), 0.3), 10px 0 10px -8px rgba(var(--error-color-rgb), 0.3), -10px 0 10px -8px rgba(var(--error-color-rgb), 0.3)
       animation: 0.5s ka-control-slidedown
-      &:hover
-        min-width: 100%
-        width: auto
-      span
-        &::after
-          content: " - "
-        &:last-of-type::after
-          content: ""
+      &:before
+        content: " "
+        position: absolute
+        inset: 0 0 0 0
+        background-color: rgba(var(--error-color-rgb), 0.1)
+        z-index: -1
+      span:after
+        content: " - "
+        &:last-of-type
+          display: none
 
     .ka-control-description
       display: none
       position: absolute
       z-index: 100
+      margin-top: -1px
       border-bottom-left-radius: 3px
       border-bottom-right-radius: 3px
       padding: 0 0.5rem
@@ -158,15 +155,52 @@ ka-control
       text-overflow: ellipsis
       background-color: #ffffff
       box-shadow: 0 5px 10px -5px rgba(0,0,0, 0.2)
+      box-shadow: inset 0 0 0 1px rgba(var(--primary-color-rgb), 0.3), 0 10px 10px -8px rgba(var(--primary-color-rgb), 0.3), 10px 0 10px -8px rgba(var(--primary-color-rgb), 0.3), -10px 0 10px -8px rgba(var(--primary-color-rgb), 0.3)
       animation: 0.2s ka-control-slidedown
       &:before
         content: " "
         position: absolute
         inset: 0 0 0 0
-        background-color: rgba(var(--primary-color-rgb), 0.2)
+        background-color: rgba(var(--primary-color-rgb), 0.1)
         z-index: -1
-  &:hover > .ka-control-overlay .ka-control-description
+
+ka-control.focus
+  > div
+    background: #ffffff
+    box-shadow: inset 0 0 0 1px rgba(var(--primary-color-rgb), 0.3), 0 0 10px 0 rgba(var(--primary-color-rgb), 0.3)
+  &:not(.error) > .ka-control-overlay .ka-control-description
     display: block
+
+ka-control.error
+  > label 
+    color: var(--error-color)
+    animation: ka-control-shake 0.7s
+  > div
+    background-color: #ffffff
+    box-shadow: inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 0 10px 0 rgba(var(--error-color-rgb), 0.3)
+
+ka-control.readonly
+  > div
+    background: transparent
+    box-shadow: inset 0 -1px 0 0 rgba(var(--text-color-rgb), 0.3)
+
+ka-control.ka-control-check
+  > div
+    background: transparent
+    box-shadow: none
+
+ka-control.ka-control-number
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button
+    -webkit-appearance: none
+    margin: 0
+
+ka-control.show-label-overflow
+  > label
+    overflow: visible
+
+ka-control.no-label
+  > label
+    display: none
 
 @keyframes ka-control-slidedown
   from
@@ -175,3 +209,16 @@ ka-control
   to
     opacity: 1
     height: 2rem
+
+@keyframes ka-control-shake
+  10%, 90%
+    transform: translateX(-1px)
+  
+  20%, 80%
+    transform: translateX(2px)
+
+  30%, 50%, 70%
+    transform: translateX(-4px)
+
+  40%, 60% 
+    transform: translateX(4px)

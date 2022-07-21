@@ -14,17 +14,26 @@ export class KaControlFile {
   }
 
   valueChanged(value) {
-    console.debug('ka-control-file: value changed!', value);
+    //console.debug('ka-control-file: value changed!', value);
     if (typeof value === 'undefined' || value === '' || (value && !value.length)) value = null;
     this.displayValue = value && value.length && value[0] && value[0].name ? value[0].name : value;
   }
 
-  clear() {
-    this.value = null;
+  open() {
+    let input = this.element.querySelector('[type="file"]');
+    input.focus();
+    input.click();
   }
 
   download() {
     if (!this.value || !this.schema.params.download) return;
     window.open(this.schema.params.download);
+  }
+  
+  focus() {
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+  }
+  blur() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
   }
 }

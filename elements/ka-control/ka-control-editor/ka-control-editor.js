@@ -23,7 +23,7 @@ export class KaControlEditor {
 
   valueChanged(value) {
     if (!this.editor || this.editorValuePending || this.editor.getData() === value) return;
-    console.debug('ka-control-editor: value changed!', value);
+    //console.debug('ka-control-editor: value changed!', value);
     this.editorValuePending = true;
     this.editor.setData(value || '');
     setTimeout(() => { this.editorValuePending = false; }, 0);
@@ -33,6 +33,13 @@ export class KaControlEditor {
     if (!this.editor) return;
     if (readonly) this.editor.enableReadOnlyMode('ka-control-editor');
     else this.editor.disableReadOnlyMode('ka-control-editor');
+  }
+
+  focus() {
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+  }
+  blur() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
   }
 
   buildEditor() {
@@ -100,6 +107,7 @@ export class KaControlEditor {
       editor.setData(this.value || '');
       if (this.schema.readonly) editor.enableReadOnlyMode('ka-control-editor');
       editor.model.document.on('change:data', () => { this.value = editor.getData(); });
+      editor.editing.view.document.on('change:isFocused', (evt, data, isFocused) => { if (isFocused) this.focus(); else this.blur(); });
       this.editor = editor;
     }).catch(error => {
       console.error('There was a problem initializing ckeditor', error );

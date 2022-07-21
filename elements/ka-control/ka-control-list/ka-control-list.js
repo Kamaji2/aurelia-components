@@ -42,8 +42,15 @@ export class KaControlsList {
   keydown() {
     return !this.schema.readonly;
   }
+  focus() {
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+  }
+  blur() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
+  }
 
   change() {
+    console.log('ka-control-list change', this._value);
     if (!this._value.map(x => Object.values(x).join('')).join('').length) {
       this.value = null;
     } else {
@@ -78,7 +85,7 @@ export class KaControlsList {
       if (!this._value.length) this.add();
       return;
     }
-    console.debug('ka-control-list: value changed!', _value);
+    //console.debug('ka-control-list: value changed!', _value);
     this._value = _value;
   }
 

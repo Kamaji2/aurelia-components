@@ -6,11 +6,13 @@
           <label if.bind="itemSchema.label">${itemSchema.label}</label>
           <input
             type="text"
-            value.bind="value[itemSchema.field]"
+            value.bind="value[itemSchema.field] | nullifyEmpty"
             disabled.bind="schema.readonly"
             placeholder.bind="itemSchema.label || itemSchema.field"
             keydown.delegate="keydown()"
             change.delegate="change()"
+            focus.trigger="focus()"
+            blur.trigger="blur()"
             ka-tooltip.bind="itemSchema.label"
             class="display-value ${schema.readonly?'readonly':''}">
         </div>

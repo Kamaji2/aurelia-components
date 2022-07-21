@@ -2,10 +2,14 @@ require('./ka-control-backdrop.sass');
 
 export class KaControlBackdropService {
 
-  constructor(element) {
-    this.element = element;
+  constructor(control, close) {
+    this.element = control.element;
     this.backdrop = document.createElement('ka-control-backdrop');
-    this.backdrop.addEventListener('click', event => { if (event.target === this.backdrop) this.close(); });
+    this.backdrop.addEventListener('click', event => {
+      if (event.target === this.backdrop) {
+        if (close) close.call(control); else this.close();
+      }
+    });
   }
 
   open(drawer) {
@@ -15,7 +19,8 @@ export class KaControlBackdropService {
         document.body.appendChild(this.backdrop);
         setTimeout(() => {
           // Move drawer to backdrop
-          let bounds = this.element.getBoundingClientRect();
+          let boundsElement = this.element.closest('ka-control') ? this.element.closest('ka-control').querySelector('.ka-control-overlay') || this.element : this.element;
+          let bounds = boundsElement.getBoundingClientRect();
           let max_h = this.backdrop.getBoundingClientRect().height;
           this.backdrop.appendChild(this.drawer);
           /*

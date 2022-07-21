@@ -13,7 +13,7 @@ export class KaControlTime {
 
   constructor(element) {
     this.element = element;
-    this.backdrop = new KaControlBackdropService(this.element);
+    this.backdrop = new KaControlBackdropService(this, this.close);
   }
 
   attached() {
@@ -23,12 +23,24 @@ export class KaControlTime {
   keydown() {
     return !this.schema.readonly;
   }
+  focus() {
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+  }
+  blur() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
+  }
   open() {
     this.opened = true;
+    this.focus();
     this.backdrop.open(this.drawer);
   }
   close() {
+    this.opened = false;
+    this.blur();
     this.backdrop.close();
+  }
+  change() {
+    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
   }
 }
 export class controlTimeValueConverter {

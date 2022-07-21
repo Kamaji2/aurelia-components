@@ -21,10 +21,7 @@ export class KaControlCombo {
 
   constructor(element) {
     this.element = element;
-
-    this.backdrop = new KaControlBackdropService(this.element);
-    //this.backdrop = document.createElement('ka-control-backdrop');
-    //this.backdrop.addEventListener('click', event => { if (event.target === this.backdrop) this.close(); });
+    this.backdrop = new KaControlBackdropService(this, this.close);
   }
 
   attached() {}
@@ -128,7 +125,7 @@ export class KaControlCombo {
       value = [String(value)];
     }
 
-    console.debug('ka-control-combo: value changed!', value);
+    //console.debug('ka-control-combo: value changed!', value);
     setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
     this._value = value;
 
@@ -237,11 +234,13 @@ export class KaControlCombo {
   open($event) {
     if (this.schema.readonly || ($event && $event.target.tagName === 'I')) return;
     this._combostack.forEach(x => x.selected = this._value && this._value.includes(x.value));
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
     this.backdrop.open(this.drawer).then(() => {
       if (this.searchInput) this.searchInput.focus();
     });
   }
   close() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
     this.backdrop.close();
     if (this.schema.datapreload !== true) this.combostack = [];
     this.term = null;

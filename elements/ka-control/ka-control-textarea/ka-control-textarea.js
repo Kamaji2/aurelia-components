@@ -16,4 +16,10 @@ export class KaControlTextarea {
   keydown() {
     return !this.schema.readonly;
   }
+  focus() {
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+  }
+  blur() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
+  }
 }

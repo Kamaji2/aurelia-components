@@ -1,4 +1,4 @@
-import {inject, customElement, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance} from 'aurelia-framework';
+import {inject, customElement, observable, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance} from 'aurelia-framework';
 import {ValidationController, ValidationRules, validateTrigger} from 'aurelia-validation';
 import { DateTime } from 'luxon';
 
@@ -11,6 +11,8 @@ export class KaControl {
   @bindable() schema = null;
   @bindable() client = null;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
+
+  @observable() readonly = null;
 
   parentResourceName = 'resource'; // default ResourceInterface name to look for in parentContext
   buttons = []; // array of button identifiers to show on control - supported value are: clear, dropdown
@@ -79,7 +81,6 @@ export class KaControl {
       .when(self => self.schema.control === 'time')
       .withMessage('Formato orario non valido')
       
-
       .on(this);
   }
 
@@ -108,11 +109,18 @@ export class KaControl {
 
   schemaChanged(schema) {
     if (!schema || !schema.control) return;
-    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client"></ka-control-${schema.control}></template>`);
+    this.readonly = schema.readonly;
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${schema.control}></template>`);
+    this.element.classList.add(`ka-control-${schema.control}`);
   }
-  valueChanged(value) {
+  valueChanged(value, old) {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) eval(`this.bindedResource.data.${this.name} = value`);
+    this.element.dispatchEvent(new Event('change', { bubbles: true }));
     this.validate();
+  }
+  readonlyChanged(value) {
+    if (value === true) this.element.classList.add('readonly');
+    else this.element.classList.remove('readonly');
   }
 
   validate() {
@@ -138,6 +146,15 @@ export class KaControl {
       this.validator.errors = [];
     }
   }
+  focus() {
+    this.element.classList.add('focus');
+  }
+  blur() {
+    this.element.classList.remove('focus');
+  }
+  change($event) {
+    $event.stopPropagation();
+  }
   /**
    * BUTTON FUNCTIONS
    */
@@ -146,6 +163,10 @@ export class KaControl {
   }
   open() {
     if (this.control && this.control.open) this.control.open();
+  }
+  toggle() {
+    if (!this._toggle && this.control && this.control.show) { this._toggle = true; this.control.show(); }
+    else if (this._toggle && this.control && this.control.show) { this._toggle = false; this.control.hide(); }
   }
 
   bindToResource() {
