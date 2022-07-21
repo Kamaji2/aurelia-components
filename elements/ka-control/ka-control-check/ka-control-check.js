@@ -12,7 +12,12 @@ export class KaControlCheck {
   constructor(element) {
     this.element = element;
   }
-
+  focus() {
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+  }
+  blur() {
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
+  }
   click($event) {
     if (this.schema.readonly) {
       $event.preventDefault();

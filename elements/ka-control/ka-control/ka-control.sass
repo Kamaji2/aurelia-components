@@ -51,6 +51,7 @@ ka-control
     overflow: hidden
     font-size: 1.2rem
     line-height: 1.5rem
+    text-overflow: ellipsis
     color: rgba(var(--primary-color-rgb), 0.7)
     white-space: nowrap
     transition: all 0.5s
@@ -135,7 +136,7 @@ ka-control
         z-index: -1
       span:after
         content: " - "
-        &:last-of-type
+      span:last-of-type:after
           display: none
 
     .ka-control-description
@@ -193,6 +194,10 @@ ka-control.ka-control-number
   input::-webkit-outer-spin-button, input::-webkit-inner-spin-button
     -webkit-appearance: none
     margin: 0
+
+ka-control.ka-control-combo
+  &:not(.error) > div:hover + .ka-control-overlay .ka-control-description
+    display: block
 
 ka-control.show-label-overflow
   > label
