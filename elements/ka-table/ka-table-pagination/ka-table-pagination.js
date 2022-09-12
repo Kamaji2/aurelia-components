@@ -1,8 +1,8 @@
-import {customElement, bindable, observable} from 'aurelia-framework';
-@customElement('md-table-pagination')
-export class MdTablePagination {
-  @bindable() table = {};
-  @bindable() limits = null;
+import {inject, customElement, observable} from 'aurelia-framework';
+
+@customElement('ka-table-pagination')
+@inject(Element)
+export class KaTablePagination {
 
   schema = {
     limit: { 
@@ -26,44 +26,50 @@ export class MdTablePagination {
   @observable() limit;
   @observable() page;
 
-  bind() {
-    if (this.limits && this.limits.length > 0) {
-      if (typeof this.limits === 'string') {
-        this.limits = this.limits.split(',');
-      }
-      let datasource = [];
-      this.limits.forEach(limit => {
-        datasource.push({ text: String(limit), value: parseInt(limit, 10) });
-      });
-      this.schema.limit.datasource = datasource;
+  constructor(element) {
+    this.element = element;
+  }
+  bind(bindingContext) {
+    this.interface = bindingContext.interface || null;
+    if (!this.interface) {
+      console.error('ka-table-pagination: missing table interface!');
+      return;
+    } else if (!this.interface.uuid) {
+      console.error('ka-table-pagination: cannot bind to table interface!');
+      return;
     }
+    this.uuid = `ka-table-pagination-${this.interface.uuid}`;
+    this.element.id = this.uuid;
+
     this.update();
-    this.table.events.addEventListener('dataLoaded', () => { this.update(); });
+    this.interface.events.addEventListener('load', () => { this.element.classList.remove('visible'); });
+    this.interface.events.addEventListener('loadSuccess', () => { this.update(); this.element.classList.add('visible'); });
+    this.interface.events.addEventListener('loadFailure', () => { this.update(); this.element.classList.remove('visible'); });
   }
 
   update() {
-    this.limit = this.table.limit;
-    this.page = (this.table.offset / this.table.limit) + 1;
+    this.limit =  this.interface.limit;
+    this.page = ( this.interface.offset /  this.interface.limit) + 1;
   }
 
   limitChanged(value, old) {
     if (!value && old) value = old;
     else if (!value) return;
-    this.table.limit = value;
-    this.table.offset = 0;
+     this.interface.limit = value;
+     this.interface.offset = 0;
     if (typeof old !== 'undefined') this.applyOptions();
   }
   
   pageChanged(value, old) {
     if (!value && old) value = old;
     else if (!value) return;
-    this.table.offset = this.table.limit * (value - 1);
+     this.interface.offset =  this.interface.limit * (value - 1);
     if (typeof old !== 'undefined') this.applyOptions();
   }
 
   paginate(direction) {
     let page = this.page;
-    let pages = Math.ceil(this.table.total / this.table.limit);
+    let pages = Math.ceil( this.interface.total /  this.interface.limit);
     if (direction === 'forward' && page + 1 <= pages) this.page = page + 1;
     else if (direction === 'back' && page - 1 > 0) this.page = page - 1;
     else if (direction === 'start' && page !== 1) this.page = 1;
@@ -72,7 +78,7 @@ export class MdTablePagination {
 
   showOptions($event) {
     if (!$event.target.classList.contains('count')) return;
-    let pages = Math.ceil(this.table.total / this.table.limit);
+    let pages = Math.ceil( this.interface.total /  this.interface.limit);
     let pagesDatasource = [];
     for (let i = 1; i <= pages; i++) pagesDatasource.push({ value: i, text: String(i)});
     this.schema.page.datasource = pagesDatasource;
@@ -85,7 +91,7 @@ export class MdTablePagination {
 
   applyOptions() {
     this.hideOptions();
-    this.table.load();
+     this.interface.load();
   }
 }
 export class integerCastValueConverter {

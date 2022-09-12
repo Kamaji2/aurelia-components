@@ -1,13 +1,15 @@
-@import '../../../static/vars';
-
-md-table-progressbar
-  display: block
-  position: relative
-  height: 3px
-  background-color: #e0e0e0
+ka-table-progressbar
+  position: absolute
+  z-index: 2
+  display: none
+  width: 100%
+  height: 2px
   overflow: hidden
+  background-color: #e0e0e0
+  &.visible
+    display: block
   .indeterminate
-    background-color: $primary-color
+    background-color: var(--primary-color)
     &:before
       content: ''
       position: absolute

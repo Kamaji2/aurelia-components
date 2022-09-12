@@ -1,4 +1,4 @@
-import {inject, customElement, bindable} from 'aurelia-framework';
+import {inject, customElement} from 'aurelia-framework';
 
 @customElement('ka-table')
 @inject(Element)

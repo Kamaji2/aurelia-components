@@ -22,6 +22,7 @@ export class TableInterface {
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
     // Custom events
     this.events = document.createTextNode(null);
+    this.events.load = new CustomEvent('load', { detail: this });
     this.events.loadSuccess = new CustomEvent('loadSuccess', { detail: this });
     this.events.loadFailure = new CustomEvent('loadFailure', { detail: this });
     // Initialize
@@ -41,19 +42,6 @@ export class TableInterface {
     });
   }
 
-  async get(id) {
-    await this.initialized;
-    return this.client.get(`${this.endpoint}/${id}`).then(xhr => {
-      this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
-      this._data = JSON.parse(JSON.stringify(this.data));
-      console.log('[ResourceInterface] GET - Success');
-      this.events.dispatchEvent(this.events.loadSuccess);
-    }).catch(error => {
-      console.error('[ResourceInterface] GET - Failure');
-      this.events.dispatchEvent(this.events.loadFailure);
-      throw new ResourceError({ method: 'get', context: 'xhr', message: `${error.statusCode} ${error.statusText}`, detail: error });
-    });
-  }
   async load(params = null, sort = null) {
     await this.initialized;
     this.isLoading = true;
@@ -88,6 +76,7 @@ export class TableInterface {
     if (this.offset) query.set('offset', this.offset);
 
     // Finally make the api call
+    this.events.dispatchEvent(this.events.load);
     return this.client.get(`${this.endpoint}?${query}`).then(xhr => {
       this.data = this.parseResponse(xhr.response);
       this.total = (xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count']) ? xhr.headers.headers['x-total-count'].value : this.data.length;
