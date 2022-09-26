@@ -1,5 +1,4 @@
 <template>
-
   <template if.bind="!schema.datamultiple">
     <input
       type="checkbox"
@@ -8,12 +7,11 @@
       focus.trigger="focus()"
       blur.trigger="blur()"
       class="${schema.readonly?'readonly':''}"
-      />
+    />
     <div
       innerhtml.bind="schema.description || ''"
       click.delegate="click($event)"
-      class="description ${schema.readonly?'readonly':''}">
-    </div>
+      class="description ${schema.readonly?'readonly':''}"
+    ></div>
   </template>
-
 </template>

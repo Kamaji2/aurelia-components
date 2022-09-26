@@ -5,7 +5,8 @@ md-table-sort {
     color: #909090;
     font-size: 1.6rem;
     line-height: 2rem;
-    &.asc, &.desc {
+    &.asc,
+    &.desc {
       color: #ed5a23;
     }
   }

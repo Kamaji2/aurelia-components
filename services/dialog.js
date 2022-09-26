@@ -1,30 +1,33 @@
-import { inject } from 'aurelia-framework';
-import { DialogService as AureliaDialogService } from 'aurelia-dialog';
+import { inject } from "aurelia-framework";
+import { DialogService as AureliaDialogService } from "aurelia-dialog";
 
-require('./dialog.sass');
+require("./dialog.sass");
 
 @inject(AureliaDialogService)
 export class DialogService {
-
   constructor(AureliaDialogService) {
     this.AureliaDialogService = AureliaDialogService;
   }
 
   open(params, lock = true) {
-    return this.AureliaDialogService.open({ viewModel: DialogServiceViewModel, model: params, lock: lock });
+    return this.AureliaDialogService.open({
+      viewModel: DialogServiceViewModel,
+      model: params,
+      lock: lock,
+    });
   }
   alert(params = {}, lock) {
-    params.type = 'alert';
+    params.type = "alert";
     return this.open(params, lock);
   }
   confirm(params = {}, lock) {
-    params.type = 'confirm';
+    params.type = "confirm";
     return this.open(params, lock);
   }
 }
 
-import { inlineView } from 'aurelia-framework';
-import { DialogController } from 'aurelia-dialog';
+import { inlineView } from "aurelia-framework";
+import { DialogController } from "aurelia-dialog";
 
 @inlineView(`
   <template>

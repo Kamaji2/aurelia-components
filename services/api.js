@@ -1,6 +1,6 @@
-import { inject } from 'aurelia-framework';
-import { Router } from 'aurelia-router';
-import { HttpClient } from 'aurelia-http-client';
+import { inject } from "aurelia-framework";
+import { Router } from "aurelia-router";
+import { HttpClient } from "aurelia-http-client";
 
 @inject(Router)
 export class ApiService {
@@ -8,53 +8,95 @@ export class ApiService {
     this.router = router;
     this.isKamaji = true;
     this.language = null;
-    
-    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
-    this.baseUrl = this.storage.getItem('APP_KAMAJI_BASE_URL') || ENVIRONMENT.APP_KAMAJI_BASE_URL || this.storage.getItem('APP_API_BASE_URL') || ENVIRONMENT.APP_API_BASE_URL;
-    
+
+    this.storage =
+      ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]
+        ? window[ENVIRONMENT.APP_STORAGE]
+        : localStorage;
+    this.baseUrl =
+      this.storage.getItem("APP_KAMAJI_BASE_URL") ||
+      ENVIRONMENT.APP_KAMAJI_BASE_URL ||
+      this.storage.getItem("APP_API_BASE_URL") ||
+      ENVIRONMENT.APP_API_BASE_URL;
+
     this.auth = null; // If needed, this will be referenced by the AuthService class itself
-    
+
     this.client = new HttpClient();
-    this.client.configure(x => {
+    this.client.configure((x) => {
       x.withBaseUrl(this.baseUrl);
       x.withInterceptor({
-        request: msg => {
-          if (this.auth && this.auth.accessToken && !msg.url.startsWith(this.baseUrl + this.auth.endpoints.refresh) && !msg.headers.has('Authorization')) {
-            msg.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
+        request: (msg) => {
+          if (
+            this.auth &&
+            this.auth.accessToken &&
+            !msg.url.startsWith(this.baseUrl + this.auth.endpoints.refresh) &&
+            !msg.headers.has("Authorization")
+          ) {
+            msg.headers.add("Authorization", "Bearer " + this.auth.accessToken);
           }
-          if (this.language && !msg.headers.has('Accept-Language')) {
-            msg.headers.add('Accept-Language', this.language);
+          if (this.language && !msg.headers.has("Accept-Language")) {
+            msg.headers.add("Accept-Language", this.language);
           }
           return msg;
         },
-        response: msg => {
-          if (String(msg.statusCode) !== '204' && msg.responseType === 'json' && typeof msg.response === 'string') {
+        response: (msg) => {
+          if (
+            String(msg.statusCode) !== "204" &&
+            msg.responseType === "json" &&
+            typeof msg.response === "string"
+          ) {
             msg.response = JSON.parse(msg.response);
           }
           return msg;
         },
-        responseError: msg => {
-          if (msg.statusCode === 401 && this.auth && this.auth.refreshToken && !msg.requestMessage.url.startsWith(this.baseUrl + this.auth.endpoints.refresh)) {
-           return this.auth.refresh().then(success => {
-              msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
-              return this.client.send(msg.requestMessage);
-            }, error => {
-              this.auth.logout(this.router?.currentInstruction?.config?.name || null);
-              try { 
-                if (this.router.routes.find(x => x.name === 'logout' || x.href === 'logout')) this.router.navigateToRoute('logout');
-                else if (this.router.routes.find(x => x.name === 'login' || x.href === 'login')) this.router.navigateToRoute('login');
-              } catch(e) {};
-              return error;
-            });
+        responseError: (msg) => {
+          if (
+            msg.statusCode === 401 &&
+            this.auth &&
+            this.auth.refreshToken &&
+            !msg.requestMessage.url.startsWith(
+              this.baseUrl + this.auth.endpoints.refresh
+            )
+          ) {
+            return this.auth.refresh().then(
+              (success) => {
+                msg.requestMessage.headers.add(
+                  "Authorization",
+                  "Bearer " + this.auth.accessToken
+                );
+                return this.client.send(msg.requestMessage);
+              },
+              (error) => {
+                this.auth.logout(
+                  this.router?.currentInstruction?.config?.name || null
+                );
+                try {
+                  if (
+                    this.router.routes.find(
+                      (x) => x.name === "logout" || x.href === "logout"
+                    )
+                  )
+                    this.router.navigateToRoute("logout");
+                  else if (
+                    this.router.routes.find(
+                      (x) => x.name === "login" || x.href === "login"
+                    )
+                  )
+                    this.router.navigateToRoute("login");
+                } catch (e) {}
+                return error;
+              }
+            );
           }
           return Promise.reject(msg);
-        }
+        },
       });
     });
   }
 
   get(endpoint, params) {
-    let queryString = (typeof params === 'object') ? '?' + this.buildQueryString(params) : '';
+    let queryString =
+      typeof params === "object" ? "?" + this.buildQueryString(params) : "";
     return this.client.get(this.baseUrl + endpoint + queryString);
   }
 
@@ -76,7 +118,8 @@ export class ApiService {
 
   buildQueryString(params) {
     let query = [];
-    for (let [key, value] of Object.entries(params)) query.push(`${key}=` + encodeURIComponent(value));
-    return query.join('&');
+    for (let [key, value] of Object.entries(params))
+      query.push(`${key}=` + encodeURIComponent(value));
+    return query.join("&");
   }
 }

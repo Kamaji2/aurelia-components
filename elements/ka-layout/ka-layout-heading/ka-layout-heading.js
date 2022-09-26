@@ -1,8 +1,13 @@
-import {inject, customElement, bindable, InlineViewStrategy} from 'aurelia-framework';
+import {
+  inject,
+  customElement,
+  bindable,
+  InlineViewStrategy,
+} from "aurelia-framework";
 
-require('./ka-layout-heading.sass');
+require("./ka-layout-heading.sass");
 
-@customElement('ka-layout-heading')
+@customElement("ka-layout-heading")
 @inject(Element)
 export class KaLayoutHeading {
   @bindable() level = null;
@@ -14,6 +19,8 @@ export class KaLayoutHeading {
   }
 
   bind() {
-    this.heading = new InlineViewStrategy(`<template><h${this.level}>${this.text}</h${this.level}></template>`);
+    this.heading = new InlineViewStrategy(
+      `<template><h${this.level}>${this.text}</h${this.level}></template>`
+    );
   }
 }

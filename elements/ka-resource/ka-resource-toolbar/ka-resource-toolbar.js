@@ -1,6 +1,6 @@
-import { customElement } from 'aurelia-framework';
+import { customElement } from "aurelia-framework";
 
-@customElement('ka-resource-toolbar')
+@customElement("ka-resource-toolbar")
 export class KaResourceToolbar {
   /*
   bind(bindingContext) {

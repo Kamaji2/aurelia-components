@@ -4,11 +4,13 @@
     value.bind="displayValue"
     disabled.bind="schema.readonly"
     placeholder.bind="schema.placeholder || ''"
-    class="display-value ${schema.readonly?'readonly':''}">
+    class="display-value ${schema.readonly?'readonly':''}"
+  />
   <input
     type="file"
     files.bind="value"
     disabled.bind="schema.readonly"
     focus.trigger="focus()"
-    blur.trigger="blur()">
+    blur.trigger="blur()"
+  />
 </template>

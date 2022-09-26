@@ -1,16 +1,21 @@
-import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
-import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
+import {
+  inject,
+  customElement,
+  bindable,
+  bindingMode,
+} from "aurelia-framework";
+import { HttpClient } from "aurelia-http-client";
+import { KaControlBackdropService } from "../ka-control-backdrop/ka-control-backdrop";
 
-require('./ka-control-combo.sass');
+require("./ka-control-combo.sass");
 
-@customElement('ka-control-combo')
+@customElement("ka-control-combo")
 @inject(Element)
 export class KaControlCombo {
   // Basic input control properties
   @bindable() schema = null;
   @bindable() client = null;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
 
   _schema = null;
   _value = null;
@@ -29,16 +34,22 @@ export class KaControlCombo {
   clientChanged(client) {
     this.api = client;
     // Override http client if needed
-    if ((!this.api && this.schema.datasource.table) || this.schema.datasource.url) {
+    if (
+      (!this.api && this.schema.datasource.table) ||
+      this.schema.datasource.url
+    ) {
       this.api = new HttpClient();
-      this.api.configure(x => {
+      this.api.configure((x) => {
         x.withInterceptor({
-          response: msg => {
-            if (msg.responseType === 'json' && typeof msg.response === 'string') {
+          response: (msg) => {
+            if (
+              msg.responseType === "json" &&
+              typeof msg.response === "string"
+            ) {
               msg.response = JSON.parse(msg.response);
             }
             return msg;
-          }
+          },
         });
       });
     }
@@ -46,14 +57,17 @@ export class KaControlCombo {
 
   schemaChanged(schema) {
     if (!schema.datasource) {
-      console.error('ka-control-combo: missing datasource in schema!', schema);
+      console.error("ka-control-combo: missing datasource in schema!", schema);
       return;
     }
-    if (typeof schema.datasource === 'string') {
+    if (typeof schema.datasource === "string") {
       try {
         schema.datasource = JSON.parse(schema.datasource);
       } catch (error) {
-        console.error('ka-control-combo: invalid datasource provided in schema!', schema);
+        console.error(
+          "ka-control-combo: invalid datasource provided in schema!",
+          schema
+        );
         return;
       }
     }
@@ -61,16 +75,16 @@ export class KaControlCombo {
       schema.datapreload = true; // Force datapreload = true if datasource is array of values
     }
     if (!schema.datavalue) {
-      schema.datavalue = 'value';
+      schema.datavalue = "value";
     }
     if (!schema.datatext) {
-      schema.datatext = 'text';
+      schema.datatext = "text";
     }
     if (!schema.datasearch) {
       schema.datasearch = {};
     }
     if (!schema.datasearch.operator) {
-      schema.datasearch.operator = '^=';
+      schema.datasearch.operator = "^=";
     }
     if (!schema.datasearch.keys) {
       schema.datasearch.keys = schema.datatext;
@@ -81,57 +95,77 @@ export class KaControlCombo {
 
     // Set client for api calls
     if (schema.client) this.client = schema.client;
-    
+
     // Element classes
     if (schema.datamultiple === true) {
-      this.element.classList.add('multiple');
+      this.element.classList.add("multiple");
       //this.drawer.classList.add('multiple'); // added in html template
     }
 
     // Build combo items list
-    setTimeout(() => { this.buildCombostack(); }, this.api ? 0 : 100);
+    setTimeout(
+      () => {
+        this.buildCombostack();
+      },
+      this.api ? 0 : 100
+    );
   }
 
   valueChanged(value) {
     if (!this.schema) {
       // Component is not ready for value handling
-      console.warn('ka-control-combo: cannot handle value without schema!');
+      console.warn("ka-control-combo: cannot handle value without schema!");
       return;
     }
     // Validate value allowing string 'null' value
-    if ((!value && !this._value) || (value !== 'null' && value === JSON.stringify(this._value))) {
+    if (
+      (!value && !this._value) ||
+      (value !== "null" && value === JSON.stringify(this._value))
+    ) {
       return;
     }
     if (value === null) {
       this.valuestack = [];
     } else if (this.schema.datamultiple === true) {
-      if (typeof value === 'string') {
+      if (typeof value === "string") {
         try {
           value = JSON.parse(value);
         } catch (error) {
-          console.error('ka-control-combo: invalid value provided!', value);
+          console.error("ka-control-combo: invalid value provided!", value);
           return;
         }
       }
       if (!Array.isArray(value)) {
-        console.warn('ka-control-combo: value should be an array! Trying to convert it...', value);
+        console.warn(
+          "ka-control-combo: value should be an array! Trying to convert it...",
+          value
+        );
         value = [String(value)];
       }
     } else {
-      if (typeof value !== 'string' && typeof value !== 'number') {
-        console.error('ka-control-combo: value must be a string or an integer!', value);
+      if (typeof value !== "string" && typeof value !== "number") {
+        console.error(
+          "ka-control-combo: value must be a string or an integer!",
+          value
+        );
         return;
       }
       value = [String(value)];
     }
 
     //console.debug('ka-control-combo: value changed!', value);
-    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
+    setTimeout(() => {
+      this.element.dispatchEvent(new Event("change", { bubbles: true }));
+    }, 100);
     this._value = value;
 
     // Build display value
-    setTimeout(() => { this.buildValuestack(); }, this.api ? 0 : 100);
-
+    setTimeout(
+      () => {
+        this.buildValuestack();
+      },
+      this.api ? 0 : 100
+    );
   }
 
   buildCombostack() {
@@ -141,17 +175,26 @@ export class KaControlCombo {
     if (dtp === true || Array.isArray(dts)) {
       if (dts.table || dts.url) {
         let endpoint = this.buildQueryUrl();
-        this.api.get(endpoint).then(x => {
-          this.combostack = x.response;
-          this.preloadedCombostack = x.response;
-        }).catch(x => {
-          console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
-        });
+        this.api
+          .get(endpoint)
+          .then((x) => {
+            this.combostack = x.response;
+            this.preloadedCombostack = x.response;
+          })
+          .catch((x) => {
+            console.error(
+              "ka-control-combo: invalid datasource provided in schema!",
+              this.schema
+            );
+          });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
       } else {
-        console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
+        console.error(
+          "ka-control-combo: invalid datasource provided in schema!",
+          this.schema
+        );
         return;
       }
     }
@@ -168,18 +211,19 @@ export class KaControlCombo {
     let dtt = this.schema.datatext;
     let combostack = [];
     for (let item of stack) {
-      let text = '';
+      let text = "";
       let keys = dtt.match(/\{[a-zA-Z0-9_\.]*?\}/g);
       if (keys) {
         text = dtt;
         for (let key of keys) {
-          let replacement = '';
+          let replacement = "";
           key = /\{([^\.]*)\.?(.*)\}/g.exec(key);
-          if (item[key[1]] && key[2] && item[key[1]][key[2]]) replacement = item[key[1]][key[2]];
+          if (item[key[1]] && key[2] && item[key[1]][key[2]])
+            replacement = item[key[1]][key[2]];
           else if (item[key[1]]) replacement = item[key[1]];
           text = text.replace(key[0], replacement);
         }
-      } else text = item[dtt] || '';
+      } else text = item[dtt] || "";
       combostack.push({ value: String(item[dtv]), text: text });
     }
     this._combostack = combostack;
@@ -193,32 +237,41 @@ export class KaControlCombo {
     let valuestack = [];
     let promises = [];
     for (let value of values) {
-      let matched = this.combostack.find(x => String(x.value) === String(value)) || { value: String(value) };
+      let matched = this.combostack.find(
+        (x) => String(x.value) === String(value)
+      ) || { value: String(value) };
       valuestack.push(matched);
     }
-    let unmatched = valuestack.filter(x => !x.text);
+    let unmatched = valuestack.filter((x) => !x.text);
     if (unmatched.length) {
-      let endpoint = this.buildQueryUrl({ filters: `${dtv}~~${unmatched.map(x => x.value).join(',')}` });
-      promises.push(this.api.get(endpoint).then(x => {
-        let response = x.response;
-        for (let item of response) {
-          let text = '';
-          let keys = dtt.match(/\{[a-zA-Z0-9_\.]*?\}/g);
-          if (keys) {
-            text = dtt;
-            for (let key of keys) {
-              let replacement = '';
-              key = /\{([^\.]*)\.?(.*)\}/g.exec(key);
-              if (item[key[1]] && key[2] && item[key[1]][key[2]]) replacement = item[key[1]][key[2]];
-              else if (item[key[1]]) replacement = item[key[1]];
-              text = text.replace(key[0], replacement);
-            }
-          } else text = item[dtt] || '';
-          valuestack.find(i => i.value === String(item[dtv])).text = text;
-        }
-      }));
+      let endpoint = this.buildQueryUrl({
+        filters: `${dtv}~~${unmatched.map((x) => x.value).join(",")}`,
+      });
+      promises.push(
+        this.api.get(endpoint).then((x) => {
+          let response = x.response;
+          for (let item of response) {
+            let text = "";
+            let keys = dtt.match(/\{[a-zA-Z0-9_\.]*?\}/g);
+            if (keys) {
+              text = dtt;
+              for (let key of keys) {
+                let replacement = "";
+                key = /\{([^\.]*)\.?(.*)\}/g.exec(key);
+                if (item[key[1]] && key[2] && item[key[1]][key[2]])
+                  replacement = item[key[1]][key[2]];
+                else if (item[key[1]]) replacement = item[key[1]];
+                text = text.replace(key[0], replacement);
+              }
+            } else text = item[dtt] || "";
+            valuestack.find((i) => i.value === String(item[dtv])).text = text;
+          }
+        })
+      );
     }
-    Promise.all(promises).finally(() => { this.valuestack = valuestack; });
+    Promise.all(promises).finally(() => {
+      this.valuestack = valuestack;
+    });
   }
   get valuestack() {
     return this._valuestack;
@@ -232,15 +285,18 @@ export class KaControlCombo {
   }
 
   open($event) {
-    if (this.schema.readonly || ($event && $event.target.tagName === 'I')) return;
-    this._combostack.forEach(x => x.selected = this._value && this._value.includes(x.value));
-    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+    if (this.schema.readonly || ($event && $event.target.tagName === "I"))
+      return;
+    this._combostack.forEach(
+      (x) => (x.selected = this._value && this._value.includes(x.value))
+    );
+    this.element.dispatchEvent(new Event("focus", { bubbles: true }));
     this.backdrop.open(this.drawer).then(() => {
       if (this.searchInput) this.searchInput.focus();
     });
   }
   close() {
-    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
+    this.element.dispatchEvent(new Event("blur", { bubbles: true }));
     this.backdrop.close();
     if (this.schema.datapreload !== true) this.combostack = [];
     this.term = null;
@@ -258,7 +314,7 @@ export class KaControlCombo {
       item.selected = true;
       value.push(item.value);
       this.valuestack.push(item);
-    } else if (!multiple  && index > -1) {
+    } else if (!multiple && index > -1) {
       item.selected = false;
       value = this._value = null;
       this.valuestack = [];
@@ -281,7 +337,9 @@ export class KaControlCombo {
     let filters = [];
 
     if (dtp && this.preloadedCombostack.length > 8) {
-      this.combostack = this.preloadedCombostack.filter(x => String(x[dtt]).toUpperCase().indexOf(term.toUpperCase()) === 0);
+      this.combostack = this.preloadedCombostack.filter(
+        (x) => String(x[dtt]).toUpperCase().indexOf(term.toUpperCase()) === 0
+      );
       return true;
     }
 
@@ -294,27 +352,34 @@ export class KaControlCombo {
     // dtt can be something like "{key1} {key2} {key3}" or "Label1 {key1} label2 {key2}"
     let keys = dsh.keys.match(/{(.*?)}/g);
     if (keys) {
-      let terms = term.trim().split(' ');
+      let terms = term.trim().split(" ");
       if (terms.length > 1) {
         keys.forEach((key, index) => {
-          if (terms[index]) filters.push(`${key.replace(/{|}/g, '')}${dsh.operator}${terms[index]}`);
+          if (terms[index])
+            filters.push(
+              `${key.replace(/{|}/g, "")}${dsh.operator}${terms[index]}`
+            );
         });
       } else {
         keys.forEach((key, index) => {
-          filters.push(`${key.replace(/{|}/g, '')}${dsh.operator}${terms[0]}`);
+          filters.push(`${key.replace(/{|}/g, "")}${dsh.operator}${terms[0]}`);
         });
-        filters = [`(${filters.join('|')})`];
+        filters = [`(${filters.join("|")})`];
       }
     } else {
       filters.push(`${dtt}${dsh.operator}${term.trim()}`);
     }
 
-    let endpoint = this.buildQueryUrl({filters: filters.join('&')});
-    if (this.searchRequest && this.searchRequest.cancel) { this.searchRequest.cancel(); }
+    let endpoint = this.buildQueryUrl({ filters: filters.join("&") });
+    if (this.searchRequest && this.searchRequest.cancel) {
+      this.searchRequest.cancel();
+    }
     this.searchRequest = this.api.get(endpoint);
-    this.searchRequest.then(x => {
+    this.searchRequest.then((x) => {
       this.combostack = x.response;
-      this._combostack.forEach(c => c.selected = this._value && this._value.includes(c.value));
+      this._combostack.forEach(
+        (c) => (c.selected = this._value && this._value.includes(c.value))
+      );
     });
     return true;
   }
@@ -322,9 +387,9 @@ export class KaControlCombo {
   getUrlParams(url) {
     let query = url.match(/\?(.*)$/);
     if (!query) return {};
-    let chunks = query[1].split('&');
+    let chunks = query[1].split("&");
     return chunks.reduce((params, hash) => {
-      let [key, val] = hash.split('=');
+      let [key, val] = hash.split("=");
       return Object.assign(params, { [key]: decodeURIComponent(val) });
     }, {});
   }
@@ -336,12 +401,17 @@ export class KaControlCombo {
     //let dsh = this.schema.datasearch;
 
     if (!dts.table && !dts.url) {
-      console.error('ka-control-combo: cannot build query url if datasource is not a table or url!', this.schema.datasource);
+      console.error(
+        "ka-control-combo: cannot build query url if datasource is not a table or url!",
+        this.schema.datasource
+      );
       return;
     }
 
     let endpoint = dts.table || dts.url;
-    if (dts.table && dts.query) endpoint = endpoint + (endpoint.indexOf('?') > -1 ? '&' : '?') + dts.query;
+    if (dts.table && dts.query)
+      endpoint =
+        endpoint + (endpoint.indexOf("?") > -1 ? "&" : "?") + dts.query;
 
     let urlParams = this.getUrlParams(endpoint);
     let fields;
@@ -350,28 +420,37 @@ export class KaControlCombo {
 
     keys = dtt.match(/\{[a-zA-Z0-9_\.]*?\}/g);
     if (keys) {
-      keys = keys.map(b=>b.replace(/\{(.*?)\}/g, '$1').replace(/([^\.]*).*/g, '$1'));
-      fields = keys.join(',');
-      sort = `+${keys.join(',+')}`;
+      keys = keys.map((b) =>
+        b.replace(/\{(.*?)\}/g, "$1").replace(/([^\.]*).*/g, "$1")
+      );
+      fields = keys.join(",");
+      sort = `+${keys.join(",+")}`;
     } else {
       fields = dtt;
       sort = `+${dtt}`;
     }
     if (dtf) {
-      urlParams.filters = (urlParams.filters ? urlParams.filters + '&' : '') + `(${dtf})`;
+      urlParams.filters =
+        (urlParams.filters ? urlParams.filters + "&" : "") + `(${dtf})`;
     }
     if (params && params.filters) {
-      urlParams.filters = (urlParams.filters ? urlParams.filters + '&' : '') + `(${params.filters})`;
+      urlParams.filters =
+        (urlParams.filters ? urlParams.filters + "&" : "") +
+        `(${params.filters})`;
     }
-    urlParams.sort = (urlParams.sort ? urlParams.sort + ',' : '') + sort;
-    urlParams.fields = (urlParams.fields ? urlParams.fields + ',' : '') + `${dtv},${fields}`;
-    endpoint = endpoint.replace(/\?.*$/, '') + '?' + this.buildQueryString(urlParams);
+    urlParams.sort = (urlParams.sort ? urlParams.sort + "," : "") + sort;
+    urlParams.fields =
+      (urlParams.fields ? urlParams.fields + "," : "") + `${dtv},${fields}`;
+    endpoint =
+      endpoint.replace(/\?.*$/, "") + "?" + this.buildQueryString(urlParams);
     return endpoint;
   }
   buildQueryString(params) {
-    return Object.keys(params).reduce((query, key) => {
-      return `${query}&${key}=` + encodeURIComponent(params[key]);
-    }, '').replace(/^\&/, '');
+    return Object.keys(params)
+      .reduce((query, key) => {
+        return `${query}&${key}=` + encodeURIComponent(params[key]);
+      }, "")
+      .replace(/^\&/, "");
   }
 }
 
@@ -379,7 +458,13 @@ export class kaControlComboHighlightValueConverter {
   toView(text, term) {
     if (!term) return text;
     let index = text.toLowerCase().indexOf(term.toLowerCase());
-    if (index >= 0) text = text.substring(0, index) + '<strong>' + text.substring(index, index + term.length) + '</strong>' + text.substring(index + term.length);
+    if (index >= 0)
+      text =
+        text.substring(0, index) +
+        "<strong>" +
+        text.substring(index, index + term.length) +
+        "</strong>" +
+        text.substring(index + term.length);
     return text;
   }
 }

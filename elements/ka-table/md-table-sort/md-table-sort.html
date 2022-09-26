@@ -1,7 +1,13 @@
 <template>
   <require from="./md-table-sort.scss"></require>
   <slot></slot>
-  <a if.bind="!order" href="" click.delegate="sort()"><i class="fal fa-sort-amount-down-alt"></i></a>
-  <a if.bind="order === 'asc'" href="" class="asc" click.delegate="sort()"><i class="fal fa-sort-amount-down-alt"></i></a>
-  <a if.bind="order === 'desc'" href="" class="desc" click.delegate="sort()"><i class="fal fa-sort-amount-up"></i></a>
+  <a if.bind="!order" href="" click.delegate="sort()"
+    ><i class="fal fa-sort-amount-down-alt"></i
+  ></a>
+  <a if.bind="order === 'asc'" href="" class="asc" click.delegate="sort()"
+    ><i class="fal fa-sort-amount-down-alt"></i
+  ></a>
+  <a if.bind="order === 'desc'" href="" class="desc" click.delegate="sort()"
+    ><i class="fal fa-sort-amount-up"></i
+  ></a>
 </template>

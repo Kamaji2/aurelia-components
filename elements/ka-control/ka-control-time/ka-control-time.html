@@ -7,8 +7,13 @@
     keydown.delegate="keydown()"
     focus.trigger="focus()"
     blur.trigger="blur()"
-    class="display-value ${schema.readonly?'readonly':''}">
+    class="display-value ${schema.readonly?'readonly':''}"
+  />
   <div ref="drawer" class="ka-control-time-drawer">
-    <ka-datetime type="time" value.bind="value" change.trigger="change()"></ka-datetime>
+    <ka-datetime
+      type="time"
+      value.bind="value"
+      change.trigger="change()"
+    ></ka-datetime>
   </div>
 </template>

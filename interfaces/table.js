@@ -1,5 +1,5 @@
-import { helpers } from 'aurelia-components';
-import { v5 as uuidv5 } from 'uuid';
+import { helpers } from "aurelia-components";
+import { v5 as uuidv5 } from "uuid";
 
 export class TableInterface {
   client = null;
@@ -8,7 +8,7 @@ export class TableInterface {
   dialog = null;
   data = [];
   settings = {
-    initializeWithDataset: false
+    initializeWithDataset: false,
   };
   query = null;
   limit = 10;
@@ -18,50 +18,55 @@ export class TableInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5(location.pathname + ':' + config.endpoint, '2af1d572-a35c-4248-a38e-348c560cd468');
-    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
+    this.uuid = uuidv5(
+      location.pathname + ":" + config.endpoint,
+      "2af1d572-a35c-4248-a38e-348c560cd468"
+    );
+    this.storage =
+      ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]
+        ? window[ENVIRONMENT.APP_STORAGE]
+        : localStorage;
     // Custom events
     this.events = document.createTextNode(null);
-    this.events.loadSuccess = new CustomEvent('loadSuccess', { detail: this });
-    this.events.loadFailure = new CustomEvent('loadFailure', { detail: this });
+    this.events.load = new CustomEvent("load", { detail: this });
+    this.events.loadSuccess = new CustomEvent("loadSuccess", { detail: this });
+    this.events.loadFailure = new CustomEvent("loadFailure", { detail: this });
     // Initialize
     this.initialized = this.initialize();
   }
 
   initialize() {
     return new Promise((resolve, reject) => {
-      if (!this.endpoint || !this.client) return reject('missing endpoint or client configuration, interface won\'t be able to call api endpoints');
+      if (!this.endpoint || !this.client)
+        return reject(
+          "missing endpoint or client configuration, interface won't be able to call api endpoints"
+        );
       resolve();
-    }).then(() => {
-      if (!this.router) console.warn('[TableInterface] Initialization warning: missing router configuration, interface won\'t be able to change route (eg: edit)');
-      Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
-      console.log('[TableInterface] Initialized');
-    }).catch(error => {
-      console.warn(`[TableInterface] Initialization failed: ${error}`);
-    });
+    })
+      .then(() => {
+        if (!this.router)
+          console.warn(
+            "[TableInterface] Initialization warning: missing router configuration, interface won't be able to change route (eg: edit)"
+          );
+        Object.assign(
+          this,
+          JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {}
+        );
+        console.log("[TableInterface] Initialized");
+      })
+      .catch((error) => {
+        console.warn(`[TableInterface] Initialization failed: ${error}`);
+      });
   }
 
-  async get(id) {
-    await this.initialized;
-    return this.client.get(`${this.endpoint}/${id}`).then(xhr => {
-      this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
-      this._data = JSON.parse(JSON.stringify(this.data));
-      console.log('[ResourceInterface] GET - Success');
-      this.events.dispatchEvent(this.events.loadSuccess);
-    }).catch(error => {
-      console.error('[ResourceInterface] GET - Failure');
-      this.events.dispatchEvent(this.events.loadFailure);
-      throw new ResourceError({ method: 'get', context: 'xhr', message: `${error.statusCode} ${error.statusText}`, detail: error });
-    });
-  }
   async load(params = null, sort = null) {
     await this.initialized;
     this.isLoading = true;
-    
+
     // Handle query params
-    let query = new URLSearchParams('');
+    let query = new URLSearchParams("");
     if (params) {
-      query = new URLSearchParams(this.query || '');
+      query = new URLSearchParams(this.query || "");
       for (const [key, value] of Object.entries(params)) {
         query.set(key, value);
       }
@@ -71,40 +76,60 @@ export class TableInterface {
       query = new URLSearchParams(this.query);
     }
     this._query = query.toString();
-    
+
     // Handle sort
     this.sort = sort || this.sort || [];
     let sorts = [];
-    this.sort.forEach(item => {
-      sorts.push(`${item.order === 'desc' ? '-' : ''}${item.name}`);
+    this.sort.forEach((item) => {
+      sorts.push(`${item.order === "desc" ? "-" : ""}${item.name}`);
     });
     if (sorts.length) {
-      sorts = sorts.join(',');
-      query.set('sort', sorts);
+      sorts = sorts.join(",");
+      query.set("sort", sorts);
     }
 
     // Handle limit and offset
-    if (this.limit) query.set('limit', this.limit);
-    if (this.offset) query.set('offset', this.offset);
+    if (this.limit) query.set("limit", this.limit);
+    if (this.offset) query.set("offset", this.offset);
 
     // Finally make the api call
-    return this.client.get(`${this.endpoint}?${query}`).then(xhr => {
-      this.data = this.parseResponse(xhr.response);
-      this.total = (xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count']) ? xhr.headers.headers['x-total-count'].value : this.data.length;
-      this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
-      console.log('[TableInterface] Load - Success');
-      this.events.dispatchEvent(this.events.loadSuccess);
-      return xhr;
-    }, xhr => {
-      //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
-      console.error('[TableInterface] Load - Failure');
-      this.events.dispatchEvent(this.events.loadFailure);
-    }).catch(error => {
-      console.error(error);
-      this.data = null;
-    }).finally(() => {
-      this.isLoading = false;
-    });
+    this.events.dispatchEvent(this.events.load);
+    return this.client
+      .get(`${this.endpoint}?${query}`)
+      .then(
+        (xhr) => {
+          this.data = this.parseResponse(xhr.response);
+          this.total =
+            xhr.headers &&
+            xhr.headers.headers &&
+            xhr.headers.headers["x-total-count"]
+              ? xhr.headers.headers["x-total-count"].value
+              : this.data.length;
+          this.storage.setItem(
+            `${this.uuid}-position`,
+            JSON.stringify({
+              limit: this.limit,
+              offset: this.offset,
+              sort: this.sort,
+            })
+          );
+          console.log("[TableInterface] Load - Success");
+          this.events.dispatchEvent(this.events.loadSuccess);
+          return xhr;
+        },
+        (xhr) => {
+          //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
+          console.error("[TableInterface] Load - Failure");
+          this.events.dispatchEvent(this.events.loadFailure);
+        }
+      )
+      .catch((error) => {
+        console.error(error);
+        this.data = null;
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   parseResponse(response) {
@@ -113,13 +138,24 @@ export class TableInterface {
 
   edit(id) {
     console.log(`Edit record ${id}`);
-    if (!this.router) return console.warn('[TableInterface] Edit - Failure: missing router configuration');
-    this.router.navigateToRoute(this.router.currentInstruction.config.name, { id });
+    if (!this.router)
+      return console.warn(
+        "[TableInterface] Edit - Failure: missing router configuration"
+      );
+    this.router.navigateToRoute(this.router.currentInstruction.config.name, {
+      id,
+    });
   }
   delete(id) {
     console.log(`Delete record ${id}`);
-    if (!this.dialog) return console.warn('[TableInterface] Delete - Warning: missing dialog configuration');
-    this.dialog.alert({ title: 'Attenzione', body: 'Confermi di voler eliminare il record selezionato?' });
+    if (!this.dialog)
+      return console.warn(
+        "[TableInterface] Delete - Warning: missing dialog configuration"
+      );
+    this.dialog.alert({
+      title: "Attenzione",
+      body: "Confermi di voler eliminare il record selezionato?",
+    });
   }
 }
 /* 

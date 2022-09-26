@@ -1,15 +1,20 @@
-import {inject, customElement, bindable, bindingMode} from 'aurelia-framework';
-import { DateTime } from 'luxon';
-import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
+import {
+  inject,
+  customElement,
+  bindable,
+  bindingMode,
+} from "aurelia-framework";
+import { DateTime } from "luxon";
+import { KaControlBackdropService } from "../ka-control-backdrop/ka-control-backdrop";
 
-require('./ka-control-date.sass');
+require("./ka-control-date.sass");
 
-@customElement('ka-control-date')
+@customElement("ka-control-date")
 @inject(Element)
 export class KaControlDate {
   // Basic input control properties
   @bindable() schema = null;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value = null;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
 
   constructor(element) {
     this.element = element;
@@ -17,17 +22,21 @@ export class KaControlDate {
   }
 
   attached() {
-    this.element.querySelector('input.display-value').addEventListener('dblclick', () => { this.open(); });
+    this.element
+      .querySelector("input.display-value")
+      .addEventListener("dblclick", () => {
+        this.open();
+      });
   }
 
   keydown() {
     return !this.schema.readonly;
   }
   focus() {
-    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+    this.element.dispatchEvent(new Event("focus", { bubbles: true }));
   }
   blur() {
-    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
+    this.element.dispatchEvent(new Event("blur", { bubbles: true }));
   }
   open() {
     this.focus();
@@ -39,20 +48,22 @@ export class KaControlDate {
     this.backdrop.close();
   }
   change() {
-    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
+    setTimeout(() => {
+      this.element.dispatchEvent(new Event("change", { bubbles: true }));
+    }, 100);
   }
 }
 export class controlDateValueConverter {
   toView(value, utc) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, 'yyyy-MM-dd');
+    let date = DateTime.fromFormat(value, "yyyy-MM-dd");
     if (!date.isValid) return value;
-    return date.toFormat('dd/MM/yyyy');
+    return date.toFormat("dd/MM/yyyy");
   }
   fromView(value, utc) {
     if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, 'dd/MM/yyyy');
+    let date = DateTime.fromFormat(value, "dd/MM/yyyy");
     if (!date.isValid) return value;
-    return date.toFormat('yyyy-MM-dd');
+    return date.toFormat("yyyy-MM-dd");
   }
 }

@@ -1,5 +1,8 @@
 <template>
-  <div class="item ${schema.readonly?'readonly':''}" repeat.for="value of _value">
+  <div
+    class="item ${schema.readonly?'readonly':''}"
+    repeat.for="value of _value"
+  >
     <div class="row g-0">
       <template repeat.for="itemSchema of schema.datasource.model.schema">
         <div class="${itemSchema.class || 'col'}">
@@ -14,12 +17,20 @@
             focus.trigger="focus()"
             blur.trigger="blur()"
             ka-tooltip.bind="itemSchema.label"
-            class="display-value ${schema.readonly?'readonly':''}">
+            class="display-value ${schema.readonly?'readonly':''}"
+          />
         </div>
       </template>
       <div class="col-3 buttons">
-        <button if.bind="!schema.readonly && $last" click.delegate="add()"><i class="fa-regular fa-plus"></i></button> 
-        <button if.bind="!schema.readonly && !$first" click.delegate="remove(value)"><i class="fa-regular fa-trash-can"></i></button> 
+        <button if.bind="!schema.readonly && $last" click.delegate="add()">
+          <i class="fa-regular fa-plus"></i>
+        </button>
+        <button
+          if.bind="!schema.readonly && !$first"
+          click.delegate="remove(value)"
+        >
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
       </div>
     </div>
   </div>
