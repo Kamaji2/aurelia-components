@@ -46,28 +46,30 @@ export class KaTooltipCustomAttribute {
             top: `${y}px`,
           });
           // Arrow
-          const {x: arrowX, y: arrowY} = middlewareData.arrow;
+          const { x: arrowX, y: arrowY } = middlewareData.arrow;
           const staticSide = {
-            top: 'bottom',
-            right: 'left',
-            bottom: 'top',
-            left: 'right',
-          }[placement.split('-')[0]];
+            top: "bottom",
+            right: "left",
+            bottom: "top",
+            left: "right",
+          }[placement.split("-")[0]];
           Object.assign(arrowElement.style, {
-            left: arrowX != null ? `${arrowX}px` : '',
-            top: arrowY != null ? `${arrowY}px` : '',
-            right: '',
-            bottom: '',
-            [staticSide]: '-4px',
+            left: arrowX != null ? `${arrowX}px` : "",
+            top: arrowY != null ? `${arrowY}px` : "",
+            right: "",
+            bottom: "",
+            [staticSide]: "-4px",
           });
         });
-      }, 1000);
-      
+      }, 700);
     });
     this.element.addEventListener("mouseleave", (e) => {
       if (!this.tooltip) return;
-      document.getElementsByTagName("body")[0].removeChild(this.tooltip);
-      this.tooltip = null;
+      this.tooltip.classList.remove("visible");
+      setTimeout(() => {
+        document.getElementsByTagName("body")[0].removeChild(this.tooltip);
+        this.tooltip = null;
+      }, 300);
     });
   }
   detached() {
