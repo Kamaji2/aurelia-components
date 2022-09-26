@@ -1,13 +1,13 @@
-import { PLATFORM } from 'aurelia-pal';
+import { PLATFORM } from "aurelia-pal";
 
-export { ResourceInterface } from './interfaces/resource';
-export { TableInterface } from './interfaces/table';
+export { ResourceInterface } from "./interfaces/resource";
+export { TableInterface } from "./interfaces/table";
 
-export { ApiService } from './services/api';
-export { AuthService } from './services/auth';
-export { UserService } from './services/user';
-export { DialogService } from './services/dialog';
-export { ToastService } from './services/toast';
+export { ApiService } from "./services/api";
+export { AuthService } from "./services/auth";
+export { UserService } from "./services/user";
+export { DialogService } from "./services/dialog";
+export { ToastService } from "./services/toast";
 
 export function configure(config, callback) {
   config = new AureliaComponentsConfiguration(config);
@@ -27,58 +27,193 @@ export class AureliaComponentsConfiguration {
     this.useButtons();
     this.useDatetime();
     this.useControls();
+    this.useTooltip();
     this.useTable();
     this.useResource();
     this.useConverters();
   }
   useLayout() {
-    console.log('%c[kamaji2-aurelia-components] loading layout modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout/ka-layout')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout-heading/ka-layout-heading')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading layout modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-layout/ka-layout/ka-layout"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-layout/ka-layout-heading/ka-layout-heading"
+      ),
+    ]);
   }
   useButtons() {
-    console.log('%c[kamaji2-aurelia-components] loading button modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-button/ka-button')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading button modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName("aurelia-components/elements/ka-button/ka-button"),
+    ]);
   }
   useDatetime() {
-    console.log('%c[kamaji2-aurelia-components] loading datetime modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-datetime/ka-datetime')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading datetime modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-datetime/ka-datetime"
+      ),
+    ]);
   }
   useControls() {
-    console.log('%c[kamaji2-aurelia-components] loading control modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control/ka-control')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-check/ka-control-check')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-combo/ka-control-combo')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-date/ka-control-date')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-datetime/ka-control-datetime')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-time/ka-control-time')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-editor/ka-control-editor')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-file/ka-control-file')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-list/ka-control-list')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-number/ka-control-number')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-password/ka-control-password')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-table/ka-control-table')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-text/ka-control-text')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-textarea/ka-control-textarea')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading control modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control/ka-control"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-check/ka-control-check"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-combo/ka-control-combo"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-date/ka-control-date"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-datetime/ka-control-datetime"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-time/ka-control-time"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-editor/ka-control-editor"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-file/ka-control-file"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-list/ka-control-list"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-number/ka-control-number"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-password/ka-control-password"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-table/ka-control-table"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-text/ka-control-text"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-control/ka-control-textarea/ka-control-textarea"
+      ),
+    ]);
+  }
+  useTooltip() {
+    console.log(
+      "%c[kamaji2-aurelia-components] loading tooltip modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/attributes/ka-tooltip/ka-tooltip"
+      ),
+    ]);
   }
   useTable() {
-    console.log('%c[kamaji2-aurelia-components] loading table modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table/ka-table')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-progressbar/ka-table-progressbar')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-toolbar/ka-table-toolbar')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-pagination/ka-table-pagination')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading table modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-table/ka-table/ka-table"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-table/ka-table-progressbar/ka-table-progressbar"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-table/ka-table-toolbar/ka-table-toolbar"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-table/ka-table-pagination/ka-table-pagination"
+      ),
+    ]);
   }
   useResource() {
-    console.log('%c[kamaji2-aurelia-components] loading resource modules', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-resource/ka-resource/ka-resource')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-resource/ka-resource-toolbar/ka-resource-toolbar')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading resource modules",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-resource/ka-resource/ka-resource"
+      ),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName(
+        "aurelia-components/elements/ka-resource/ka-resource-toolbar/ka-resource-toolbar"
+      ),
+    ]);
   }
   useConverters() {
-    console.log('%c[kamaji2-aurelia-components] loading value converters', 'color:#8b64cf;font-size:8px;');
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/date')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/datetime')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/striphtml')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/stringify')]);
+    console.log(
+      "%c[kamaji2-aurelia-components] loading value converters",
+      "color:#8b64cf;font-size:8px;"
+    );
+    this.config.globalResources([
+      PLATFORM.moduleName("aurelia-components/converters/date"),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName("aurelia-components/converters/datetime"),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName("aurelia-components/converters/striphtml"),
+    ]);
+    this.config.globalResources([
+      PLATFORM.moduleName("aurelia-components/converters/stringify"),
+    ]);
   }
 
   apply() {}
@@ -92,7 +227,7 @@ export const helpers = {
     // object1 = original data, object2 = modified data
     let data = {};
     for (let [k, v] of Object.entries(object1)) {
-      if (typeof object2[k] === 'undefined') continue;
+      if (typeof object2[k] === "undefined") continue;
       if (deep && helpers.isObject(v)) {
         let value = helpers.diffObject(v, object2[k]);
         if (value) data[k] = value;
@@ -107,7 +242,7 @@ export const helpers = {
     if (!sources.length) return target;
     const source = JSON.parse(JSON.stringify(sources.shift()));
     if (helpers.isObject(target) && helpers.isObject(source)) {
-      Object.keys(source).forEach(key => {
+      Object.keys(source).forEach((key) => {
         if (helpers.isObject(source[key])) {
           target[key] = helpers.deepMerge(target[key] || {}, source[key]);
         } else {
@@ -128,21 +263,32 @@ export const helpers = {
           name: item.name || item.href,
           href: item.href,
           route: item.route || item.href,
-          title: item.title || item.label || helpers.capitalize(item.name || item.href),
+          title:
+            item.title ||
+            item.label ||
+            helpers.capitalize(item.name || item.href),
           moduleId: item.moduleId,
-          activationStrategy: 'replace',
+          activationStrategy: "replace",
           settings: {
             hasLayout: !!item.hasLayout,
             hasLanguages: !!item.hasLanguages,
-            authRequired: (item.authGroups && item.authGroups.length > 0) || (item.authRoles && item.authRoles.length > 0) || (inherit && inherit.authGroups && inherit.authGroups.length > 0) || (inherit && inherit.authRoles && inherit.authRoles.length > 0) || !!item.authRequired,              
+            authRequired:
+              (item.authGroups && item.authGroups.length > 0) ||
+              (item.authRoles && item.authRoles.length > 0) ||
+              (inherit &&
+                inherit.authGroups &&
+                inherit.authGroups.length > 0) ||
+              (inherit && inherit.authRoles && inherit.authRoles.length > 0) ||
+              !!item.authRequired,
             authGroups: item.authGroups || null,
-            authRoles: item.authRoles || null
-          }
+            authRoles: item.authRoles || null,
+          },
         };
         routes.push(route);
       }
-      if (item.nav) routes = routes.concat(helpers.routesFromNav(item.nav, item));
+      if (item.nav)
+        routes = routes.concat(helpers.routesFromNav(item.nav, item));
     }
     return routes;
-  }
-}
+  },
+};

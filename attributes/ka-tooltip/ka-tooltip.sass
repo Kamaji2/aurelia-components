@@ -1,0 +1,31 @@
+.ka-tooltip
+  pointer-events: none
+  display: none
+  position: absolute
+  z-index: 1100
+
+  border-radius: 5px
+  padding: 1rem 1rem
+
+  font-size: 1.2rem
+  font-weight: 400
+  line-height: 1.4rem
+  color: #ffffff
+  background-color: var(--text-color)
+
+  &.visible
+    display: block
+  > span
+    a
+      color: inherit
+  > div
+    position: absolute
+    width: 8px
+    height: 8px
+    transform: rotate(45deg)
+    background-color: inherit
+  
+  &.primary
+    background-color: var(--primary-color)
+  &.secondary
+    background-color: var(--secondary-color)
