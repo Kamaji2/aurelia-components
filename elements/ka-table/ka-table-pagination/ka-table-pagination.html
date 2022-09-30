@@ -11,7 +11,7 @@
       click.trigger="paginate('back')"
       class="d-inline-flex justify-content-center align-items-center"
     >
-      <i class="fa-light fa-angles-left"></i>
+      <i class="fa-light fa-angle-left"></i>
     </button>
 
     <!-- Counter -->
@@ -23,21 +23,22 @@
       <!-- Options -->
       <div
         if.bind="optionsShown"
-        class="options-tab d-flex justify-content-start"
+        class="options-tab row"
       >
-        <ka-control
-          schema.bind="schema.limit"
-          value.bind="limit | integerCast"
-          label="Record per pagina"
-          class="no-clear"
-        ></ka-control>
-        <ka-control
-          schema.bind="schema.page"
-          value.bind="page | integerCast:'page'"
-          label="Salta alla pagina"
-          style="margin-left: 2rem"
-          class="no-clear"
-        ></ka-control>
+        <div class="col">
+          <ka-control
+            schema.bind="schema.limit"
+            value.bind="limit | integerCast"
+            buttons="dropdown"
+          ></ka-control>
+        </div>
+        <div class="col">
+          <ka-control
+            schema.bind="schema.page"
+            value.bind="page | integerCast:'page'"
+            buttons="dropdown"
+          ></ka-control>
+        </div>
       </div>
     </span>
     <div
@@ -45,7 +46,6 @@
       class="options-background"
       click.delegate="hideOptions()"
     ></div>
-
     <button
       click.trigger="paginate('forward')"
       class="d-inline-flex justify-content-center align-items-center"

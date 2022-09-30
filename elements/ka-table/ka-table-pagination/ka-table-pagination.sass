@@ -5,8 +5,8 @@ ka-table-pagination
     box-shadow: inset 1px 0 0 0 #e0e0e0, inset -1px 0 0 0 #e0e0e0
     &:first-child
       box-shadow: none
-      &:last-child
-        box-shadow: none
+    &:last-child
+      box-shadow: none
 
   .count
     display: inline-block
@@ -17,7 +17,6 @@ ka-table-pagination
     color: #606060
     padding: 0 2rem
     text-align: center
-    text-transform: lowercase
     font-size: 1.2rem
     font-weight: 500
     cursor: pointer
@@ -26,13 +25,14 @@ ka-table-pagination
       position: absolute
       top: 0
       left: 50%
-      padding: 2rem
       width: 26rem
       z-index: 101
       background-color: #ffffff
       box-shadow: 0 0 10px #0000001a, 0 10px 10px -10px #0000001a
       transform: translateX(-50%) translateY(14px)
       animation: options .5s
+      > .col
+        padding: unset
 
   .options-background
     position: fixed

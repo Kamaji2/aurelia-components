@@ -5,6 +5,7 @@ import { inject, customElement, observable } from "aurelia-framework";
 export class KaTablePagination {
   schema = {
     limit: {
+      label: 'Record per pagina',
       control: "combo",
       datasource: [
         { text: "10", value: 10 },
@@ -18,6 +19,7 @@ export class KaTablePagination {
       datamultiple: false,
     },
     page: {
+      label: 'Salta alla pagina',
       control: "combo",
       datasource: [],
       datatext: "text",

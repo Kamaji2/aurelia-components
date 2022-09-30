@@ -19,7 +19,7 @@ export class TableInterface {
   constructor(config) {
     Object.assign(this, config || {});
     this.uuid = uuidv5(
-      location.pathname + ":" + config.endpoint,
+      location.pathname + ":" + (config?.endpoint),
       "2af1d572-a35c-4248-a38e-348c560cd468"
     );
     this.storage =
