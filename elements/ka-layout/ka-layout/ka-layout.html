@@ -3,11 +3,12 @@
     <div class="ka-layout-burger" click.delegate="toggle()" ref="burgerAside">
       <i class="fa-light fa-bars"></i>
     </div>
-    <div
-      class="ka-layout-logo"
-      if.bind="config.brand"
-      style="background-image: url(${config.brand})"
-    ></div>
+    <div class="ka-layout-brand" if.bind="config.brand">
+      <div
+        class="ka-layout-logo"
+        style="background-image: url(${config.brand})"
+      ></div>
+    </div>
 
     <slot name="beforeNav"></slot>
 

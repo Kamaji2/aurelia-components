@@ -1,3 +1,5 @@
+@use "sass:math"
+
 // Vars
 $headerHeight: 5rem
 $asideWidth: 30rem
@@ -9,8 +11,8 @@ ka-layout
   .ka-layout-burger 
     display: block
     position: fixed
-    top: #{$headerHeight/2-2}
-    left: #{$headerHeight/2-2}
+    top: calc(math.div($headerHeight, 2) - 2rem)
+    left: calc(math.div($headerHeight, 2) - 2rem)
     width: 4rem
     height: 4rem
     cursor: pointer
@@ -38,31 +40,33 @@ ka-layout
 
     .ka-layout-burger
       color: var(--primary-color)
-    .ka-layout-logo
+    .ka-layout-brand
       position: relative
       display: block
-      width: 100%
       padding-bottom: 50%
-      background-position: center
-      background-repeat: no-repeat
-      background-size: 80%
+      width: 100%
+      overflow: hidden
+      background: rgba(var(--primary-color-rgb),0.1)
+      background: -moz-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
+      background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(var(--primary-color-rgb),0)), color-stop(100%, rgba(var(--primary-color-rgb),0.1)))
+      background: -webkit-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
+      background: -o-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
+      background: -ms-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
+      background: linear-gradient(to bottom, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
       box-shadow: inset 0 -10px 10px -10px rgba(var(--primary-color-rgb), 0.2), inset 0 -1px 0 0 rgba(var(--primary-color-rgb), 0.1), inset 0 10px 10px -10px rgba(var(--primary-color-rgb), 0.4)
-      transition: background-size 0.3s ease-in-out
-      transition-delay: 0.1s
-      &:after
-        content: " "
+      
+      .ka-layout-logo
         position: absolute
-        width: 100%
+        margin: 0 2rem
+        width: calc(100% - 4rem)
         height: 100%
         z-index: -1
-        background: rgba(var(--primary-color-rgb),0.1)
-        background: -moz-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
-        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(var(--primary-color-rgb),0)), color-stop(100%, rgba(var(--primary-color-rgb),0.1)))
-        background: -webkit-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
-        background: -o-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
-        background: -ms-linear-gradient(top, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
-        background: linear-gradient(to bottom, rgba(var(--primary-color-rgb),0) 0%, rgba(var(--primary-color-rgb),0.1) 100%)
-    
+        background-position: center
+        background-repeat: no-repeat
+        background-size: contain
+        transition: all 0.3s ease-in-out
+        transition-delay: 0.1s
+        
     .ka-layout-burger + nav // no brand
       margin-top: $headerHeight
 
@@ -441,7 +445,7 @@ ka-layout
   &.collapsed aside
     transform: translateX(-100%)
     .ka-layout-logo
-      background-size: 200%
+      transform: scale(2)
       transition-delay: 0.3s
   &.collapsed aside + header
     padding-left: $headerHeight
@@ -452,7 +456,7 @@ ka-layout
     transition-delay: 0s
 
 @media screen and (max-width: 860px)
-	ka-layout
+  ka-layout
     aside + header
       padding-left: $headerHeight
       left: 0
