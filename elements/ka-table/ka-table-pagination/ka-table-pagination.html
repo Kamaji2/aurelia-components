@@ -1,61 +1,35 @@
 <template>
   <require from="./ka-table-pagination.sass"></require>
   <div class="d-flex flex-nowrap">
-    <button
-      click.trigger="paginate('start')"
-      class="d-inline-flex justify-content-center align-items-center"
-    >
+    <!-- Arrows left -->
+    <button click.trigger="paginate('start')" class="d-inline-flex justify-content-center align-items-center">
       <i class="fa-light fa-angles-left"></i>
     </button>
-    <button
-      click.trigger="paginate('back')"
-      class="d-inline-flex justify-content-center align-items-center"
-    >
+    <button click.trigger="paginate('back')" class="d-inline-flex justify-content-center align-items-center">
       <i class="fa-light fa-angle-left"></i>
     </button>
 
     <!-- Counter -->
     <span click.delegate="showOptions($event)" class="count">
-      ${interface.offset + 1} - ${(interface.limit + interface.offset) <
-      interface.total ? (interface.limit + interface.offset) : interface.total}
-      di ${interface.total}
+      ${interface.offset + 1} - ${(interface.limit + interface.offset) < interface.total ? (interface.limit + interface.offset) : interface.total} di ${interface.total}
 
       <!-- Options -->
-      <div
-        if.bind="optionsShown"
-        class="options-tab row"
-      >
+      <div if.bind="optionsShown" class="options-tab row">
         <div class="col">
-          <ka-control
-            schema.bind="schema.limit"
-            value.bind="limit | integerCast"
-            buttons="dropdown"
-          ></ka-control>
+          <ka-control schema.bind="schema.limit" value.bind="limit | integerCast" buttons="dropdown"></ka-control>
         </div>
         <div class="col">
-          <ka-control
-            schema.bind="schema.page"
-            value.bind="page | integerCast:'page'"
-            buttons="dropdown"
-          ></ka-control>
+          <ka-control schema.bind="schema.page" value.bind="page | integerCast:'page'" buttons="dropdown"></ka-control>
         </div>
       </div>
     </span>
-    <div
-      if.bind="optionsShown"
-      class="options-background"
-      click.delegate="hideOptions()"
-    ></div>
-    <button
-      click.trigger="paginate('forward')"
-      class="d-inline-flex justify-content-center align-items-center"
-    >
+    <div if.bind="optionsShown" class="options-background" click.delegate="hideOptions()"></div>
+
+    <!-- Arrows right -->
+    <button click.trigger="paginate('forward')" class="d-inline-flex justify-content-center align-items-center">
       <i class="fa-light fa-angle-right"></i>
     </button>
-    <button
-      click.trigger="paginate('end')"
-      class="d-inline-flex justify-content-center align-items-center"
-    >
+    <button click.trigger="paginate('end')" class="d-inline-flex justify-content-center align-items-center">
       <i class="fa-light fa-angles-right"></i>
     </button>
   </div>

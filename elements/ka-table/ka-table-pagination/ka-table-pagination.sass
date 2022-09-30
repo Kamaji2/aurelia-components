@@ -1,6 +1,5 @@
 ka-table-pagination
   display: block
-
   button
     box-shadow: inset 1px 0 0 0 #e0e0e0, inset -1px 0 0 0 #e0e0e0
     &:first-child
@@ -20,20 +19,19 @@ ka-table-pagination
     font-size: 1.2rem
     font-weight: 500
     cursor: pointer
-
     > .options-tab
       position: absolute
       top: 0
       left: 50%
       width: 26rem
+      padding: 1rem 1rem 1.5rem
       z-index: 101
       background-color: #ffffff
       box-shadow: 0 0 10px #0000001a, 0 10px 10px -10px #0000001a
       transform: translateX(-50%) translateY(14px)
       animation: options .5s
-      > .col
-        padding: unset
-
+      > .col ka-control > label
+        text-align: left
   .options-background
     position: fixed
     background: transparent

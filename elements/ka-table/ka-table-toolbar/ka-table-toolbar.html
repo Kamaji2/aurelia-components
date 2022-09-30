@@ -1,33 +1,27 @@
 <template>
   <require from="./ka-table-toolbar.sass"></require>
-  <div class="row">
-    <div class="col buttons-left">
-      <!-- Search -->
+  <div class="row mx-0">
+    <!-- Buttons left -->
+    <div class="col px-0 buttons-left">
       <button
         if.bind="buttons.includes('search')"
         click.delegate="openSearch()"
-        class="${search.active ? 'search-active' : ''}"
-      >
+        class="${search.active ? 'search-active' : ''}">
         <i class="fa-light fa-magnifying-glass"></i>
-        <i
-          if.bind="search.active"
-          class="material-icons with-filter"
-          click.delegate="reset($event)"
-          >do_not_disturb</i
-        >
+        <i if.bind="search.active" class="material-icons with-filter" click.delegate="reset($event)">do_not_disturb</i>
       </button>
-      <!-- Download -->
-      <button
-        if.bind="buttons.includes('download')"
-        click.delegate="download()"
-      >
+      <button if.bind="buttons.includes('download')" click.delegate="download()">
         <i class="fa-light fa-arrow-down-to-arc"></i>
       </button>
     </div>
+
+    <!-- Pagination -->
     <div class="col d-flex justify-content-center flex-grow flex-wrap">
       <ka-table-pagination></ka-table-pagination>
     </div>
-    <div class="col buttons-right d-flex justify-content-end">
+
+    <!-- Buttons right -->
+    <div class="col px-0 d-flex justify-content-end align-items-center buttons-right">
       <slot></slot>
     </div>
   </div>
