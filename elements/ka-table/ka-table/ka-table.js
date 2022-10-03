@@ -1,10 +1,11 @@
-import { inject, customElement } from "aurelia-framework";
+import { inject, customElement, BindingEngine } from "aurelia-framework";
 
 @customElement("ka-table")
-@inject(Element)
+@inject(Element, BindingEngine)
 export class KaTable {
-  constructor(element) {
+  constructor(element, binding) {
     this.element = element;
+    this.binding = binding;
   }
   bind(bindingContext) {
     this.interface =
@@ -18,6 +19,15 @@ export class KaTable {
       console.error("ka-table: cannot bind to table interface!");
       return;
     }
+    // Observe change on  this.interface.isLoading
+    this.binding
+      .expressionObserver(this, 'interface.isLoading')
+      .subscribe((value) => {
+        console.debug('ka-table: observable interface.isLoading', value);
+        if (value) this.element.classList.add('isLoading')
+        else this.element.classList.remove('isLoading');
+      });
+
     this.uuid = `ka-table-${this.interface.uuid}`;
     this.element.id = this.uuid;
   }

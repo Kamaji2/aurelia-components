@@ -3,7 +3,7 @@ ka-table
   position: relative
   display: block
   overflow: auto
-  table, table.ka-table
+  table
     margin: 0
     border: 0
     padding: 0
@@ -41,7 +41,9 @@ ka-table
           box-shadow: -5px 0 5px -5px #00000040
           > .material-icons
             width: 2.2rem
-
+  &.isLoading
+    table
+      filter: blur(2px)
   .ka-table-tools
     ka-button + ka-button
       margin-left: 0
