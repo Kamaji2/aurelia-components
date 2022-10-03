@@ -442,6 +442,43 @@ ka-layout
     transition: all 0.3s ease-in-out
     transition-delay: 0.1s
   
+  #ka-layout-loader
+    display: none
+    position: fixed
+    top: $headerHeight
+    right: 0
+    bottom: 0
+    left: $asideWidth
+    z-index: 1
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    transition: all 0.3s ease-in-out
+    transition-delay: 0.1s
+    &.visible
+      display: flex
+    > div
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      background-color: var(--background-color)
+      &:before, &:after
+        content: ' '
+        position: absolute
+        border-radius: 50%
+        width: 1rem
+        height: 1rem
+        top: 50%
+        background-color: var(--primary-color)
+        transform: translate(-50%, -50%)
+        will-change: left, transform
+      &:after
+        animation: left-to-right 0.5s linear infinite
+      &:before
+        animation: right-to-left 0.5s linear infinite
+
   &.collapsed aside
     transform: translateX(-100%)
     .ka-layout-logo
@@ -454,6 +491,8 @@ ka-layout
   &.collapsed+router-view
     left: 0
     transition-delay: 0s
+  &.collapsed #ka-layout-loader
+    left: 0
 
 @media screen and (max-width: 860px)
   ka-layout
@@ -471,6 +510,7 @@ ka-layout
         text-transform: uppercase
       .ka-layout-user
         display: none
+
 
 router-view
   display: block

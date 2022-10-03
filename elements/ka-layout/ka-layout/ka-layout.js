@@ -1,19 +1,20 @@
 import { inject, customElement, bindable } from "aurelia-framework";
 import { Router } from "aurelia-router";
-import { helpers } from "aurelia-components";
+import { LayoutService, helpers } from "aurelia-components";
 
 require("./ka-layout.sass");
 
 @customElement("ka-layout")
-@inject(Element, Router)
+@inject(Element, LayoutService, Router)
 export class KaLayout {
   @bindable() config = null;
 
   _collapsed = false;
   _intervals = [];
 
-  constructor(element, router) {
+  constructor(element, layout, router) {
     this.element = element;
+    this.layout = layout;
     this.router = router;
     // Handle click on burger to expand/collapse aside navigation
     document.addEventListener("click", (e) => {
@@ -35,6 +36,11 @@ export class KaLayout {
       if (!isBurger && !this._collapsed && window.innerWidth < 860)
         this.toggle();
     });
+    // Share selected functions to LayoutService
+    this.layout.aside.show = () => { this.asideShow.call(this) };
+    this.layout.aside.hide = () => { this.asideHide.call(this) };
+    this.layout.loader.show = () => { this.loaderShow.call(this) };
+    this.layout.loader.hide = () => { this.loaderHide.call(this) };
   }
 
   attached() {
@@ -62,6 +68,20 @@ export class KaLayout {
     this._collapsed = !this._collapsed;
     if (this._collapsed) this.element.classList.add("collapsed");
     else this.element.classList.remove("collapsed");
+  }
+  asideShow() {
+    this._collapsed = false;
+    this.element.classList.remove("collapsed");
+  }
+  asideHide() {
+    this._collapsed = true;
+    this.element.classList.add("collapsed");
+  }
+  loaderShow() {
+    this.loader.classList.add("visible");
+  }
+  loaderHide() {
+    this.loader.classList.remove("visible");
   }
 
   activateBadges(items) {

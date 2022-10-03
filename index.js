@@ -4,6 +4,7 @@ export { ResourceInterface } from "./interfaces/resource";
 export { TableInterface } from "./interfaces/table";
 
 export { ApiService } from "./services/api";
+export { LayoutService } from "./services/layout";
 export { AuthService } from "./services/auth";
 export { UserService } from "./services/user";
 export { DialogService } from "./services/dialog";
