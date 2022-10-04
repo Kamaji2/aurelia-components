@@ -49,13 +49,14 @@ export class KaResourceToolbar {
       this.toast.show(`${message}!`, 'success');
       this.close();
     }, error => {
-      let message = error.info.context === 'validation' ? this.i18n.tr('Data validation error') : this.i18n.tr(error.info?.message || error.detail?.message || undefined);
-      if (['sanitization', 'validation'].includes(error.info.context)) {
-        this.toast.show(`${this.i18n.tr('Warning')}: ${message}!`, 'warning');
-      } else if (['xhr'].includes(error.info.context)) {
-        this.toast.show(`${this.i18n.tr('Server error')}: ${message}!`, 'error');
+      if (error.info?.context === 'sanitization') {
+        this.toast.show(`${this.i18n.tr('Warning')}: ${this.i18n.tr(error.info?.message || error.detail?.message)}!`, 'warning');
+      } else if (error.info?.context === 'validation') {
+        this.toast.show([`${this.i18n.tr('Warning')}: ${this.i18n.tr('Data validation error')}!`, this.i18n.tr(error.info?.message || error.detail?.message)], 'warning');
+      } else if (error.info?.context === 'xhr') {
+        this.toast.show([`${this.i18n.tr('Server error')}!`, this.i18n.tr(error.info?.message || error.detail?.message)], 'error');
       } else {
-        this.toast.show(`${this.i18n.tr('Error')}: ${message}`, 'error');
+        this.toast.show([`${this.i18n.tr('Error')}!`, this.i18n.tr(error.info?.message || error.detail?.message)], 'error');
       }
       console.error(error.name, error.info);
     }).catch(error => {
