@@ -78,9 +78,11 @@ export class KaLayout {
     this.element.classList.add("collapsed");
   }
   loaderShow() {
+    if (!this.loader) return;
     this.loader.classList.add("visible");
   }
   loaderHide() {
+    if (!this.loader) return;
     this.loader.classList.remove("visible");
   }
 
