@@ -24,6 +24,10 @@ export class DialogService {
     params.type = "confirm";
     return this.open(params, lock);
   }
+  continue(params = {}, lock) {
+    params.type = "continue";
+    return this.open(params, lock);
+  }
 }
 
 import { inlineView } from "aurelia-framework";
@@ -43,8 +47,13 @@ import { DialogController } from "aurelia-dialog";
       </ux-dialog-footer>
 
       <ux-dialog-footer if.bind="type==='confirm'">
-        <ka-button class="inverted" click.delegate="DialogController.cancel(model || null)">Annulla</ka-button>
-        <ka-button click.delegate="DialogController.ok(model || null)">Continua</ka-button>
+        <ka-button class="inverted" click.delegate="DialogController.cancel(model || null)">\${'Cancel'|t}</ka-button>
+        <ka-button click.delegate="DialogController.ok(model || null)">\${'Confirm'|t}</ka-button>
+      </ux-dialog-footer>
+
+      <ux-dialog-footer if.bind="type==='continue'">
+        <ka-button class="inverted" click.delegate="DialogController.cancel(model || null)">\${'Cancel'|t}</ka-button>
+        <ka-button click.delegate="DialogController.ok(model || null)">\${'Continue'|t}</ka-button>
       </ux-dialog-footer>
 
     </ux-dialog>
