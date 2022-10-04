@@ -58,8 +58,4 @@ export class KaResource {
     window.removeEventListener("resize", window[`resize-handler-${this.uuid}`]);
     delete window[`resize-handler-${this.uuid}`];
   }
-
-  save() {
-    console.log("Save");
-  }
 }

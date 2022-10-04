@@ -3,17 +3,10 @@
   <div class="row">
     <div class="col buttons buttons-left"></div>
     <div class="col buttons buttons-right">
-      <slot></slot>
-      <!--
-      <ka-button if.bind="interface.toolbar.cancel" icon="fa-solid fa-xmark" class="secondary inverted" click.delegate="interface.toolbar.cancel()">Cancel</ka-button>
-      <ka-button if.bind="interface.toolbar.delete" icon="fa-solid fa-trash-xmark" class="accent inverted" click.delegate="interface.toolbar.delete()">Delete</ka-button>
-      <ka-button if.bind="interface.toolbar.save" icon="fa-solid fa-check" class="ka-resource-button-save" click.delegate="interface.toolbar.save()">Save</ka-button>
-      -->
-      <!--
-      <button if.bind="interface.toolbar.cancel" class="ka-resource-button-cancel" click.delegate="interface.toolbar.cancel()"><i class="fa-light fa-xmark"></i><span>Cancel</span></button>
-      <button if.bind="interface.toolbar.delete" class="ka-resource-button-delete" click.delegate="interface.toolbar.delete()"><i class="fa-light fa-trash-xmark"></i><span>Delete</span></button>
-      <button if.bind="interface.toolbar.save" class="ka-resource-button-save" click.delegate="interface.toolbar.save()"><i class="fa-light fa-check"></i><span>Save</span></button>
-      -->
+      <slot>
+        <ka-button click.delegate="cancel()"  icon="fa-solid fa-xmark" class="inverted">${'Cancel'|t}</ka-button>
+        <ka-button click.delegate="save()" icon="fa-solid fa-check" class="ka-resource-button-save">${'Save'|t}</ka-button>
+      </slot>
     </div>
   </div>
 </template>
