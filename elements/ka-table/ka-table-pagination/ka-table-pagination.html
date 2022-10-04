@@ -2,34 +2,32 @@
   <require from="./ka-table-pagination.sass"></require>
   <div class="d-flex flex-nowrap">
     <!-- Arrows left -->
-    <button click.trigger="paginate('start')" class="d-inline-flex justify-content-center align-items-center">
+    <button click.trigger="paginate('start')" class="d-inline-flex justify-content-center align-items-center" ka-tooltip="value.bind: 'First page' | t; placement: left;">
       <i class="fa-light fa-angles-left"></i>
     </button>
-    <button click.trigger="paginate('back')" class="d-inline-flex justify-content-center align-items-center">
+    <button click.trigger="paginate('back')" class="d-inline-flex justify-content-center align-items-center" ka-tooltip="value.bind: 'Previous page' | t; placement: left;">
       <i class="fa-light fa-angle-left"></i>
     </button>
 
     <!-- Counter -->
-    <span click.delegate="showOptions($event)" class="count">
-      ${interface.offset + 1} - ${(interface.limit + interface.offset) < interface.total ? (interface.limit + interface.offset) : interface.total} di ${interface.total}
-
-      <!-- Options -->
-      <div if.bind="optionsShown" class="options-tab row">
-        <div class="col">
-          <ka-control schema.bind="schema.limit" value.bind="limit | integerCast" buttons="dropdown"></ka-control>
+    <span click.delegate="showOptions($event)" class="count" ka-tooltip="value.bind: 'Pagination options' | t; placement.bind: optionsShown ? 'top' : 'bottom';">
+      ${interface.offset + 1} - ${(interface.limit + interface.offset) < interface.total ? (interface.limit + interface.offset) : interface.total} di ${interface.total} <!-- Options -->
+        <div if.bind="optionsShown" class="options-tab row">
+          <div class="col">
+            <ka-control schema.bind="schema.limit" value.bind="limit | integerCast" buttons="dropdown"></ka-control>
+          </div>
+          <div class="col">
+            <ka-control schema.bind="schema.page" value.bind="page | integerCast:'page'" buttons="dropdown"></ka-control>
+          </div>
         </div>
-        <div class="col">
-          <ka-control schema.bind="schema.page" value.bind="page | integerCast:'page'" buttons="dropdown"></ka-control>
-        </div>
-      </div>
     </span>
     <div if.bind="optionsShown" class="options-background" click.delegate="hideOptions()"></div>
 
     <!-- Arrows right -->
-    <button click.trigger="paginate('forward')" class="d-inline-flex justify-content-center align-items-center">
+    <button click.trigger="paginate('forward')" class="d-inline-flex justify-content-center align-items-center" ka-tooltip="value.bind: 'Next page' | t; placement: right;">
       <i class="fa-light fa-angle-right"></i>
     </button>
-    <button click.trigger="paginate('end')" class="d-inline-flex justify-content-center align-items-center">
+    <button click.trigger="paginate('end')" class="d-inline-flex justify-content-center align-items-center" ka-tooltip="value.bind: 'Last page' | t; placement: right;">
       <i class="fa-light fa-angles-right"></i>
     </button>
   </div>

@@ -5,12 +5,16 @@
     <div class="col px-0 buttons-left">
       <button
         if.bind="buttons.includes('search')"
-        click.delegate="openSearch()"
-        class="${search.active ? 'search-active' : ''}">
+        click.delegate="searchAction()"
+        class="${search.active ? 'search-active' : ''}"
+        ka-tooltip="value.bind: 'Search' | t; placement: right;">
         <i class="fa-light fa-magnifying-glass"></i>
         <i if.bind="search.active" class="material-icons with-filter" click.delegate="reset($event)">do_not_disturb</i>
       </button>
-      <button if.bind="buttons.includes('download')" click.delegate="download()">
+      <button
+        if.bind="buttons.includes('download')"
+        click.delegate="downloadAction()"
+        ka-tooltip="value.bind: 'Download' | t; placement: right;">
         <i class="fa-light fa-arrow-down-to-arc"></i>
       </button>
     </div>
@@ -22,6 +26,12 @@
 
     <!-- Buttons right -->
     <div class="col px-0 d-flex justify-content-end align-items-center buttons-right">
+      <button
+        if.bind="buttons.includes('add')"
+        click.delegate="addAction()"
+        ka-tooltip="value.bind: 'Add' | t; placement: left;">
+        <i class="fa-light fa-plus"></i>
+      </button>
       <slot></slot>
     </div>
   </div>

@@ -3,8 +3,7 @@ import { inject, customElement, bindable } from "aurelia-framework";
 @customElement("ka-table-toolbar")
 @inject(Element)
 export class KaTableToolbar {
-  @bindable() search = {};
-  @bindable() download = () => {};
+  @bindable() search = { active: false };
 
   constructor(element) {
     this.element = element;
@@ -29,4 +28,8 @@ export class KaTableToolbar {
       this.buttons = this.element.getAttribute("buttons").split(",");
     }
   }
+
+  searchAction() {}
+  downloadAction() {}
+  addAction() {}
 }
