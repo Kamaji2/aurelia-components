@@ -9,7 +9,7 @@ export class ResourceInterface {
   schema = {};
   data = {};
   settings = {
-    initializeWithDataset: false,
+    initializeWithDataset: false
   };
 
   // API Response data parser functions
@@ -170,14 +170,6 @@ export class ResourceInterface {
                 this.parsers[`${method}Request`](data)
               )
                 .then((xhr) => {
-                  /*
-            // Auto update resource data has been commented out as it gets really complex
-            // when sent data has been manipulated by request parser
-            if (this.client.isKamaji) {
-              this.data = this.parsers[`${method}Response`](this.parsers.getKamajiResponse(xhr.response));
-              this._data = JSON.parse(JSON.stringify(this.data));
-            }
-            */
                   resolve(xhr);
                 })
                 .catch((error) => {
@@ -200,6 +192,7 @@ export class ResourceInterface {
           detail: xhr.response,
         });
         this.events.dispatchEvent(this.events[`${method}Success`]);
+        return xhr;
       })
       .catch((error) => {
         console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
@@ -209,13 +202,14 @@ export class ResourceInterface {
         });
         this.events.dispatchEvent(this.events[`${method}Failure`]);
         // Prepare and throw custom ResourceError
-        if (error.name && ["TypeError", "SyntaxError"].includes(error.name)) {
+        if (error.name && ["TypeError", "SyntaxError", "ReferenceError"].includes(error.name)) {
           error = {
             context: "js",
             message: `${error.name}: ${error.message}`,
             detail: JSON.parse(
               JSON.stringify(error, Object.getOwnPropertyNames(error))
             ),
+            original: error
           };
         }
         throw new ResourceError(Object.assign({ method }, error));
