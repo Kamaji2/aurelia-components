@@ -51,7 +51,22 @@ export class KaButton {
     this.element.addEventListener("mouseup", active);
     this.element.addEventListener("touchend", active);
 
+    // Prevent multiple fast clicks hack
+    this.element.addEventListener("click", (event) => {
+      if (this.click_pending) {
+        event.preventDefault();
+        event.stopPropagation(); 
+      } else this.click_pending = true;
+      setTimeout(() => {
+        this.click_pending = false;
+      }, 1000);
+    });
+
     this.init();
+  }
+
+  click() {
+    console.log('click');
   }
 
   disabledChanged(value) {
