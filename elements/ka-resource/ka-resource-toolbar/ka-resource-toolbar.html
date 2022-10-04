@@ -1,12 +1,22 @@
 <template>
   <require from="./ka-resource-toolbar.sass"></require>
   <div class="row">
-    <div class="col buttons buttons-left"></div>
+    <div class="col buttons buttons-left"><slot name="buttons-left"></slot></div>
     <div class="col buttons buttons-right">
-      <slot>
-        <ka-button click.delegate="cancel()"  icon="fa-solid fa-xmark" class="inverted">${'Cancel'|t}</ka-button>
-        <ka-button click.delegate="save()" icon="fa-solid fa-check" class="ka-resource-button-save">${'Save'|t}</ka-button>
-      </slot>
+      <slot></slot>
+      <ka-button
+        if.bind="buttons.includes('cancel')"
+        click.delegate="buttonCancel()"
+        icon="fa-solid fa-xmark"
+        class="inverted">
+        ${'Cancel'|t}
+      </ka-button>
+      <ka-button
+        if.bind="buttons.includes('save')"
+        click.delegate="buttonSave()"
+        icon="fa-solid fa-check">
+        ${'Save'|t}
+      </ka-button>
     </div>
   </div>
 </template>

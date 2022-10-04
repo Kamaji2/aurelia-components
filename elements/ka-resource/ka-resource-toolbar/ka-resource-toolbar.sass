@@ -2,69 +2,11 @@ $borderColor: #e0e0e0
 ka-resource-toolbar
   display: block
   width: 100%
-  //box-shadow: inset 0 -1px 0 $borderColor, 0 10px 10px -10px $borderColor
   .buttons
     display: flex
+    &.buttons-right
+      justify-content: end
     ka-button
       margin: 1rem 0.5rem
       &:last-of-type
         margin-right: 0
-    &.buttons-left
-      button:first-of-type
-        border-left: 0
-    &.buttons-right
-      justify-content: end
-      button:last-of-type
-        border-right: 0
-    button
-      display: inline-block
-      appearance: none
-      outline: none
-      cursor: pointer
-      margin: 0
-      border: 1px solid $borderColor
-      border-top: 0
-      padding: 0
-      width: 4rem
-      height: 4rem
-      overflow: hidden
-      line-height: 4rem
-      color: rgba(var(--text-color-rgb), 0.5)
-      vertical-align: top
-      background: transparent
-      //box-shadow:  inset 0 1px 0 $borderColor, inset 0 -1px 0 $borderColor, inset 1px 0 0 $borderColor, inset -1px 0 0 $borderColor
-      transition: all 0.5s
-      i
-        display: block
-        width: 4rem
-        height: 4rem
-        font-size: 2rem
-        line-height: inherit
-        color: inherit
-        text-align: center
-        transition: all 0.5s
-      span
-        display: block
-        font-size: 0.8rem
-        line-height: 4rem
-        text-align: center
-        text-transform: uppercase
-        color: inherit
-        transition: all 0.5s
-    button:focus
-      box-shadow: 0 0 10px -4px rgba(var(--text-color-rgb), 0.5)
-    button:hover
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, white 25%)
-      i
-        transform: translateY(100%)
-      span
-        transform: translateY(-100%)
-    button+button
-       border-left: 0
-      
-    button.ka-resource-button-cancel i
-      color: var(--text-color)
-    button.ka-resource-button-save i
-      color: var(--success-color)
-    button.ka-resource-button-delete
-      color: var(--error-color)
