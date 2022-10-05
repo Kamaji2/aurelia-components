@@ -1,8 +1,23 @@
 {
-  "extends": "./node_modules/aurelia-tools/.eslintrc.json",
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "legacyDecorators": true
-    }
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "overrides": [
+  ],
+  "rules": {
+    "array-bracket-newline": ["error", { "multiline": true }],
+    "dot-location": ["error", "property"],
+    "multiline-ternary": ["error", "never"]
   }
 }

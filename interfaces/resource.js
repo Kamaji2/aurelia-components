@@ -1,6 +1,5 @@
 import { helpers } from "aurelia-components";
 import { v5 as uuidv5 } from "uuid";
-import { DateTime } from "luxon";
 
 export class ResourceInterface {
   client = null;
@@ -80,29 +79,22 @@ export class ResourceInterface {
         );
       new Promise((resolve, reject) => {
         if (this.settings.initializeWithDataset) {
-          this.client
-            .get(`datasets/${this.endpoint}`)
-            .then((xhr) => {
+          this.client.get(`datasets/${this.endpoint}`).then((xhr) => {
               let schema = {};
               xhr.response.forEach((control) => {
                 schema[control.field] = control;
-              });
-              this.schema =
-                this.schema && Object.keys(this.schema).length
-                  ? helpers.deepMerge(schema, this.schema)
-                  : schema;
+              }); 
+              this.schema = this.schema && Object.keys(this.schema).length ?helpers.deepMerge(schema, this.schema) :schema;
               resolve();
-            })
-            .catch((error) => {
+            }).catch((error) => {
               console.error(error);
               reject(`could not retrieve dataset for ${this.endpoint}`);
             });
         } else resolve();
+      }).then(() => {
+        if (this.schema && Object.keys(this.schema).length) return resolve();
+        else return reject("missing schema configuration");
       })
-        .then(() => {
-          if (this.schema && Object.keys(this.schema).length) return resolve();
-          else return reject("missing schema configuration");
-        })
         .catch((error) => reject(error));
     })
       .then(() => {
@@ -173,8 +165,7 @@ export class ResourceInterface {
                   resolve(xhr);
                 })
                 .catch((error) => {
-                  this.parseError(error);
-                  reject({
+                  reject(this.parseError(error) || {
                     context: "xhr",
                     message: `${error.statusCode} ${error.statusText}`,
                     detail: error,
@@ -224,14 +215,23 @@ export class ResourceInterface {
         new Promise((resolve, reject) => {
           control.validate().then((result) => {
             if (result.valid) resolve();
-            else
-              reject({
-                context: "validation",
-                message: `Control "${
-                  control.name || control.schema?.label || "undefined"
-                }" didn't pass validation`,
-                detail: control,
-              });
+            else {
+              let message = control.validator?.errors?.length ? control.validator.errors[0].message : null;
+              let label = control.schema?.label || control.schema?.field || control.name || null;
+              if (message) {
+                reject({
+                  context: "validation",
+                  message: (label ? `${label}: ` : '') + message,
+                  detail: control,
+                });
+              } else {
+                reject({
+                  context: "validation",
+                  message: `Control "${control.name || control.schema?.label || 'undefined'}" didn't pass validation`,
+                  detail: control,
+                });
+              }
+            }
           });
         })
       );
@@ -269,12 +269,10 @@ export class ResourceInterface {
                   let filedata = { filename: object[key][0].name },
                     reader = new FileReader();
                   reader.readAsDataURL(object[key][0]);
-                  reader.onload = (x) => {
-                    filedata.stream = reader.result.indexOf("base64,")
-                      ? reader.result.slice(
-                          reader.result.indexOf("base64,") + 7
-                        )
-                      : reader.result;
+                  reader.onload = () => {
+                    filedata.stream = reader.result.indexOf("base64,")? reader.result.slice(
+                        reader.result.indexOf("base64,") + 7
+                      ): reader.result;
                     object[key] = filedata;
                     passed();
                   };
@@ -330,27 +328,33 @@ export class ResourceInterface {
     });
   }
   parseError(xhr) {
-    if (
-      !xhr.response ||
-      typeof xhr.response !== "string" ||
-      !xhr.response.startsWith("{")
-    )
-      return;
-    let response = JSON.parse(xhr.response);
+    let response;
+    if (!xhr.response) return;
+    if (typeof xhr.response === "string" || xhr.response.startsWith("{")) {
+      try {
+        response = JSON.parse(xhr.response);
+      } catch (error) {
+        return;
+      }
+    } else {
+      response = xhr.response;
+    }
     // Attempt to handle Kamaji API Error
-    if (this.client.isKamaji && response.errors) {
-      /* TODO
-      for (let error of response.errors) {
-        // Gestisci errore formato kamaji
-        if (error.arg && Array.isArray(error.arg) && error.arg[0]) this.toast.show(`<strong>${this.schema[error.arg[0]].label}</strong>: ${error.msg}`, 'error');
-        else if (error.arg && typeof error.arg === 'object') this.toast.show(`<strong>${this.schema[Object.keys(error.arg)[0]].label}</strong>: ${error.msg}`, 'error');
-        // Gestisci errore formato gateway
-        else if (error.message) {
-          let message = (error.data && this.schema[error.data] ? `<strong>${this.schema[error.data].label}</strong>: ` : '') + error.message;
-          this.toast.show(message, 'error');
+    if (response.errors && response.errors[0] && response.errors[0].msg) {
+      // Handle server 4xx error codes
+      if (response.errors[0].num && String(response.errors[0].num).match(/^4[0-9]{2}$/)) {
+        console.log(this.controls, Object.keys(response.errors[0].arg)[0]);
+        let label, field = Object.keys(response.errors[0].arg)[0] || null;
+        if (this.controls[field]) {
+          label = this.controls[field].schema?.label || this.controls[field].schema?.field || this.controls[field].name || null;
+          this.controls[field].setError(response.errors[0].msg);
+        }
+        return {
+          context: 'validation',
+          message: (label ? `${label}: ` : '') + response.errors[0].msg,
+          detail: response.errors[0]
         }
       }
-      */
     }
   }
 }

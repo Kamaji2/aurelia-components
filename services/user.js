@@ -36,7 +36,7 @@ export class UserService {
     this.data = null;
     return new Promise((resolve, reject) => {
       this.api
-        .get("me")
+        .get('me?depth=0')
         .then((xhr) => {
           this.data = xhr.response;
           resolve(this);
