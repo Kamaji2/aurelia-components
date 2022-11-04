@@ -4,7 +4,6 @@ import { v5 as uuidv5 } from "uuid";
 export class TableInterface {
   client = null;
   endpoint = null;
-  router = null;
   dialog = null;
   data = [];
   settings = {
@@ -18,10 +17,8 @@ export class TableInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5(location.pathname + ":" + (config?.endpoint),
-      "2af1d572-a35c-4248-a38e-348c560cd468");
-    this.storage =
-      ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
+    this.uuid = uuidv5(location.pathname + ":" + (config?.endpoint), "2af1d572-a35c-4248-a38e-348c560cd468");
+    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Custom events
     this.events = document.createTextNode(null);
     this.events.load = new CustomEvent("load", { detail: this });
@@ -37,7 +34,6 @@ export class TableInterface {
       if (!this.endpoint || !this.client) return reject("missing endpoint or client configuration, interface won't be able to call api endpoints");
       resolve();
     }).then(() => {
-      if (!this.router) console.warn("[TableInterface] Initialization warning: missing router configuration, interface won't be able to change route (eg: edit)");
       Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
       console.log("[TableInterface] Initialized");
     }).catch((error) => {
@@ -114,24 +110,6 @@ export class TableInterface {
 
   parseResponse(response) {
     return response;
-  }
-
-  edit(id) {
-    console.log(`Edit record ${id}`);
-    if (!this.router)
-      return console.warn("[TableInterface] Edit - Failure: missing router configuration");
-    this.router.navigateToRoute(this.router.currentInstruction.config.name, {
-      id
-    });
-  }
-  delete(id) {
-    console.log(`Delete record ${id}`);
-    if (!this.dialog)
-      return console.warn("[TableInterface] Delete - Warning: missing dialog configuration");
-    this.dialog.alert({
-      title: "Attenzione",
-      body: "Confermi di voler eliminare il record selezionato?"
-    });
   }
 }
 /* 
