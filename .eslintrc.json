@@ -6,18 +6,29 @@
   "extends": [
     "eslint:recommended"
   ],
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
+    "requireConfigFile": false,
     "ecmaFeatures": {
       "legacyDecorators": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "babelOptions": {
+      "plugins": [
+        ["@babel/plugin-proposal-decorators", { "legacy": true }]
+      ]
+    }
   },
   "overrides": [
   ],
   "rules": {
     "array-bracket-newline": ["error", { "multiline": true }],
     "dot-location": ["error", "property"],
-    "multiline-ternary": ["error", "never"]
+    "multiline-ternary": ["error", "never"],
+    "object-curly-spacing": ["error", "always", { "objectsInObjects": true, "arraysInObjects": true }],
+    "function-paren-newline": ["error", "never"],
+    "space-in-parens": ["error", "never"],
+    "comma-dangle": ["error", "never"]
   }
 }
