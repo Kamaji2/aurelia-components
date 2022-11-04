@@ -15,12 +15,12 @@ export class KaTooltipCustomAttribute {
 
   attached() {
     this.element.addEventListener("mouseenter", (e) => {
-      if (this.tooltip) return;
+      if (this.tooltip || !this.value || !this.value.trim().length) return;
       this.tooltip = document.createElement("div");
       this.tooltip.role = "tooltip";
       this.tooltip.classList.add("ka-tooltip");
       if (this.style) this.tooltip.classList.add(this.style);
-      this.tooltip.innerHTML = `<span>${this.value}</span><div></div>`;
+      this.tooltip.innerHTML = `<div class="value">${this.value}</div><div class="arrow"></div>`;
       document
         .getElementsByTagName("body")[0]
         .insertBefore(
@@ -31,7 +31,7 @@ export class KaTooltipCustomAttribute {
       setTimeout(() => {
         if (!this.tooltip) return;
         this.tooltip.classList.add("visible");
-        const arrowElement = this.tooltip.querySelector("div");
+        const arrowElement = this.tooltip.querySelector("div.arrow");
         computePosition(e.target, this.tooltip, {
           placement: this.placement,
           middleware: [
