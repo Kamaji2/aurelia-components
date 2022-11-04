@@ -54,10 +54,10 @@ export class KaLayout {
     if (!this.config) console.warn("[ka-layout] Missing configuration");
     let config = {
       brand: null,
-      user: { groups: [], roles: [] },
+      user: { roles: [] },
       profile: null, // { name: '', description: '' }
       navigation: { items: [] },
-      toolbar: { items: [] },
+      toolbar: { items: [] }
     };
     this.config = helpers.deepMerge(config, this.config);
     this.activateBadges(this.config.navigation.items);
@@ -120,9 +120,7 @@ export class KaLayout {
 
     // Remove class visible
     if (
-      this.element.querySelectorAll(
-        `ul[data-subtool]:not([data-subtool="${index}"])`
-      )
+      this.element.querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`)
     ) {
       this.element
         .querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`)
@@ -136,21 +134,9 @@ export class KaLayout {
   }
 
   authorized(item) {
-    let userGroups = this.config.user
-      ? this.config.user.group || this.config.user.groups || []
-      : [];
-    if (!Array.isArray(userGroups)) userGroups = [userGroups];
-    let userGroupsPassed =
-      !item.authGroups ||
-      (item.authGroups && userGroups.some((e) => item.authGroups.includes(e)));
-    let userRoles = this.config.user
-      ? this.config.user.role || this.config.user.roles || []
-      : [];
-    if (!Array.isArray(userRoles)) userGroups = [userRoles];
-    let userRolesPassed =
-      !item.authRoles ||
-      (item.authRoles && userRoles.some((e) => item.authRoles.includes(e.id)));
-    return userGroupsPassed && userRolesPassed;
+    let userRoles = this.config.user? this.config.user.role || this.config.user.roles || []: [];
+    if (!Array.isArray(userRoles)) userRoles = [userRoles];
+    return !item.authRoles || (item.authRoles && userRoles.some((e) => item.authRoles.includes(e)));
   }
 
   expand(item) {

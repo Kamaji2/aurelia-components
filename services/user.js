@@ -6,10 +6,7 @@ export class UserService {
   constructor(api, auth) {
     this.api = api;
     this.auth = auth;
-    this.storage =
-      ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]
-        ? window[ENVIRONMENT.APP_STORAGE]
-        : localStorage;
+    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
     // Custom events
     this.events = document.createTextNode(null);
     this.events.dataChanged = new CustomEvent("dataChanged", { detail: this });
@@ -35,15 +32,12 @@ export class UserService {
   fetch() {
     this.data = null;
     return new Promise((resolve, reject) => {
-      this.api
-        .get('me?depth=0')
-        .then((xhr) => {
-          this.data = xhr.response;
-          resolve(this);
-        })
-        .catch((error) => {
-          reject("user fetch failed");
-        });
+      this.api.get('me?depth=0').then((xhr) => {
+        this.data = xhr.response;
+        resolve(this);
+      }).catch(() => {
+        reject("user fetch failed");
+      });
     });
   }
 }
