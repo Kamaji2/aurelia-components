@@ -8,10 +8,7 @@ export class KaTable {
     this.binding = binding;
   }
   bind(bindingContext) {
-    this.interface =
-      bindingContext && bindingContext.constructor?.name === "TableInterface"
-        ? bindingContext
-        : null;
+    this.interface = bindingContext && bindingContext.constructor?.name === "TableInterface"? bindingContext: null;
     if (!this.interface) {
       console.error("ka-table: missing table interface!");
       return;
@@ -36,9 +33,7 @@ export class KaTable {
       let element = document.querySelector(`#${this.uuid}`);
       if (!element) return;
       element.style.height = "0px";
-      element.style.height =
-        parseInt(window.innerHeight - element.getBoundingClientRect().top) +
-        "px";
+      element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
     };
     window[`resize-handler-${this.uuid}`] = resizeHandler;
     window.addEventListener("resize", window[`resize-handler-${this.uuid}`]);

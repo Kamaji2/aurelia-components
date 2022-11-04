@@ -8,7 +8,7 @@ export class TableInterface {
   dialog = null;
   data = [];
   settings = {
-    initializeWithDataset: false,
+    initializeWithDataset: false
   };
   query = null;
   limit = 10;
@@ -18,14 +18,10 @@ export class TableInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5(
-      location.pathname + ":" + (config?.endpoint),
-      "2af1d572-a35c-4248-a38e-348c560cd468"
-    );
+    this.uuid = uuidv5(location.pathname + ":" + (config?.endpoint),
+      "2af1d572-a35c-4248-a38e-348c560cd468");
     this.storage =
-      ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]
-        ? window[ENVIRONMENT.APP_STORAGE]
-        : localStorage;
+      ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Custom events
     this.events = document.createTextNode(null);
     this.events.load = new CustomEvent("load", { detail: this });
@@ -36,27 +32,17 @@ export class TableInterface {
   }
 
   initialize() {
+    if (this.initialized) return this.initialized;
     return new Promise((resolve, reject) => {
-      if (!this.endpoint || !this.client)
-        return reject(
-          "missing endpoint or client configuration, interface won't be able to call api endpoints"
-        );
+      if (!this.endpoint || !this.client) return reject("missing endpoint or client configuration, interface won't be able to call api endpoints");
       resolve();
-    })
-      .then(() => {
-        if (!this.router)
-          console.warn(
-            "[TableInterface] Initialization warning: missing router configuration, interface won't be able to change route (eg: edit)"
-          );
-        Object.assign(
-          this,
-          JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {}
-        );
-        console.log("[TableInterface] Initialized");
-      })
-      .catch((error) => {
-        console.warn(`[TableInterface] Initialization failed: ${error}`);
-      });
+    }).then(() => {
+      if (!this.router) console.warn("[TableInterface] Initialization warning: missing router configuration, interface won't be able to change route (eg: edit)");
+      Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
+      console.log("[TableInterface] Initialized");
+    }).catch((error) => {
+      console.warn(`[TableInterface] Initialization failed: ${error}`);
+    });
   }
 
   async load(params = null, sort = null) {
@@ -96,23 +82,18 @@ export class TableInterface {
     this.events.dispatchEvent(this.events.load);
     return this.client
       .get(`${this.endpoint}?${query}`)
-      .then(
-        (xhr) => {
+      .then((xhr) => {
           this.data = this.parseResponse(xhr.response);
           this.total =
             xhr.headers &&
             xhr.headers.headers &&
-            xhr.headers.headers["x-total-count"]
-              ? xhr.headers.headers["x-total-count"].value
-              : this.data.length;
-          this.storage.setItem(
-            `${this.uuid}-position`,
+            xhr.headers.headers["x-total-count"]? xhr.headers.headers["x-total-count"].value: this.data.length;
+          this.storage.setItem(`${this.uuid}-position`,
             JSON.stringify({
               limit: this.limit,
               offset: this.offset,
-              sort: this.sort,
-            })
-          );
+              sort: this.sort
+            }));
           console.log("[TableInterface] Load - Success");
           this.events.dispatchEvent(this.events.loadSuccess);
           return xhr;
@@ -121,8 +102,7 @@ export class TableInterface {
           //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
           console.error("[TableInterface] Load - Failure");
           this.events.dispatchEvent(this.events.loadFailure);
-        }
-      )
+        })
       .catch((error) => {
         console.error(error);
         this.data = null;
@@ -139,22 +119,18 @@ export class TableInterface {
   edit(id) {
     console.log(`Edit record ${id}`);
     if (!this.router)
-      return console.warn(
-        "[TableInterface] Edit - Failure: missing router configuration"
-      );
+      return console.warn("[TableInterface] Edit - Failure: missing router configuration");
     this.router.navigateToRoute(this.router.currentInstruction.config.name, {
-      id,
+      id
     });
   }
   delete(id) {
     console.log(`Delete record ${id}`);
     if (!this.dialog)
-      return console.warn(
-        "[TableInterface] Delete - Warning: missing dialog configuration"
-      );
+      return console.warn("[TableInterface] Delete - Warning: missing dialog configuration");
     this.dialog.alert({
       title: "Attenzione",
-      body: "Confermi di voler eliminare il record selezionato?",
+      body: "Confermi di voler eliminare il record selezionato?"
     });
   }
 }

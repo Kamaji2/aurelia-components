@@ -6,12 +6,12 @@ import {
   bindingMode,
   BindingEngine,
   InlineViewStrategy,
-  NewInstance,
+  NewInstance
 } from "aurelia-framework";
 import {
   ValidationController,
   ValidationRules,
-  validateTrigger,
+  validateTrigger
 } from "aurelia-validation";
 import { DateTime } from "luxon";
 
@@ -46,127 +46,84 @@ export class KaControl {
       .when((self) => self.schema.control === "check" && self.schema.required)
       .withMessage("Spunta obbligatoria")
 
-      .satisfies(
-        (value, self) =>
+      .satisfies((value, self) =>
           parseInt(value, 10) >= parseInt(self.schema.min, 10) &&
-          value <= parseInt(self.schema.max, 10)
-      )
-      .when(
-        (self) =>
-          self.schema.control === "number" && self.schema.min && self.schema.max
-      )
-      .withMessage(
-        "Il valore deve essere compreso tra ${schema.min} e ${schema.max}"
-      )
+          value <= parseInt(self.schema.max, 10))
+      .when((self) =>
+          self.schema.control === "number" && self.schema.min && self.schema.max)
+      .withMessage("Il valore deve essere compreso tra ${schema.min} e ${schema.max}")
 
-      .satisfies(
-        (value, self) => parseInt(value, 10) >= parseInt(self.schema.min, 10)
-      )
-      .when(
-        (self) =>
+      .satisfies((value, self) => parseInt(value, 10) >= parseInt(self.schema.min, 10))
+      .when((self) =>
           self.schema.control === "number" &&
           self.schema.min &&
-          !self.schema.max
-      )
+          !self.schema.max)
       .withMessage("Il valore deve essere uguale o maggiore di ${schema.min}")
 
-      .satisfies(
-        (value, self) => parseInt(value, 10) <= parseInt(self.schema.max, 10)
-      )
-      .when(
-        (self) =>
+      .satisfies((value, self) => parseInt(value, 10) <= parseInt(self.schema.max, 10))
+      .when((self) =>
           self.schema.control === "number" &&
           !self.schema.min &&
-          self.schema.max
-      )
+          self.schema.max)
       .withMessage("Il valore deve essere minore o uguale a ${schema.max}")
 
-      .satisfies(
-        (value, self) =>
-          value.length >= self.schema.min && value.length <= self.schema.max
-      )
-      .when(
-        (self) =>
+      .satisfies((value, self) =>
+          value.length >= self.schema.min && value.length <= self.schema.max)
+      .when((self) =>
           self.value &&
           ["text", "textarea", "password"].includes(self.schema.control) &&
           self.schema.min &&
-          self.schema.max
-      )
-      .withMessage(
-        "Il numero di caratteri deve essere compreso tra ${schema.min} e ${schema.max}"
-      )
+          self.schema.max)
+      .withMessage("Il numero di caratteri deve essere compreso tra ${schema.min} e ${schema.max}")
 
       .satisfies((value, self) => value.length >= self.schema.min)
-      .when(
-        (self) =>
+      .when((self) =>
           self.value &&
           ["text", "textarea", "password"].includes(self.schema.control) &&
           self.schema.min &&
-          !self.schema.max
-      )
+          !self.schema.max)
       .withMessage("Il valore deve essere di almeno ${schema.min} caratteri")
 
       .satisfies((value, self) => value.length <= self.schema.max)
-      .when(
-        (self) =>
+      .when((self) =>
           self.value &&
           ["text", "textarea", "password"].includes(self.schema.control) &&
           !self.schema.min &&
-          self.schema.max
-      )
+          self.schema.max)
       .withMessage("Il valore non deve superare i ${schema.max} caratteri")
 
       .satisfies((value, self) => {
         let pattern =
-          typeof self.schema.pattern === "string"
-            ? new RegExp(self.schema.pattern)
-            : self.schema.pattern;
+          typeof self.schema.pattern === "string"? new RegExp(self.schema.pattern): self.schema.pattern;
         return value === null || value === "" || pattern.test(value);
       })
-      .when(
-        (self) =>
-          ["text", "textarea", "password", "number"].includes(
-            self.schema.control
-          ) && self.schema.pattern
-      )
+      .when((self) =>
+          ["text", "textarea", "password", "number"].includes(self.schema.control) && self.schema.pattern)
       .withMessage("Formato non valido")
 
       .satisfies((value, self) =>
-        self.schema.validationRule.satisfies(value, self)
-      )
-      .when(
-        (self) =>
-          ["text", "textarea", "password", "number"].includes(
-            self.schema.control
-          ) && self.schema.validationRule
-      )
+        self.schema.validationRule.satisfies(value, self))
+      .when((self) =>
+          ["text", "textarea", "password", "number"].includes(self.schema.control) && self.schema.validationRule)
       .withMessage("${schema.validationRule.withMessage}")
 
-      .satisfies(
-        (value, self) =>
+      .satisfies((value, self) =>
           value === null ||
           value === "" ||
-          DateTime.fromFormat(value, "yyyy-MM-dd").isValid
-      )
-      .when(
-        (self) =>
-          self.schema.control === "date" || self.schema.control === "age"
-      )
+          DateTime.fromFormat(value, "yyyy-MM-dd").isValid)
+      .when((self) =>
+          self.schema.control === "date" || self.schema.control === "age")
       .withMessage("Formato data non valido")
 
-      .satisfies(
-        (value, self) =>
-          value === null || value === "" || DateTime.fromISO(value).isValid
-      )
+      .satisfies((value, self) =>
+          value === null || value === "" || DateTime.fromISO(value).isValid)
       .when((self) => self.schema.control === "datetime")
       .withMessage("Formato data/orario non valido")
 
-      .satisfies(
-        (value, self) =>
+      .satisfies((value, self) =>
           value === null ||
           value === "" ||
-          DateTime.fromFormat(value, "HH:mm:ss").isValid
-      )
+          DateTime.fromFormat(value, "HH:mm:ss").isValid)
       .when((self) => self.schema.control === "time")
       .withMessage("Formato orario non valido")
 
@@ -202,11 +159,13 @@ export class KaControl {
   }
 
   schemaChanged(schema) {
-    if (!schema || !schema.control) return;
+    if (!schema || !schema.control) {
+      console.log(schema);
+      this.schema = { control: 'text', label: 'Undefined schema', readonly: true };
+      return;
+    }
     this.readonly = schema.readonly;
-    this.viewStrategy = new InlineViewStrategy(
-      `<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${schema.control}></template>`
-    );
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${schema.control}></template>`);
     this.element.classList.add(`ka-control-${schema.control}`);
   }
   valueChanged(value, old) {

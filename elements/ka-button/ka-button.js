@@ -20,10 +20,7 @@ export class KaButton {
     this.parent = bindingContext;
 
     this.disabled = this.disabled === "" ? true : this.disabled;
-    this.disabled =
-      this.disabled === null || typeof this.disabled === "undefined"
-        ? false
-        : this.disabled;
+    this.disabled = this.disabled === null || typeof this.disabled === "undefined"? false : this.disabled;
     this.disabled = this.disabled === "false" ? false : Boolean(this.disabled);
   }
 
@@ -43,7 +40,7 @@ export class KaButton {
       }
     });
 
-    let active = (e) => {
+    let active = () => {
       if (!this.disabled && !this.busy) this.element.classList.toggle("active");
     };
     this.element.addEventListener("mousedown", active);
@@ -74,7 +71,7 @@ export class KaButton {
     this.disabled = value;
     if (this._ready) this.init();
   }
-  busyChanged(value) {
+  busyChanged() {
     if (this._ready) this.init();
   }
 

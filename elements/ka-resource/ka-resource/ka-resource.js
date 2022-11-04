@@ -7,11 +7,7 @@ export class KaResource {
     this.element = element;
   }
   bind(bindingContext) {
-    this.interface =
-      bindingContext && bindingContext.constructor?.name === "ResourceInterface"
-        ? bindingContext
-        : null;
-    console.log("interface", this.interface);
+    this.interface = bindingContext && bindingContext.constructor?.name === "ResourceInterface"? bindingContext: null;
     if (!this.interface) {
       console.error("ka-resource: missing resource interface!");
       return;
@@ -26,25 +22,12 @@ export class KaResource {
     const resizeHandler = () => {
       let element = document.querySelector(`#${this.uuid}`);
       if (!element) return;
-      /* element.style.height = '0px';
-      element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';*/
-      console.log(element.scrollHeight, element.clientHeight);
-      console.log(
-        element.getBoundingClientRect().height,
-        ">",
-        parseInt(window.innerHeight - element.getBoundingClientRect().top)
-      );
       element.classList.remove("overflowed");
       element.style.height = "unset";
-      if (
-        element.getBoundingClientRect().height >
-        parseInt(window.innerHeight - element.getBoundingClientRect().top)
-      ) {
+      if (element.getBoundingClientRect().height > parseInt(window.innerHeight - element.getBoundingClientRect().top)) {
         element.classList.add("overflowed");
         element.style.height = "0px";
-        element.style.height =
-          parseInt(window.innerHeight - element.getBoundingClientRect().top) +
-          "px";
+        element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
       }
     };
     window[`resize-handler-${this.uuid}`] = resizeHandler;
