@@ -135,8 +135,8 @@ export class KaControl {
     // Handle control if not attached to ka-resource
     if (!this.name && this.schema) this.schemaChanged(this.schema);
     // Handle buttons configuration
-    if (this.element.hasAttribute("buttons")) {
-      this.buttons = this.element.getAttribute("buttons").split(",");
+    if (this.element.hasAttribute('buttons')) {
+      this.buttons = this.element.getAttribute('buttons').split(',').map(button => button.trim());
     }
   }
 
