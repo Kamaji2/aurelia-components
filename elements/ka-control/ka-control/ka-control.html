@@ -1,61 +1,29 @@
 <template>
-  <label if.bind="schema.label"
-    >${schema.label} <span if.bind="schema.required">*</span></label
-  >
+  <label if.bind="schema.label">${schema.label | t}<span if.bind="schema.required">*</span></label>
   <div>
     <compose containerless view.bind="viewStrategy"></compose>
     <div class="ka-control-buttons">
-      <button
-        class="button-dropdown"
-        tabindex="-1"
-        click.delegate="open()"
-        if.bind="!schema.readonly && buttons.includes('dropdown') && ['combo', 'date', 'datetime', 'time', 'file'].includes(schema.control)"
-      >
-        <i
-          if.bind="schema.control === 'combo'"
-          class="fa-light fa-chevron-down"
-        ></i>
+      <button class="button-dropdown" tabindex="-1" click.delegate="open()" if.bind="!schema.readonly && buttons.includes('dropdown') && ['combo', 'date', 'datetime', 'time', 'file'].includes(schema.control)">
+        <i if.bind="schema.control === 'combo'" class="fa-light fa-chevron-down"></i>
         <i if.bind="schema.control === 'date'" class="fa-light fa-calendar"></i>
-        <i
-          if.bind="schema.control === 'datetime'"
-          class="fa-light fa-calendar-clock"
-        ></i>
+        <i if.bind="schema.control === 'datetime'" class="fa-light fa-calendar-clock"></i>
         <i if.bind="schema.control === 'time'" class="fa-light fa-clock"></i>
-        <i
-          if.bind="schema.control === 'file'"
-          class="fa-light fa-cloud-arrow-up"
-        ></i>
+        <i if.bind="schema.control === 'file'" class="fa-light fa-cloud-arrow-up"></i>
       </button>
-      <button
-        class="button-toggle"
-        tabindex="-1"
-        click.delegate="toggle()"
-        if.bind="!schema.readonly && buttons.includes('toggle') && ['password'].includes(schema.control)"
-      >
+      <button class="button-toggle" tabindex="-1" click.delegate="toggle()" if.bind="!schema.readonly && buttons.includes('toggle') && ['password'].includes(schema.control)">
         <i if.bind="!_toggle" class="fa-light fa-eye"></i>
         <i if.bind="_toggle" class="fa-light fa-eye-slash"></i>
       </button>
-      <button
-        class="button-clear"
-        tabindex="-1"
-        click.delegate="clear()"
-        if.bind="!schema.readonly && buttons.includes('clear') && !['check', 'editor', 'list'].includes(schema.control)"
-      >
+      <button class="button-clear" tabindex="-1" click.delegate="clear()" if.bind="!schema.readonly && buttons.includes('clear') && !['check', 'editor', 'list'].includes(schema.control)">
         <i class="fa-light fa-times"></i>
       </button>
     </div>
   </div>
   <div class="ka-control-overlay">
-    <div
-      class="ka-control-error"
-      if.bind="!schema.readonly && validator.errors.length"
-    >
+    <div class="ka-control-error" if.bind="!schema.readonly && validator.errors.length">
       <span repeat.for="error of validator.errors">${error}</span>
     </div>
-    <div
-      class="ka-control-description"
-      if.bind="!schema.readonly && schema.control !=='check' && schema.description"
-    >
+    <div class="ka-control-description" if.bind="!schema.readonly && schema.control !=='check' && schema.description">
       ${schema.description}
     </div>
   </div>

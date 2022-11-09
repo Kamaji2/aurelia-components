@@ -1,18 +1,5 @@
-import {
-  inject,
-  customElement,
-  observable,
-  bindable,
-  bindingMode,
-  BindingEngine,
-  InlineViewStrategy,
-  NewInstance
-} from "aurelia-framework";
-import {
-  ValidationController,
-  ValidationRules,
-  validateTrigger
-} from "aurelia-validation";
+import { inject, customElement, observable, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance } from "aurelia-framework";
+import { ValidationController, ValidationRules, validateTrigger } from "aurelia-validation";
 import { DateTime } from "luxon";
 
 require("./ka-control.sass");
@@ -93,8 +80,7 @@ export class KaControl {
       .withMessage("Il valore non deve superare i ${schema.max} caratteri")
 
       .satisfies((value, self) => {
-        let pattern =
-          typeof self.schema.pattern === "string"? new RegExp(self.schema.pattern): self.schema.pattern;
+        let pattern = typeof self.schema.pattern === "string" ? new RegExp(self.schema.pattern): self.schema.pattern;
         return value === null || value === "" || pattern.test(value);
       })
       .when((self) =>
