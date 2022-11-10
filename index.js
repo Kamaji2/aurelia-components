@@ -1,7 +1,7 @@
 import { PLATFORM } from "aurelia-pal";
 
 export { ResourceInterface } from "./interfaces/resource";
-export { TableInterface } from "./interfaces/table";
+export { TableInterface, TableSearchInterface } from "./interfaces/table";
 
 export { ApiService } from "./services/api";
 export { LayoutService } from "./services/layout";

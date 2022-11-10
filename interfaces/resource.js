@@ -49,7 +49,7 @@ export class ResourceInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5(location.pathname + ":" + config.endpoint, "2af1d572-a35c-4248-a38e-348c560cd468");
+    this.uuid = uuidv5('resourceInterface:' + location.pathname + ":" + config.endpoint, "2af1d572-a35c-4248-a38e-348c560cd468");
     // Custom events
     this.events = document.createTextNode(null);
     this.events.getSuccess = new CustomEvent("getSuccess", { detail: this });
@@ -71,16 +71,14 @@ export class ResourceInterface {
       return new Promise((resolve, reject) => {
         if (this.settings.initializeWithDataset) {
           this.client.get(`datasets/${this.endpoint}`).then((xhr) => {
-              let schema = {};
-              xhr.response.forEach((control) => {
-                schema[control.field] = control;
-              }); 
-              this.schema = this.schema && Object.keys(this.schema).length ?helpers.deepMerge(schema, this.schema) :schema;
-              resolve();
-            }).catch((error) => {
-              console.error(error);
-              reject(`could not retrieve dataset for ${this.endpoint}`);
-            });
+            let schema = {};
+            xhr.response.forEach((control) => { schema[control.field] = control; }); 
+            this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
+            resolve();
+          }).catch((error) => {
+            console.error(error);
+            reject(`could not retrieve dataset for ${this.endpoint}`);
+          });
         } else resolve();
       }).then(() => {
         if (this.schema && Object.keys(this.schema).length) return resolve();

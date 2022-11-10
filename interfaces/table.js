@@ -4,11 +4,7 @@ import { v5 as uuidv5 } from "uuid";
 export class TableInterface {
   client = null;
   endpoint = null;
-  dialog = null;
   data = [];
-  settings = {
-    initializeWithDataset: false
-  };
   query = null;
   limit = 10;
   offset = 0;
@@ -17,7 +13,7 @@ export class TableInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5(location.pathname + ":" + (config?.endpoint), "2af1d572-a35c-4248-a38e-348c560cd468");
+    this.uuid = uuidv5('tableInterface:' + location.pathname + ":" + (config?.endpoint), "2af1d572-a35c-4248-a38e-348c560cd468");
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Custom events
     this.events = document.createTextNode(null);
@@ -76,40 +72,95 @@ export class TableInterface {
 
     // Finally make the api call
     this.events.dispatchEvent(this.events.load);
-    return this.client
-      .get(`${this.endpoint}?${query}`)
-      .then((xhr) => {
-          this.data = this.parseResponse(xhr.response);
-          this.total =
-            xhr.headers &&
-            xhr.headers.headers &&
-            xhr.headers.headers["x-total-count"]? xhr.headers.headers["x-total-count"].value: this.data.length;
-          this.storage.setItem(`${this.uuid}-position`,
-            JSON.stringify({
-              limit: this.limit,
-              offset: this.offset,
-              sort: this.sort
-            }));
-          console.log("[TableInterface] Load - Success");
-          this.events.dispatchEvent(this.events.loadSuccess);
-          return xhr;
-        },
-        (xhr) => {
-          //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
-          console.error("[TableInterface] Load - Failure");
-          this.events.dispatchEvent(this.events.loadFailure);
-        })
-      .catch((error) => {
-        console.error(error);
-        this.data = null;
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
+    return this.client.get(`${this.endpoint}?${query}`).then((xhr) => {
+      this.data = this.parseResponse(xhr.response);
+      this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers["x-total-count"]? xhr.headers.headers["x-total-count"].value : this.data.length;
+      this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
+      console.log("[TableInterface] Load - Success");
+      this.events.dispatchEvent(this.events.loadSuccess);
+      return xhr;
+    }, (xhr) => {
+      //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
+      console.error("[TableInterface] Load - Failure");
+      this.events.dispatchEvent(this.events.loadFailure);
+    })
+    .catch((error) => {
+      console.error(error);
+      this.data = null;
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
   }
 
   parseResponse(response) {
     return response;
+  }
+}
+export class TableSearchInterface {
+  controls = {};
+  schema = {};
+  data = {};
+  settings = {
+    initializeWithDataset: false
+  };
+
+  constructor(config) {
+    Object.assign(this, config || {});
+    this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ":" + (config?.endpoint), "2af1d572-a35c-4248-a38e-348c560cd468");
+    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
+    // Get session stored data
+    this.data = JSON.parse(this.storage.getItem(`${this.uuid}-data`)) || this.data || {};
+    // Initialize
+    this.initialized = this.initialize();
+  }
+
+  initialize() {
+    if (this.initialized) return this.initialized;
+    return new Promise((resolve, reject) => {
+      if (!this.table) return reject("missing table reference, interface won't work as expected");
+      // Self reference inside TableInterface
+      this.table.searchInterface = this;
+      return new Promise((resolve, reject) => {
+        if (this.settings.initializeWithDataset) {
+          this.table.client.get(`datasets/${this.table.endpoint}`).then((xhr) => {
+            let schema = {};
+            xhr.response.forEach((control) => { schema[control.field] = control; }); 
+            this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
+            resolve();
+          }).catch((error) => {
+            console.error(error);
+            reject(`could not retrieve dataset for ${this.table.endpoint}`);
+          });
+        } else resolve();
+      }).then(() => {
+        if (this.schema && Object.keys(this.schema).length) {
+          Object.values(this.schema).forEach((control) => {
+            control.readonly = false;
+            control.required = false;
+          });
+          return resolve();
+        }
+        else return reject("missing schema configuration");
+      }).catch((error) => reject(error));
+    }).then(() => {
+      console.log("[TableSearchInterface] Initialized");
+    }).catch((error) => {
+      console.warn(`[TableSearchInterface] Initialization failed: ${error}`);
+    });
+  }
+
+  async validate(controls = null) {
+    await this.initialized;
+    let promises = [];
+    controls = controls || Object.values(this.controls);
+    controls.forEach(control => {
+      if (control) { // Control can be null if in the meantime view removes it (eg: with an if.bind)
+        control.setError(); // Reset in case there is already an error manually attached to the control
+        promises.push(new Promise((resolve, reject) => { control.validate().then(result => { if (result.valid) resolve(); else reject('control didn\'t pass validation'); }).catch(error => reject(error)); }));
+      }
+    });
+    return Promise.all(promises);
   }
 }
 /* 

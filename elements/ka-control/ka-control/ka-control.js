@@ -126,12 +126,7 @@ export class KaControl {
       this.name = name;
     }
     // Bind to ka-resource if any in parentContext
-    if (
-      this.name &&
-      (this.parentContext[this.parentResourceName] ||
-        this.parentContext.constructor?.name === "ResourceInterface")
-    )
-      this.bindToResource();
+    if (this.name && (this.parentContext[this.parentResourceName] || ["ResourceInterface", "TableSearchInterface"].includes(this.parentContext.constructor?.name))) this.bindToResource();
     // Handle control if not attached to ka-resource
     if (!this.name && this.schema) this.schemaChanged(this.schema);
     // Handle buttons configuration
@@ -221,15 +216,8 @@ export class KaControl {
   }
 
   bindToResource() {
-    if (
-      !(
-        this.parentContext[this.parentResourceName] ||
-        this.parentContext.constructor?.name === "ResourceInterface"
-      )
-    )
-      return;
-    const resource =
-      this.parentContext[this.parentResourceName] || this.parentContext;
+    if (!(this.parentContext[this.parentResourceName] || ["ResourceInterface", "TableSearchInterface"].includes(this.parentContext.constructor?.name))) return;
+    const resource = this.parentContext[this.parentResourceName] || this.parentContext;
     // Bind to parent resource controls
     if (resource.controls) {
       resource.controls[this.name] = this;
