@@ -6,6 +6,7 @@ export class TableInterface {
   endpoint = null;
   data = [];
   query = null;
+  meta = 1;
   limit = 10;
   offset = 0;
   total = 0;
@@ -54,6 +55,9 @@ export class TableInterface {
       query = new URLSearchParams(this.query);
     }
     this._query = query.toString();
+
+    // Handle meta
+    if (this.meta) query.set('meta', '1');
 
     // Handle sort
     this.sort = sort || this.sort || [];
