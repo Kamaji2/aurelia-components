@@ -1,8 +1,9 @@
-import { inject, customElement, BindingEngine } from "aurelia-framework";
+import { inject, customElement, bindable, BindingEngine } from "aurelia-framework";
 
 @customElement("ka-table")
 @inject(Element, BindingEngine)
 export class KaTable {
+  @bindable() height = 'full';
   constructor(element, binding) {
     this.element = element;
     this.binding = binding;
@@ -30,10 +31,12 @@ export class KaTable {
   }
   attached() {
     const resizeHandler = () => {
-      let element = document.querySelector(`#${this.uuid}`);
-      if (!element) return;
-      element.style.height = "0px";
-      element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
+      if (this.height === 'full') {
+        let element = document.querySelector(`#${this.uuid}`);
+        if (!element) return;
+        element.style.height = "0px";
+        element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
+      }
     };
     window[`resize-handler-${this.uuid}`] = resizeHandler;
     window.addEventListener("resize", window[`resize-handler-${this.uuid}`]);
