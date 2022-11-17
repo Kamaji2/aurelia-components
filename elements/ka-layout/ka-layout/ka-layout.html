@@ -216,7 +216,7 @@
               data-subtool="${$index}"
             >
               <template repeat.for="item of item.nav">
-                <li if.bind="authorized(item)">
+                <li if.bind="authorized(item) && !item.hidden">
                   <div>
                     <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
                     <span class="item-label">${item.label}</span>
