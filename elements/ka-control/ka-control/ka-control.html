@@ -1,5 +1,5 @@
 <template>
-  <label if.bind="schema.label">${schema.label | t}<span if.bind="schema.required">*</span></label>
+  <label if.bind="schema.label">${schema.label | t} <span if.bind="schema.required">*</span></label>
   <div>
     <compose containerless view.bind="viewStrategy"></compose>
     <div class="ka-control-buttons">
