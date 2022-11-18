@@ -326,7 +326,9 @@ export class KaControlCombo {
 
     if (dsh.filters) {
       // if schema.datasearch.filters is set, this overrides any other filtering logic
-      filters.push(dsh.filters);
+      // schema.datasearch.filters can contain only the {term} keyword to be replaced
+      filters.push(dsh.filters.replaceAll('{term}', term));
+
     } else {
       // dtt can be something like "{key1} {key2} {key3}" or "Label1 {key1} label2 {key2}"
       let keys = dtt.match(/{(.*?)}/g);
