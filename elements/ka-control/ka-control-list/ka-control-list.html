@@ -13,6 +13,7 @@
             disabled.bind="schema.readonly"
             placeholder.bind="itemSchema.label || itemSchema.field"
             keydown.delegate="keydown()"
+            keyup.delegate="keyup($event)"
             change.delegate="change()"
             focus.trigger="focus()"
             blur.trigger="blur()"

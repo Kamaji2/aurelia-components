@@ -1,13 +1,8 @@
-import {
-  inject,
-  customElement,
-  bindable,
-  bindingMode,
-} from "aurelia-framework";
+import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
 
-require("./ka-control-text.sass");
+require('./ka-control-text.sass');
 
-@customElement("ka-control-text")
+@customElement('ka-control-text')
 @inject(Element)
 export class KaControlText {
   // Basic input control properties
@@ -21,10 +16,13 @@ export class KaControlText {
   keydown() {
     return !this.schema.readonly;
   }
+  keyup(event) {
+    if (event.key === 'Enter') this.element.dispatchEvent(new Event('enter', { bubbles: true }));
+  }
   focus() {
-    this.element.dispatchEvent(new Event("focus", { bubbles: true }));
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
   }
   blur() {
-    this.element.dispatchEvent(new Event("blur", { bubbles: true }));
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
   }
 }

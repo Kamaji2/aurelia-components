@@ -32,6 +32,9 @@ export class KaControlDate {
   keydown() {
     return !this.schema.readonly;
   }
+  keyup(event) {
+    if (event.key === 'Enter') this.element.dispatchEvent(new Event('enter', { bubbles: true }));
+  }
   focus() {
     this.element.dispatchEvent(new Event("focus", { bubbles: true }));
   }
