@@ -30,11 +30,6 @@ export class KaTableSearch {
     }
     this.uuid = `ka-table-search-${this.interface.uuid}`;
     this.element.id = this.uuid;
-
-    // Handle buttons configuration
-    if (this.element.hasAttribute('buttons')) {
-      this.buttons = this.element.getAttribute('buttons').split(',');
-    }
   }
 
   defaultReset() {

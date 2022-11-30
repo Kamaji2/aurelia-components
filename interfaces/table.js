@@ -7,6 +7,7 @@ export class TableInterface {
   endpoint = null;
   data = [];
   query = null;
+  filters = null;
   meta = 1;
   limit = 10;
   offset = 0;
@@ -56,6 +57,12 @@ export class TableInterface {
       query = new URLSearchParams(this.query);
     }
     this._query = query.toString();
+
+    // Handle filters (aka prefilters)
+    if (this.filters) {
+      let filters = query.has('filters') ? `(${decodeURIComponent(query.get('filters'))})&` : '';
+      query.set('filters', `${filters}(${this.filters})`);
+    }
 
     // Handle meta
     if (this.meta) query.set('meta', this.meta);
@@ -143,6 +150,7 @@ export class TableSearchInterface {
           Object.values(this.schema).forEach((control) => {
             control.readonly = false;
             control.required = false;
+            control.datamultiple = true;
           });
           return resolve();
         }

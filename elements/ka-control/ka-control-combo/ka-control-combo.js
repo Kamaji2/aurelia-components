@@ -162,6 +162,7 @@ export class KaControlCombo {
     if (dtp === true || Array.isArray(dts)) {
       if (dts.table || dts.url) {
         let endpoint = this.buildQueryUrl();
+        if (!this.api) throw new Error('ka-control-combo: missing http client configuration!');
         this.api
           .get(endpoint)
           .then((x) => {
@@ -228,6 +229,7 @@ export class KaControlCombo {
       let endpoint = this.buildQueryUrl({
         filters: `${dtv}~~${unmatched.map((x) => x.value).join(",")}`
       });
+      if (!this.api) throw new Error('ka-control-combo: missing http client configuration!');
       promises.push(this.api.get(endpoint).then((x) => {
         let response = x.response;
         for (let item of response) {
