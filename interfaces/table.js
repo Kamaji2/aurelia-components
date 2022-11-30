@@ -193,6 +193,15 @@ export class TableSearchInterface {
               v = DateTime.fromISO(v, { setZone: true }).toLocal();
               v = v.isValid ? v.endOf('day').toUTC().toSQL({ includeOffset: false }) : null;
             }
+            // Format data for date range
+            if (this.schema[k].control === 'date' && this.controls[k].isRange) {
+              let [v1, v2] = v.split('<=>');
+              v1 = DateTime.fromFormat(v1, "yyyy-MM-dd").isValid ? v1 : null;
+              v2 = DateTime.fromFormat(v2, "yyyy-MM-dd").isValid ? v2 : null;
+              if (v1) filters.push(`${k}>=${v1}`);
+              if (v2) filters.push(`${k}<=${v2}`);
+              continue;
+            }
             console.log(`Filter ready: ${k} ${operator} ${v}`);
             filters.push(`${k}${operator}${v}`);
           }

@@ -1,0 +1,27 @@
+<template>
+  <div class="row g-0" if.bind="_schema">
+    <div class="col-6">
+      <ka-control
+        class="no-label"
+        schema.bind="_schema"
+        value.bind="valueFrom"
+        buttons="dropdown"
+        focus.trigger="focus()"
+        blur.trigger="blur()"
+        change.trigger="change($event)">
+          <button class="button-range"><i class="fa-light fa-arrows-left-right"></i></button>
+      </ka-control>
+    </div>
+    <div class="col-6">
+      <ka-control
+        class="no-label"
+        schema.bind="_schema"
+        value.bind="valueTo"
+        buttons="dropdown"
+        focus.trigger="focus()"
+        blur.trigger="blur()"
+        change.trigger="change($event)">
+      </ka-control>
+    </div>
+  </div>
+</template>

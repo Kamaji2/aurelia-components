@@ -16,6 +16,7 @@ export class KaControl {
 
   parentResourceName = "resource"; // default ResourceInterface name to look for in parentContext
   buttons = []; // array of button identifiers to show on control - supported value are: clear, dropdown
+  isRange = false;
 
   constructor(element, binding, validator) {
     this.element = element;
@@ -97,20 +98,19 @@ export class KaControl {
           value === null ||
           value === "" ||
           DateTime.fromFormat(value, "yyyy-MM-dd").isValid)
-      .when((self) =>
-          self.schema.control === "date" || self.schema.control === "age")
+      .when((self) => (self.schema.control === "date" || self.schema.control === "age") && !self.isRange)
       .withMessage("Formato data non valido")
 
       .satisfies((value, self) =>
           value === null || value === "" || DateTime.fromISO(value).isValid)
-      .when((self) => self.schema.control === "datetime")
+      .when((self) => (self.schema.control === "datetime") && !self.isRange)
       .withMessage("Formato data/orario non valido")
 
       .satisfies((value, self) =>
           value === null ||
           value === "" ||
           DateTime.fromFormat(value, "HH:mm:ss").isValid)
-      .when((self) => self.schema.control === "time")
+      .when((self) => (self.schema.control === "time") && !self.isRange)
       .withMessage("Formato orario non valido")
 
       .on(this);
@@ -146,8 +146,15 @@ export class KaControl {
       return;
     }
     this.readonly = schema.readonly;
-    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${schema.control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${schema.control}></template>`);
-    this.element.classList.add(`ka-control-${schema.control}`);
+    // Forse range control if ka-control has attribute operator set to "<=>"
+    let control = schema.control;
+    if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {
+      control = schema.control + '-range';
+      this.isRange = true;
+      this.buttons = this.buttons.filter(b => b !== 'dropdown');
+    }
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${schema.control}></template>`);
+    this.element.classList.add(`ka-control-${control}`);
   }
   valueChanged(value, old) {
     if (

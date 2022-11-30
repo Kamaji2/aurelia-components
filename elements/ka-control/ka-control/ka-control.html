@@ -17,6 +17,7 @@
       <button class="button-clear" tabindex="-1" click.delegate="clear()" if.bind="!schema.readonly && buttons.includes('clear') && !['check', 'editor', 'list'].includes(schema.control)">
         <i class="fa-light fa-times"></i>
       </button>
+      <slot></slot>
     </div>
   </div>
   <div class="ka-control-overlay">

@@ -1,0 +1,39 @@
+ka-control-date-range
+  ka-control
+    margin: 0
+    > label
+      display: block
+      margin: 0
+      padding: 0
+      width: 100%
+      height: 1.5rem
+      overflow: hidden
+      font-size: 1.2rem
+      line-height: 1.5rem
+      text-overflow: ellipsis
+      color: rgba(var(--primary-color-rgb), 0.7)
+      white-space: nowrap
+      transition: all 0.5s
+    > div
+      background: transparent !important
+      background-color: transparent !important
+      box-shadow: none !important
+      &:hover
+        box-shadow: none
+
+    .ka-control-buttons
+      button:after
+        content: " "
+        display: block
+        position: absolute
+        top: 0
+        left: unset !important
+        right: 0 !important
+        bottom: 0
+        width: 1px
+        background: linear-gradient(0deg, rgba(var(--text-color-rgb), 0.3) 0%, rgba(var(--text-color-rgb), 0) 100%)
+
+      button.date-range
+        &:hover i
+          transform: none
+  

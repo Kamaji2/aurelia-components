@@ -54,6 +54,7 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-check/ka-control-check')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-combo/ka-control-combo')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-date/ka-control-date')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-date-range/ka-control-date-range')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-datetime/ka-control-datetime')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-time/ka-control-time')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-editor/ka-control-editor')]);
