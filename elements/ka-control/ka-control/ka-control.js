@@ -148,7 +148,7 @@ export class KaControl {
     this.readonly = schema.readonly;
     // Forse range control if ka-control has attribute operator set to "<=>"
     let control = schema.control;
-    if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {
+    if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range') && (control.startsWith('date') || control.startsWith('time'))) {
       control = schema.control + '-range';
       this.isRange = true;
       this.buttons = this.buttons.filter(b => b !== 'dropdown');
