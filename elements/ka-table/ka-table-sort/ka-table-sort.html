@@ -1,13 +1,13 @@
 <template>
-  <require from="./md-table-sort.scss"></require>
+  <require from="./ka-table-sort.sass"></require>
   <slot></slot>
   <a if.bind="!order" href="" click.delegate="sort()">
-    <i class="fal fa-sort-amount-down-alt"></i>
+    <i class="fa-light fa-arrow-down-arrow-up"></i>
   </a>
   <a if.bind="order === 'asc'" href="" class="asc" click.delegate="sort()">
-    <i class="fal fa-sort-amount-down-alt"></i>
+    <i class="fa-light fa-arrow-up-short-wide"></i>
   </a>
   <a if.bind="order === 'desc'" href="" class="desc" click.delegate="sort()">
-    <i class="fal fa-sort-amount-up"></i>
+    <i class="fa-light fa-arrow-down-wide-short"></i>
   </a>
 </template>

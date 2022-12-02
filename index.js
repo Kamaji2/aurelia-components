@@ -43,8 +43,7 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-button/ka-button')]);
   }
   useDatetime() {
-    console.log('%c[kamaji2-aurelia-components] loading datetime modules',
-      'color:#8b64cf;font-size:8px;');
+    console.log('%c[kamaji2-aurelia-components] loading datetime modules', 'color:#8b64cf;font-size:8px;');
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-datetime/ka-datetime')]);
   }
   useControls() {
@@ -54,7 +53,6 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-check/ka-control-check')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-combo/ka-control-combo')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-date/ka-control-date')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-date-range/ka-control-date-range')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-datetime/ka-control-datetime')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-time/ka-control-time')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-editor/ka-control-editor')]);
@@ -65,6 +63,7 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-table/ka-control-table')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-text/ka-control-text')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-textarea/ka-control-textarea')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-range/ka-control-range')]);
   }
   useTooltip() {
     console.log('%c[kamaji2-aurelia-components] loading tooltip modules', 'color:#8b64cf;font-size:8px;');
@@ -73,10 +72,11 @@ export class AureliaComponentsConfiguration {
   useTable() {
     console.log('%c[kamaji2-aurelia-components] loading table modules', 'color:#8b64cf;font-size:8px;');
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table/ka-table')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-search/ka-table-search')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-progressbar/ka-table-progressbar')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-toolbar/ka-table-toolbar')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-pagination/ka-table-pagination')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-progressbar/ka-table-progressbar')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-search/ka-table-search')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-sort/ka-table-sort')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-toolbar/ka-table-toolbar')]);
   }
   useResource() {
     console.log('%c[kamaji2-aurelia-components] loading resource modules',
