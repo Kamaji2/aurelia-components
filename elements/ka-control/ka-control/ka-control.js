@@ -142,6 +142,7 @@ export class KaControl {
   }
 
   schemaChanged(schema) {
+    console.log('schema changed');
     // Handle undefined schema
     if (!schema || !schema.control) {
       this.schema = { control: 'text', label: 'Undefined schema', readonly: true };
@@ -149,13 +150,14 @@ export class KaControl {
     }
     // Force range control if ka-control has attribute operator set to "<=>"
     let control = schema.control;
-    if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range') && (control.startsWith('date') || control.startsWith('time'))) {
-      control = schema.control + '-range';
+    if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {
+      control = 'range';
       this.isRange = true;
+      console.log('buttons', this.buttons),
       this.buttons = this.buttons.filter(b => b !== 'dropdown');
     }
     // Setup ka-control subcomponent
-    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${schema.control}></template>`);
+    this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${control}></template>`);
     this.element.classList.add(`ka-control-${control}`);
     // Bind properties and subscribe observers
     this.readonly = schema.readonly;
@@ -184,6 +186,7 @@ export class KaControl {
     }
     */
     this.observers.push(this.binding.expressionObserver(this, `schema.readonly`).subscribe((value) => {
+      console.log(this.schema.label + ` Schema property readonly has value:`, value);
       this.readonly = value;
     }));
   }

@@ -5,7 +5,7 @@ import { DateTime } from "luxon";
 export class TableInterface {
   client = null;
   endpoint = null;
-  data = [];
+  data = null;
   query = null;
   filters = null;
   meta = 1;
@@ -24,13 +24,14 @@ export class TableInterface {
     this.events.loadSuccess = new CustomEvent('loadSuccess', { detail: this });
     this.events.loadFailure = new CustomEvent('loadFailure', { detail: this });
     // Initialize
-    this.initialized = this.initialize();
+    this._initialize = this.initialize();
   }
 
   initialize() {
-    if (this.initialized) return this.initialized;
+    if (this._initialize) return this._initialize;
     return new Promise((resolve, reject) => {
       if (!this.endpoint || !this.client) return reject('missing endpoint or client configuration, interface won\'t be able to call api endpoints');
+      this.initialized = true;
       resolve();
     }).then(() => {
       Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
@@ -41,9 +42,9 @@ export class TableInterface {
   }
 
   async load(params = null, sort = null) {
-    await this.initialized;
+    await this._initialize;
     this.isLoading = true;
-
+    if (!this.data) this.data = [];
     // Handle query params
     let query = new URLSearchParams('');
     if (params) {
@@ -124,12 +125,16 @@ export class TableSearchInterface {
     // Get session stored data
     this.data = JSON.parse(this.storage.getItem(`${this.uuid}-data`)) || this.data || {};
     // Initialize
-    this.initialized = this.initialize();
+    this._initialize = this.initialize();
   }
 
   initialize() {
-    if (this.initialized) return this.initialized;
+    if (this._initialize) return this._initialize;
     return new Promise((resolve, reject) => {
+      const solve = () => {
+        this.initialized = true;
+        setTimeout(() => { resolve(); }, 500);
+      };
       if (!this.table) return reject('missing table reference, interface won\'t work as expected');
       // Self reference inside TableInterface
       this.table.searchInterface = this;
@@ -152,7 +157,7 @@ export class TableSearchInterface {
             control.required = false;
             control.datamultiple = true;
           });
-          return resolve();
+          return solve();
         }
         else return reject('missing schema configuration');
       }).catch((error) => reject(error));
@@ -164,7 +169,7 @@ export class TableSearchInterface {
   }
 
   async validate(controls = null) {
-    await this.initialized;
+    await this._initialize;
     let promises = [];
     controls = controls || Object.values(this.controls);
     controls.forEach(control => {
@@ -177,7 +182,7 @@ export class TableSearchInterface {
   }
 
   async search() {
-    await this.initialized;
+    await this._initialize;
     return new Promise((resolve, reject) => {
       this.validate().then(() => {
         let filters = [], params = {};
@@ -201,6 +206,12 @@ export class TableSearchInterface {
               if (v1) filters.push(`${k}>=${v1}`);
               if (v2) filters.push(`${k}<=${v2}`);
               continue;
+            // Format data for other range types
+            } else if (this.controls[k].isRange) {
+              let [v1, v2] = v.split('<=>');
+              if (v1) filters.push(`${k}>=${v1}`);
+              if (v2) filters.push(`${k}<=${v2}`);
+              continue;
             }
             console.log(`Filter ready: ${k} ${operator} ${v}`);
             filters.push(`${k}${operator}${v}`);
@@ -215,7 +226,7 @@ export class TableSearchInterface {
   }
 
   async reset(soft = false) {
-    await this.initialized;
+    await this._initialize;
     for (let key of Object.keys(this.data)) { this.data[key] = null; }
     if (!soft) {
       this.storage.removeItem(`${this.uuid}-data`);

@@ -2,11 +2,11 @@ import { inject, customElement, bindable, bindingMode } from 'aurelia-framework'
 import { DateTime } from 'luxon';
 import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
-require("./ka-control-date-range.sass");
+require("./ka-control-range.sass");
 
-@customElement('ka-control-date-range')
+@customElement('ka-control-range')
 @inject(Element)
-export class KaControlDateRange {
+export class KaControlRange {
   // Basic input control properties
   @bindable() schema = null;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
@@ -20,7 +20,7 @@ export class KaControlDateRange {
   }
 
   schemaChanged(value) {
-    this._schema = Object.assign({}, value, { control: 'date', label: null });
+    this._schema = Object.assign({}, value, { label: null });
   }
   valueChanged(value) {
     if (!value) {

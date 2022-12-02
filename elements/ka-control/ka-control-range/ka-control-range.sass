@@ -1,4 +1,4 @@
-ka-control-date-range
+ka-control-range
   > .row > .col-6:first-of-type
     width: calc(50% + 1.5rem)
   ka-control
@@ -25,17 +25,22 @@ ka-control-date-range
 
     .ka-control-buttons
       button:after
-        content: " "
-        display: block
-        position: absolute
-        top: 0
-        left: unset !important
-        right: 0 !important
-        bottom: 0
-        width: 1px
-        background: linear-gradient(0deg, rgba(var(--text-color-rgb), 0.3) 0%, rgba(var(--text-color-rgb), 0) 100%)
+        content: unset
+        display: none
 
       button.button-range
+        &:before, &:after
+          content: " "
+          display: block
+          position: absolute
+          top: 0
+          left: 0
+          bottom: 0
+          width: 1px
+          background: linear-gradient(0deg, rgba(var(--text-color-rgb), 0.3) 0%, rgba(var(--text-color-rgb), 0) 100%)
+        &:after
+          left: unset !important
+          right: 0 !important
         &:hover i
           transform: none
   

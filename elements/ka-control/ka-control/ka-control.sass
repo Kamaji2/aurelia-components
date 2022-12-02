@@ -1,6 +1,6 @@
 @use "sass:color"
 
-ka-control-date-range
+ka-control-range
   display: block
   position: relative
   flex: 1 1 0
@@ -101,15 +101,17 @@ ka-control
         transition: all 0.5s
     button:hover i
       transform: scale(0.7)
-    button + button:after
-      content: " "
-      display: block
+    button:after
+      display: none
       position: absolute
       top: 0
       left: 0
       bottom: 0
       width: 1px
       background: linear-gradient(0deg, rgba(var(--text-color-rgb), 0.3) 0%, rgba(var(--text-color-rgb), 0) 100%)
+    button + button:after
+      content: " "
+      display: block
 
   .ka-control-overlay
     width: 100%
@@ -199,6 +201,16 @@ ka-control.ka-control-number
   input::-webkit-outer-spin-button, input::-webkit-inner-spin-button
     -webkit-appearance: none
     margin: 0
+
+ka-control.ka-control-range
+  > div > .ka-control-buttons .button-dropdown
+    display: none
+  > div > .ka-control-buttons button:after
+    content: unset
+    display: none
+  > div > .ka-control-buttons .button-clear:after
+    content: " "
+    display: block
 
 ka-control.ka-control-combo
   &:not(.error) > div:hover + .ka-control-overlay .ka-control-description
