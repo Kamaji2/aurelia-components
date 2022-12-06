@@ -142,7 +142,6 @@ export class KaControl {
   }
 
   schemaChanged(schema) {
-    console.log('schema changed');
     // Handle undefined schema
     if (!schema || !schema.control) {
       this.schema = { control: 'text', label: 'Undefined schema', readonly: true };

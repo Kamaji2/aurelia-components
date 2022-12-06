@@ -1,7 +1,7 @@
 ux-dialog-overlay
   background-color: rgba(#000, 0.1)
 
-ux-dialog
+body ux-dialog
   display: block
   border-radius: 5px
   border: 0
@@ -21,13 +21,35 @@ ux-dialog
     max-width: 1250px
 
 
-  > ka-layout-heading
+  ka-layout-heading
     margin: 0
+    border: 0
     background: transparent
     box-shadow: inset 0 -1px 0 #e0e0e0
-  > ux-dialog-body
+
+  > compose
+      display: block
+
+  ux-dialog-body
     display: block
+    border: 0
     padding: 1rem
     font-display: inherit
     font-size: 1.4rem
     color: inherit
+    background: var(--background-color)
+
+  ux-dialog-footer
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    border: 0
+    padding: 1rem
+    font-display: inherit
+    font-size: 1.4rem
+    color: inherit
+    text-align: left
+    box-shadow: inset 0 1px 0 #e0e0e0
+
+    ka-button
+      margin: 0 0 0 1rem

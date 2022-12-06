@@ -13,7 +13,7 @@ export class DialogService {
     return this.AureliaDialogService.open({
       viewModel: DialogServiceViewModel,
       model: params,
-      lock: lock,
+      lock: lock
     });
   }
   alert(params = {}, lock) {
@@ -38,12 +38,13 @@ import { DialogController } from "aurelia-dialog";
     <ux-dialog class.bind="class">
       <ka-layout-heading if.bind="title" level="3" icon.bind="icon" text.bind="title"></ka-layout-heading>
 
+      <compose if.bind="viewModel" view-model.bind="viewModel" model.bind="model"></compose>
+      <compose if.bind="viewStrategy" view.bind="viewStrategy"></compose>
+
       <ux-dialog-body if.bind="body" innerhtml.bind="body"></ux-dialog-body>
-      <ux-dialog-body if.bind="viewModel"><compose view-model.bind="viewModel" model.bind="model"></compose></ux-dialog-body>
-      <ux-dialog-body if.bind="viewStrategy"><compose view.bind="viewStrategy"></compose></ux-dialog-body>
 
       <ux-dialog-footer if.bind="type==='alert'">
-        <ka-button click.delegate="DialogController.ok(model || null)">Ok</ka-button>
+        <ka-button click.delegate="DialogController.ok(model || null)">\${'OK'|t}</ka-button>
       </ux-dialog-footer>
 
       <ux-dialog-footer if.bind="type==='confirm'">
@@ -66,6 +67,5 @@ export class DialogServiceViewModel {
   }
   activate(params) {
     Object.assign(this, params);
-    console.log(this, this.DialogController);
   }
 }
