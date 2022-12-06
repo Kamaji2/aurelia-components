@@ -34,6 +34,14 @@ export class ApiService {
           return msg;
         },
         responseError: (msg) => {
+          if (msg.statusCode === 0) { //net::ERR_FAILED
+            console.warn('net::ERR_FAILED intercepted! Retry in 5 seconds... ');
+            return new Promise((resolve) => { 
+              setTimeout(() => {
+                this.client.send(msg.requestMessage).then(xhr => { resolve(xhr); });
+              }, 5000);
+            });
+          }
           if (msg.statusCode === 401 && this.auth && this.auth.refreshToken && !msg.requestMessage.url.startsWith(this.baseUrl + this.auth.endpoints.refresh)) {
             return this.auth.refresh().then(() => {
               msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
