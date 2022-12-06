@@ -71,9 +71,13 @@ export class ResourceInterface {
       return new Promise((resolve, reject) => {
         if (this.settings.initializeWithDataset) {
           this.client.get(`datasets/${this.endpoint}`).then((xhr) => {
-            let schema = {};
-            xhr.response.forEach((control) => { schema[control.field] = control; }); 
+            let schema = {}, data = {};
+            xhr.response.forEach((control) => {
+              schema[control.field] = control;
+              data[control.field] = null;
+            }); 
             this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
+            this.data = this.data && Object.keys(this.data).length ? helpers.deepMerge(data, this.data) : data;
             resolve();
           }).catch((error) => {
             console.error(error);
@@ -95,29 +99,24 @@ export class ResourceInterface {
     await this.initialized;
     this.id = null;
     let data = this.client.isKamaji ? { depth: 0 } : {};
-    return this.client
-      .get(`${this.endpoint}/${id}`, data)
-      .then((xhr) => {
-        this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
-        this._data = JSON.parse(JSON.stringify(this.data));
-        this.id = id;
-        console.log("[ResourceInterface] GET - Success");
-        // Prepare and dispatch success event
-        this.events[`getSuccess`] = new CustomEvent(`getSuccess`, {
-          detail: this.data
-        });
-        this.events.dispatchEvent(this.events[`getSuccess`]);
-      })
-      .catch((error) => {
-        console.error("[ResourceInterface] GET - Failure", error);
-        this.events.dispatchEvent(this.events.getFailure);
-        throw new ResourceError({
-          method: "get",
-          context: "xhr",
-          message: `${error.statusCode} ${error.statusText}`,
-          detail: error
-        });
+    return this.client.get(`${this.endpoint}/${id}`, data).then((xhr) => {
+      this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
+      this._data = JSON.parse(JSON.stringify(this.data));
+      this.id = id;
+      console.log("[ResourceInterface] GET - Success");
+      // Prepare and dispatch success event
+      this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
+      this.events.dispatchEvent(this.events[`getSuccess`]);
+    }).catch((error) => {
+      console.error("[ResourceInterface] GET - Failure", error);
+      this.events.dispatchEvent(this.events.getFailure);
+      throw new ResourceError({
+        method: "get",
+        context: "xhr",
+        message: `${error.statusCode} ${error.statusText}`,
+        detail: error
       });
+    });
   }
   async post(data) {
     await this.initialized;
@@ -137,54 +136,41 @@ export class ResourceInterface {
     if (!data && this.data) data = this.data;
     if (!method) method = id ? "patch" : "post";
     return new Promise((resolve, reject) => {
-      this.validate()
-        .then(() => {
-          this.sanitize(data, method)
-            .then((data) => {
-              this.client[method](this.endpoint + (id ? `/${id}` : ""),
-                this.parsers[`${method}Request`](data))
-                .then((xhr) => {
-                  resolve(xhr);
-                })
-                .catch((error) => {
-                  reject(this.parseError(error) || {
-                    context: "xhr",
-                    message: `${error.statusCode} ${error.statusText}`,
-                    detail: error
-                  });
-                });
-            })
-            .catch((error) => reject(error));
-        })
-        .catch((error) => reject(error));
-    })
-      .then((xhr) => {
-        console.log(`[ResourceInterface] ${method.toUpperCase()} - Success`);
-        // Prepare and dispatch success event
-        this.events[`${method}Success`] = new CustomEvent(`${method}Success`, {
-          detail: xhr.response
-        });
-        this.events.dispatchEvent(this.events[`${method}Success`]);
-        return xhr;
-      })
-      .catch((error) => {
-        console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
-        // Prepare and dispatch failure event
-        this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, {
-          detail: error
-        });
-        this.events.dispatchEvent(this.events[`${method}Failure`]);
-        // Prepare and throw custom ResourceError
-        if (error.name && ["TypeError", "SyntaxError", "ReferenceError"].includes(error.name)) {
-          error = {
-            context: "js",
-            message: `${error.name}: ${error.message}`,
-            detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
-            original: error
-          };
-        }
-        throw new ResourceError(Object.assign({ method }, error));
-      });
+      this.validate().then(() => {
+        this.sanitize(data, method).then((data) => {
+          this.client[method](this.endpoint + (id ? `/${id}` : ""), this.parsers[`${method}Request`](data)).then((xhr) => {
+            resolve(xhr);
+          }).catch((error) => {
+            reject(this.parseError(error) || {
+              context: "xhr",
+              message: `${error.statusCode} ${error.statusText}`,
+              detail: error
+            });
+          });
+        }).catch((error) => reject(error));
+      }).catch((error) => reject(error));
+    }).then((xhr) => {
+      console.log(`[ResourceInterface] ${method.toUpperCase()} - Success`);
+      // Prepare and dispatch success event
+      this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
+      this.events.dispatchEvent(this.events[`${method}Success`]);
+      return xhr;
+    }).catch((error) => {
+      console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
+      // Prepare and dispatch failure event
+      this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
+      this.events.dispatchEvent(this.events[`${method}Failure`]);
+      // Prepare and throw custom ResourceError
+      if (error.name && ["TypeError", "SyntaxError", "ReferenceError"].includes(error.name)) {
+        error = {
+          context: "js",
+          message: `${error.name}: ${error.message}`,
+          detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
+          original: error
+        };
+      }
+      throw new ResourceError(Object.assign({ method }, error));
+    });
   }
   validate(controls = null) {
     let promises = [];
@@ -192,27 +178,27 @@ export class ResourceInterface {
     controls.forEach((control) => {
       control.setError(); // Reset in case there is already an error manually attached to the control
       promises.push(new Promise((resolve, reject) => {
-          control.validate().then((result) => {
-            if (result.valid) resolve();
-            else {
-              let message = control.validator?.errors?.length ? control.validator.errors[0].message : null;
-              let label = control.schema?.label || control.schema?.field || control.name || null;
-              if (message) {
-                reject({
-                  context: "validation",
-                  message: (label ? `${label}: ` : '') + message,
-                  detail: control
-                });
-              } else {
-                reject({
-                  context: "validation",
-                  message: `Control "${control.name || control.schema?.label || 'undefined'}" didn't pass validation`,
-                  detail: control
-                });
-              }
+        control.validate().then((result) => {
+          if (result.valid) resolve();
+          else {
+            let message = control.validator?.errors?.length ? control.validator.errors[0].message : null;
+            let label = control.schema?.label || control.schema?.field || control.name || null;
+            if (message) {
+              reject({
+                context: "validation",
+                message: (label ? `${label}: ` : '') + message,
+                detail: control
+              });
+            } else {
+              reject({
+                context: "validation",
+                message: `Control "${control.name || control.schema?.label || 'undefined'}" didn't pass validation`,
+                detail: control
+              });
             }
-          });
-        }));
+          }
+        });
+      }));
     });
     return Promise.all(promises);
   }
@@ -226,79 +212,63 @@ export class ResourceInterface {
         if (!object) return null;
         for (let key of Object.keys(object)) {
           if (typeof object[key] === "undefined") continue;
-          if (helpers.isObject(object[key]))
+          if (helpers.isObject(object[key])) {
             parseData(object[key], path ? `${path}.${key}` : key);
-          else
+          } else {
             promises.push(new Promise((passed) => {
-                let control = this.controls[path ? `${path}.${key}` : key];
-                // Missing corresponding control object
-                if (!control) return passed();
-                // Missing corresponding control schema
-                if (!control.schema) return passed();
-                // Format control file
-                if (
-                  control.schema.control === "file" &&
-                  object[key] &&
-                  object[key].length &&
-                  object[key][0] &&
-                  object[key][0].name
-                ) {
-                  let filedata = { filename: object[key][0].name },
-                    reader = new FileReader();
-                  reader.readAsDataURL(object[key][0]);
-                  reader.onload = () => {
-                    filedata.stream = reader.result.indexOf("base64,")? reader.result.slice(reader.result.indexOf("base64,") + 7): reader.result;
-                    object[key] = filedata;
-                    passed();
-                  };
-                  return;
+              let control = this.controls[path ? `${path}.${key}` : key];
+              // Missing corresponding control object
+              if (!control) return passed();
+              // Missing corresponding control schema
+              if (!control.schema) return passed();
+              // Format control file
+              if (control.schema.control === "file" && object[key] && object[key].length && object[key][0] && object[key][0].name) {
+                let filedata = { filename: object[key][0].name }, reader = new FileReader();
+                reader.readAsDataURL(object[key][0]);
+                reader.onload = () => {
+                  filedata.stream = reader.result.indexOf("base64,")? reader.result.slice(reader.result.indexOf("base64,") + 7): reader.result;
+                  object[key] = filedata;
+                  passed();
+                };
+                return;
+              }
+              // Format control json
+              if (control.schema.control === "json" && object[key] && typeof object[key] === "string") {
+                try {
+                  object[key] = JSON.parse(object[key]);
+                } catch (error) {
+                  console.warn("Error parsing value of json control", error);
                 }
-                // Format control json
-                if (
-                  control.schema.control === "json" &&
-                  object[key] &&
-                  typeof object[key] === "string"
-                ) {
-                  try {
-                    object[key] = JSON.parse(object[key]);
-                  } catch (error) {
-                    console.warn("Error parsing value of json control", error);
-                  }
-                  return passed();
-                }
-                // Format control editor
-                if (control.schema.control === "editor" && object[key] === "") {
-                  object[key] = null;
-                  return passed();
-                }
-                // Format control number
-                if (
-                  control.schema.control === "number" &&
-                  this.client.isKamaji &&
-                  object[key]
-                ) {
-                  object[key] = parseFloat(object[key]) || object[key];
-                  return passed();
-                }
-                object[key] = JSON.parse(JSON.stringify(object[key]));
-                passed();
-              }));
+                return passed();
+              }
+              // Format control editor
+              if (control.schema.control === "editor" && object[key] === "") {
+                object[key] = null;
+                return passed();
+              }
+              // Format control number
+              if (control.schema.control === "number" && this.client.isKamaji && object[key]) {
+                object[key] = parseFloat(object[key]) || object[key];
+                return passed();
+              }
+              object[key] = JSON.parse(JSON.stringify(object[key]));
+              passed();
+            }));
+          }
         }
       };
       parseData(data);
-      Promise.all(promises)
-        .then(() => {
-          if (!data || !Object.keys(data).length)
-            reject({
-              context: "sanitization",
-              message: "No data to be sent",
-              detail: data
-            });
-          else resolve(data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
+      Promise.all(promises).then(() => {
+        if (!data || !Object.keys(data).length) {
+          reject({
+            context: "sanitization",
+            message: "No data to be sent",
+            detail: data
+          });
+        } else resolve(data);
+      }).catch((error) => {
+        reject(error);
+      });
     });
   }
   parseError(xhr) {
