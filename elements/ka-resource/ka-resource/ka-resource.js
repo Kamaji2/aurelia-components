@@ -1,8 +1,9 @@
-import { inject, customElement } from "aurelia-framework";
+import { inject, customElement, bindable } from "aurelia-framework";
 
 @customElement("ka-resource")
 @inject(Element)
 export class KaResource {
+  @bindable() height = 'full';
   constructor(element) {
     this.element = element;
   }
@@ -20,14 +21,16 @@ export class KaResource {
   }
   attached() {
     const resizeHandler = () => {
-      let element = document.querySelector(`#${this.uuid}`);
-      if (!element) return;
-      element.classList.remove("overflowed");
-      element.style.height = "unset";
-      if (element.getBoundingClientRect().height > parseInt(window.innerHeight - element.getBoundingClientRect().top)) {
-        element.classList.add("overflowed");
-        element.style.height = "0px";
-        element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
+      if (this.height === 'full') {
+        let element = document.querySelector(`#${this.uuid}`);
+        if (!element) return;
+        element.classList.remove("overflowed");
+        element.style.height = "unset";
+        if (element.getBoundingClientRect().height > parseInt(window.innerHeight - element.getBoundingClientRect().top)) {
+          element.classList.add("overflowed");
+          element.style.height = "0px";
+          element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
+        }
       }
     };
     window[`resize-handler-${this.uuid}`] = resizeHandler;
