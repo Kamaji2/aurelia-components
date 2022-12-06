@@ -77,6 +77,7 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-search/ka-table-search')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-sort/ka-table-sort')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-toolbar/ka-table-toolbar')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-row-tools/ka-table-row-tools')]);
   }
   useResource() {
     console.log('%c[kamaji2-aurelia-components] loading resource modules',

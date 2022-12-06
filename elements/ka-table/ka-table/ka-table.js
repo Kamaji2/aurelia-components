@@ -27,21 +27,46 @@ export class KaTable {
       if (value) this.element.classList.add('isLoading')
       else this.element.classList.remove('isLoading');
     }));
+    this.interface.events.addEventListener('loadSuccess', () => {
+      console.warn('ka-table: loadSuccess!');
+      setTimeout(() => {
+        try { window[`resize-handler-${this.uuid}`](); } catch (error) { console.warn('ka-table: cannot run resize handler on load!'); }
+      }, 0);
+    });
   }
   attached() {
     const resizeHandler = () => {
+      let element = document.querySelector(`#${this.uuid}`);
+      if (!element) return;
+
       if (this.height === 'full') {
-        let element = document.querySelector(`#${this.uuid}`);
-        if (!element) return;
         element.style.height = '0px';
         element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
       }
+      element.querySelectorAll('tbody td.ka-table-row-tools:last-child').forEach(function (element) {
+        var floater = element.querySelector('.floater');
+        if (!floater) return;
+        var h = element.getBoundingClientRect().height;
+        var w = floater.getBoundingClientRect().width;
+        if (floater && h && w) {
+          floater.classList.add('float');
+          floater.style.transform = `translateX(${element.closest('ka-table').scrollLeft}px)`;
+          floater.style.height = h + 'px';
+          element.style.minWidth = w + 'px';
+        }
+      });
     };
     window[`resize-handler-${this.uuid}`] = resizeHandler;
     window.addEventListener('resize', window[`resize-handler-${this.uuid}`]);
-    setTimeout(() => {
+    /* setTimeout(() => {
       resizeHandler();
-    }, 1000);
+    }, 1000); */
+
+    this.element.addEventListener('scroll', event => {
+      event.target.querySelectorAll('.floater.float').forEach(floater => {
+        floater.style.transform = `translateX(${event.target.scrollLeft}px)`;
+      });
+    });
   }
 
   detached() {
