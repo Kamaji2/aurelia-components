@@ -34,7 +34,6 @@ export class KaButton {
         location.href = this.href;
       } else {
         e.toggle = () => {
-          console.log(this.busy);
           this.busy = !this.busy;
         };
       }
@@ -63,7 +62,6 @@ export class KaButton {
   }
 
   click() {
-    console.log('click');
   }
 
   disabledChanged(value) {

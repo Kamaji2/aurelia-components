@@ -70,7 +70,6 @@ export class KaControlsList {
   }
 
   change() {
-    console.log("ka-control-list change", this._value);
     if (!this._value.map((x) => Object.values(x).join("")).join("").length) {
       this.value = null;
     } else {

@@ -13,6 +13,10 @@ export class TableInterface {
   offset = 0;
   total = 0;
   sort = null;
+  // status helpers
+  isLoading = false;
+  isFailed = false;
+  isActive = false;
 
   constructor(config) {
     Object.assign(this, config || {});
@@ -44,7 +48,8 @@ export class TableInterface {
   async load(params = null, sort = null) {
     await this._initialize;
     this.isLoading = true;
-    if (!this.data) this.data = [];
+    this.isFailed = false;
+    this.isActive = true;
     // Handle query params
     let query = new URLSearchParams('');
     if (params) {
@@ -90,19 +95,22 @@ export class TableInterface {
       this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count']? xhr.headers.headers['x-total-count'].value : this.data.length;
       this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
       console.log('[TableInterface] Load - Success');
+      this.isLoading = false;
       this.events.dispatchEvent(this.events.loadSuccess);
       return xhr;
     }, (xhr) => {
       //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
+      this.data = [];
+      this.total = 0;
       console.error('[TableInterface] Load - Failure');
+      console.error(xhr.response);
+      this.isLoading = false;
+      this.isFailed = true;
       this.events.dispatchEvent(this.events.loadFailure);
     })
     .catch((error) => {
       console.error(error);
       this.data = null;
-    })
-    .finally(() => {
-      this.isLoading = false;
     });
   }
 
@@ -189,7 +197,6 @@ export class TableSearchInterface {
         for (let [k,v] of Object.entries(this.data)) {
           if (v && v !== 'null' && this.schema[k]) {
             let operator = this.controls[k].element.getAttribute('operator') || '=';
-            console.log(`Filter found: ${k} ${operator} ${v}`);
             // Format data for datetime
             if (this.schema[k].control === 'datetime' && ['>', '>='].includes(operator)) {
               v = DateTime.fromISO(v, { setZone: true }).toLocal();
@@ -213,7 +220,6 @@ export class TableSearchInterface {
               if (v2) filters.push(`${k}<=${v2}`);
               continue;
             }
-            console.log(`Filter ready: ${k} ${operator} ${v}`);
             filters.push(`${k}${operator}${v}`);
           }
         }

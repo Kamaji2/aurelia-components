@@ -161,7 +161,6 @@ export class KaControlCombo {
     for (let key of Object.keys(this.schema)) {
       if (key.startsWith('data')) {
         this.observers.push(this.binding.expressionObserver(this, `schema.${key}`).subscribe((value) => {
-          console.log(`${key} changed on ${this.schema.field || this.schema.label || this.schema.control}`, value);
           this.buildCombostack();
           this.buildValuestack();
         }));

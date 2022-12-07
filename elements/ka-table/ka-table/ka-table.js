@@ -26,11 +26,6 @@ export class KaTable {
       if (value) this.element.classList.add('isLoading')
       else this.element.classList.remove('isLoading');
     }));
-    this.interface.events.addEventListener('loadSuccess', () => {
-      setTimeout(() => {
-        try { window[`resize-handler-${this.uuid}`](); } catch (error) { console.warn('ka-table: cannot run resize handler on load!'); }
-      }, 0);
-    });
   }
   attached() {
     const resizeHandler = () => {
@@ -55,6 +50,7 @@ export class KaTable {
         }
       });
     };
+    // Resize event listener
     window[`resize-handler-${this.uuid}`] = resizeHandler;
     window.addEventListener('resize', window[`resize-handler-${this.uuid}`]);
     // Scroll event listener
@@ -63,6 +59,14 @@ export class KaTable {
         floater.style.transform = `translateX(${event.target.scrollLeft}px)`;
       });
     });
+    
+    if (!this.interface) return;
+    // Trigger resizeHandler when TableInterface loads new data
+    this.interface.events.addEventListener('loadSuccess', () => {
+      setTimeout(() => { try { window[`resize-handler-${this.uuid}`](); } catch (error) { console.warn('ka-table: cannot run resize handler on load!'); } }, 0);
+    });
+    // Trigger resizeHandler if TableInterface has already loaded data when attaching this component to dom
+    if (this.interface.data?.length) window[`resize-handler-${this.uuid}`]();
   }
 
   detached() {

@@ -17,8 +17,7 @@ export class KaTableProgressbar {
     }
     this.uuid = `ka-table-progressbar-${this.interface.uuid}`;
     this.element.id = this.uuid;
-    if (this.interface.isLoading) this.element.classList.add('visible');
-
+    
     this.interface.events.addEventListener('load', () => {
       this.element.classList.add('visible');
     });
@@ -28,5 +27,9 @@ export class KaTableProgressbar {
     this.interface.events.addEventListener('loadFailure', () => {
       this.element.classList.remove('visible');
     });
+    if (this.interface.isLoading) {
+      console.log('ka-table-progressbar: this.interface.isLoading', this.interface.data);
+      this.element.classList.add('visible');
+    }
   }
 }

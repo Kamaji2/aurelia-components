@@ -152,7 +152,6 @@ export class KaControl {
     if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {
       control = 'range';
       this.isRange = true;
-      console.log('buttons', this.buttons),
       this.buttons = this.buttons.filter(b => b !== 'dropdown');
     }
     // Setup ka-control subcomponent
@@ -177,15 +176,7 @@ export class KaControl {
   subscribeObservers() {
     if (this.observers.length) return;
     // Schema properties observing
-    /*
-    for (let key of Object.keys(this.schema)) {
-      this.observers.push(this.binding.expressionObserver(this, `schema.${key}`).subscribe((value) => {
-        console.log(`Schema property "${key}" has value:`, value);
-      }));
-    }
-    */
     this.observers.push(this.binding.expressionObserver(this, `schema.readonly`).subscribe((value) => {
-      console.log(this.schema.label + ` Schema property readonly has value:`, value);
       this.readonly = value;
     }));
   }
