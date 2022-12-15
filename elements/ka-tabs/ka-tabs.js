@@ -16,8 +16,8 @@ export class KaTabs {
       this.tabs.push({
         element: tab,
         id: tab.id,
-        label: tab.getAttribute('label') || tab.id || 'tab-' + index,
-        icon: tab.getAttribute('icon') || null,
+        label: tab.getAttribute('label') || tab.label || tab.id || 'tab-' + index,
+        icon: tab.getAttribute('icon') || tab.icon || null,
         active: false
       });
     });
