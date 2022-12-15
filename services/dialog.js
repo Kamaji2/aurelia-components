@@ -36,7 +36,7 @@ import { DialogController } from "aurelia-dialog";
 @inlineView(`
   <template>
     <ux-dialog class.bind="class">
-      <ka-layout-heading if.bind="title" level="3" icon.bind="icon" text.bind="title"></ka-layout-heading>
+      <ka-heading if.bind="title" level="3" icon.bind="icon" text.bind="title"></ka-heading>
 
       <compose if.bind="viewModel" view-model.bind="viewModel" model.bind="model"></compose>
       <compose if.bind="viewStrategy" view.bind="viewStrategy"></compose>

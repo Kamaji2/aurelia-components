@@ -12,7 +12,6 @@ export class KaTabs {
   }
   attached() {
     const tabs = this.element.querySelectorAll(':scope > ka-tab');
-    //const parentTab = this.element.closest('ka-tabs:not(:scope)');
     tabs.forEach((tab, index) => {
       this.tabs.push({
         element: tab,
@@ -23,19 +22,17 @@ export class KaTabs {
       });
     });
     this._initialize = new Promise((resolve) => {
-      this.setSelected(location.hash.replace('#', ''), false, true).then(() => { resolve(); }).catch(() => {
-        this.setSelected(this.tabs[0].id, false, false).then(() => { resolve(); });
+      this.syncSelect(location.hash.replace('#', ''), false, true).then(() => { resolve(); }).catch(() => {
+        this.syncSelect(this.tabs[0].id, false, false).then(() => { resolve(); });
       });
     });
   }
 
   async select(id, replaceState = true, traverse = false) {
     await this._initialize;
-    this.setSelected(id, replaceState, traverse);
+    this.syncSelect(id, replaceState, traverse);
   }
-
-  setSelected(id, replaceState = true, traverse = false) {
-    console.log(`Select tab ${id.length ? id : 'NONE'} with replaceState=${replaceState} and traverse=${traverse}`);
+  syncSelect(id, replaceState = true, traverse = false) {
     return new Promise((resolve, reject) => {
       let tab = this.tabs.find((tab) => { return tab.id === id });
       if (!tab) return reject();
@@ -69,5 +66,4 @@ export class KaTabs {
       resolve(tab);
     });
   }
-
 }
