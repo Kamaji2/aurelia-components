@@ -1,5 +1,5 @@
-import { helpers } from "aurelia-components";
-import { v5 as uuidv5 } from "uuid";
+import { helpers } from 'aurelia-components';
+import { v5 as uuidv5 } from 'uuid';
 
 export class ResourceInterface {
   client = null;
@@ -49,17 +49,17 @@ export class ResourceInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5('resourceInterface:' + location.pathname + ":" + config.endpoint, "2af1d572-a35c-4248-a38e-348c560cd468");
+    this.uuid = uuidv5('resourceInterface:' + location.pathname + ':' + config.endpoint, '2af1d572-a35c-4248-a38e-348c560cd468');
     // Custom events
     this.events = document.createTextNode(null);
-    this.events.getSuccess = new CustomEvent("getSuccess", { detail: this });
-    this.events.getFailure = new CustomEvent("getFailure", { detail: this });
-    this.events.postSuccess = new CustomEvent("postSuccess", { detail: this });
-    this.events.postFailure = new CustomEvent("postFailure", { detail: this });
-    this.events.putSuccess = new CustomEvent("putSuccess", { detail: this });
-    this.events.putFailure = new CustomEvent("putFailure", { detail: this });
-    this.events.patchSuccess = new CustomEvent("patchSuccess", { detail: this });
-    this.events.patchFailure = new CustomEvent("patchFailure", { detail: this });
+    this.events.getSuccess = new CustomEvent('getSuccess', { detail: this });
+    this.events.getFailure = new CustomEvent('getFailure', { detail: this });
+    this.events.postSuccess = new CustomEvent('postSuccess', { detail: this });
+    this.events.postFailure = new CustomEvent('postFailure', { detail: this });
+    this.events.putSuccess = new CustomEvent('putSuccess', { detail: this });
+    this.events.putFailure = new CustomEvent('putFailure', { detail: this });
+    this.events.patchSuccess = new CustomEvent('patchSuccess', { detail: this });
+    this.events.patchFailure = new CustomEvent('patchFailure', { detail: this });
     // Initialize
     this.initialized = this.initialize();
   }
@@ -86,10 +86,10 @@ export class ResourceInterface {
         } else resolve();
       }).then(() => {
         if (this.schema && Object.keys(this.schema).length) return resolve();
-        else return reject("missing schema configuration");
+        else return reject('missing schema configuration');
       }).catch((error) => reject(error));
     }).then(() => {
-      console.log("[ResourceInterface] Initialized");
+      console.log('[ResourceInterface] Initialized');
     }).catch((error) => {
       console.warn(`[ResourceInterface] Initialization failed: ${error}`);
     });
@@ -99,20 +99,20 @@ export class ResourceInterface {
     await this.initialized;
     this.id = null;
     let data = this.client.isKamaji ? { depth: 0 } : {};
-    return this.client.get(`${this.endpoint}/${id}`, data).then((xhr) => {
+    return this.client.get(`${this.endpoint}` + (id ? `/${id}` : ''), data).then((xhr) => {
       this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
       this._data = JSON.parse(JSON.stringify(this.data));
       this.id = id;
-      console.log("[ResourceInterface] GET - Success");
+      console.log('[ResourceInterface] GET - Success');
       // Prepare and dispatch success event
       this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
       this.events.dispatchEvent(this.events[`getSuccess`]);
     }).catch((error) => {
-      console.error("[ResourceInterface] GET - Failure", error);
+      console.error('[ResourceInterface] GET - Failure', error);
       this.events.dispatchEvent(this.events.getFailure);
       throw new ResourceError({
-        method: "get",
-        context: "xhr",
+        method: 'get',
+        context: 'xhr',
         message: `${error.statusCode} ${error.statusText}`,
         detail: error
       });
@@ -120,29 +120,29 @@ export class ResourceInterface {
   }
   async post(data) {
     await this.initialized;
-    return this.save("post", null, data);
+    return this.save('post', null, data);
   }
   async put(id, data) {
     await this.initialized;
-    return this.save("put", id, data);
+    return this.save('put', id, data);
   }
   async patch(id, data) {
     await this.initialized;
-    return this.save("patch", id, data);
+    return this.save('patch', id, data);
   }
 
   save(method, id, data) {
-    if (!id && this.id) id = this.id;
+    if (!id && (this.id || this.id === undefined)) id = this.id;
     if (!data && this.data) data = this.data;
-    if (!method) method = id ? "patch" : "post";
+    if (!method) method = id || id === undefined ? 'patch' : 'post';
     return new Promise((resolve, reject) => {
       this.validate().then(() => {
         this.sanitize(data, method).then((data) => {
-          this.client[method](this.endpoint + (id ? `/${id}` : ""), this.parsers[`${method}Request`](data)).then((xhr) => {
+          this.client[method](this.endpoint + (id ? `/${id}` : ''), this.parsers[`${method}Request`](data)).then((xhr) => {
             resolve(xhr);
           }).catch((error) => {
             reject(this.parseError(error) || {
-              context: "xhr",
+              context: 'xhr',
               message: `${error.statusCode} ${error.statusText}`,
               detail: error
             });
@@ -161,9 +161,9 @@ export class ResourceInterface {
       this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
       this.events.dispatchEvent(this.events[`${method}Failure`]);
       // Prepare and throw custom ResourceError
-      if (error.name && ["TypeError", "SyntaxError", "ReferenceError"].includes(error.name)) {
+      if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
         error = {
-          context: "js",
+          context: 'js',
           message: `${error.name}: ${error.message}`,
           detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
           original: error
@@ -185,13 +185,13 @@ export class ResourceInterface {
             let label = control.schema?.label || control.schema?.field || control.name || null;
             if (message) {
               reject({
-                context: "validation",
+                context: 'validation',
                 message: (label ? `${label}: ` : '') + message,
                 detail: control
               });
             } else {
               reject({
-                context: "validation",
+                context: 'validation',
                 message: `Control "${control.name || control.schema?.label || 'undefined'}" didn't pass validation`,
                 detail: control
               });
@@ -205,13 +205,13 @@ export class ResourceInterface {
   sanitize(data, method) {
     return new Promise((resolve, reject) => {
       data = JSON.parse(JSON.stringify(data));
-      if (method === "patch" && this._data && Object.keys(this._data).length)
+      if (method === 'patch' && this._data && Object.keys(this._data).length)
         data = helpers.diffObject(this._data, data, !this.client.isKamaji);
       let promises = [];
-      const parseData = (object, path = "") => {
+      const parseData = (object, path = '') => {
         if (!object) return null;
         for (let key of Object.keys(object)) {
-          if (typeof object[key] === "undefined") continue;
+          if (typeof object[key] === 'undefined') continue;
           if (helpers.isObject(object[key])) {
             parseData(object[key], path ? `${path}.${key}` : key);
           } else {
@@ -222,32 +222,32 @@ export class ResourceInterface {
               // Missing corresponding control schema
               if (!control.schema) return passed();
               // Format control file
-              if (control.schema.control === "file" && object[key] && object[key].length && object[key][0] && object[key][0].name) {
+              if (control.schema.control === 'file' && object[key] && object[key].length && object[key][0] && object[key][0].name) {
                 let filedata = { filename: object[key][0].name }, reader = new FileReader();
                 reader.readAsDataURL(object[key][0]);
                 reader.onload = () => {
-                  filedata.stream = reader.result.indexOf("base64,")? reader.result.slice(reader.result.indexOf("base64,") + 7): reader.result;
+                  filedata.stream = reader.result.indexOf('base64,')? reader.result.slice(reader.result.indexOf('base64,') + 7): reader.result;
                   object[key] = filedata;
                   passed();
                 };
                 return;
               }
               // Format control json
-              if (control.schema.control === "json" && object[key] && typeof object[key] === "string") {
+              if (control.schema.control === 'json' && object[key] && typeof object[key] === 'string') {
                 try {
                   object[key] = JSON.parse(object[key]);
                 } catch (error) {
-                  console.warn("Error parsing value of json control", error);
+                  console.warn('Error parsing value of json control', error);
                 }
                 return passed();
               }
               // Format control editor
-              if (control.schema.control === "editor" && object[key] === "") {
+              if (control.schema.control === 'editor' && object[key] === '') {
                 object[key] = null;
                 return passed();
               }
               // Format control number
-              if (control.schema.control === "number" && this.client.isKamaji && object[key]) {
+              if (control.schema.control === 'number' && this.client.isKamaji && object[key]) {
                 object[key] = parseFloat(object[key]) || object[key];
                 return passed();
               }
@@ -261,8 +261,8 @@ export class ResourceInterface {
       Promise.all(promises).then(() => {
         if (!data || !Object.keys(data).length) {
           reject({
-            context: "sanitization",
-            message: "No data to be sent",
+            context: 'sanitization',
+            message: 'No data to be sent',
             detail: data
           });
         } else resolve(data);
@@ -274,7 +274,7 @@ export class ResourceInterface {
   parseError(xhr) {
     let response;
     if (!xhr.response) return;
-    if (typeof xhr.response === "string" || xhr.response.startsWith("{")) {
+    if (typeof xhr.response === 'string' || xhr.response.startsWith('{')) {
       try {
         response = JSON.parse(xhr.response);
       } catch (error) {
@@ -308,7 +308,7 @@ class ResourceError extends Error {
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ResourceError);
     }
-    this.name = "[ResourceInterface] Error";
+    this.name = '[ResourceInterface] Error';
     this.info = info;
   }
 }
