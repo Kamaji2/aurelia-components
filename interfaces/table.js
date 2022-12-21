@@ -20,7 +20,7 @@ export class TableInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + (config?.endpoint), '2af1d572-a35c-4248-a38e-348c560cd468');
+    this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + (config?.endpoint) + (config?.filters), '2af1d572-a35c-4248-a38e-348c560cd468');
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Custom events
     this.events = document.createTextNode(null);
@@ -128,7 +128,7 @@ export class TableSearchInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ':' + (config?.endpoint), '2af1d572-a35c-4248-a38e-348c560cd468');
+    this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ':' + (JSON.stringify(config?.schema || {})) + (config?.endpoint) + (config.table?.endpoint) + (config.table?.filters), '2af1d572-a35c-4248-a38e-348c560cd468');
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Get session stored data
     this.data = JSON.parse(this.storage.getItem(`${this.uuid}-data`)) || this.data || {};
