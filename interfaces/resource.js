@@ -10,6 +10,10 @@ export class ResourceInterface {
   settings = {
     initializeWithDataset: false
   };
+  // status helpers
+  isLoading = false;
+  isFailed = false;
+  isActive = false;
 
   // API Response data parser functions
   parsers = {
@@ -97,6 +101,9 @@ export class ResourceInterface {
 
   async get(id, data = {}) {
     await this.initialized;
+    this.isLoading = true;
+    this.isFailed = false;
+    this.isActive = true;
     this.id = null;
     data = Object.assign((this.client.isKamaji ? { depth: 0 } : {}), data);
     return this.client.get(`${this.endpoint}` + (id ? `/${id}` : ''), data).then((xhr) => {
@@ -104,11 +111,14 @@ export class ResourceInterface {
       this._data = JSON.parse(JSON.stringify(this.data));
       this.id = id;
       console.log('[ResourceInterface] GET - Success');
+      this.isLoading = false;
       // Prepare and dispatch success event
       this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
       this.events.dispatchEvent(this.events[`getSuccess`]);
     }).catch((error) => {
       console.error('[ResourceInterface] GET - Failure', error);
+      this.isLoading = false;
+      this.isFailed = true;
       this.events.dispatchEvent(this.events.getFailure);
       throw new ResourceError({
         method: 'get',
@@ -151,12 +161,15 @@ export class ResourceInterface {
       }).catch((error) => reject(error));
     }).then((xhr) => {
       console.log(`[ResourceInterface] ${method.toUpperCase()} - Success`);
+      this.isLoading = false;
       // Prepare and dispatch success event
       this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
       this.events.dispatchEvent(this.events[`${method}Success`]);
       return xhr;
     }).catch((error) => {
       console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
+      this.isLoading = false;
+      this.isFailed = true;
       // Prepare and dispatch failure event
       this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
       this.events.dispatchEvent(this.events[`${method}Failure`]);
