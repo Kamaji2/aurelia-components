@@ -58,25 +58,21 @@ export class KaControlDate {
 }
 export class controlDatetimeValueConverter {
   toView(value, utc) {
-    if (
-      !/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/.test(
-        value
-      )
-    )
-      return value;
-    let date = !(utc === false)
-      ? DateTime.fromISO(value, { setZone: true }).toLocal()
-      : DateTime.fromISO(value);
-    if (!date.isValid) return value;
-    return date.toFormat("dd/MM/yyyy HH:mm");
+    if (/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/.test(value)) {
+      let dateISO = !(utc === false) ? DateTime.fromISO(value, { setZone: true }).toLocal() : DateTime.fromISO(value);
+      if (!dateISO.isValid) return value;
+      return dateISO.toFormat("dd/MM/yyyy HH:mm");
+    } else if (/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.test(value)) {
+      let dateSQL = !(utc === false) ? DateTime.fromSQL(value, { setZone: true }).toLocal() : DateTime.fromSQL(value);
+      if (!dateSQL.isValid) return value;
+      return dateSQL.toFormat("dd/MM/yyyy HH:mm");
+    } else return value;
   }
   fromView(value, utc) {
     if (!/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(value)) return value;
     let date = DateTime.fromFormat(value, "dd/MM/yyyy HH:mm");
     if (!date.isValid) return value;
     if (!(utc === false)) date = date.toUTC();
-    return date
-      .set({ seconds: 0, milliseconds: 0 })
-      .toISO({ suppressMilliseconds: true });
+    return date.set({ seconds: 0, milliseconds: 0 }).toISO({ suppressMilliseconds: true });
   }
 }
