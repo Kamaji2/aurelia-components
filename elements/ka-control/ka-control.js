@@ -103,7 +103,7 @@ export class KaControl {
       .withMessage('Formato data non valido')
 
       .satisfies((value, self) =>
-          value === null || value === '' || DateTime.fromISO(value).isValid)
+          value === null || value === '' || DateTime.fromISO(value).isValid || DateTime.fromSQL(value).isValid)
       .when((self) => (self.schema.control === 'datetime') && !self.isRange)
       .withMessage('Formato data/orario non valido')
 
