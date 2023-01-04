@@ -1,52 +1,64 @@
-ux-dialog-overlay
-  background-color: rgba(#000, 0.1)
+body
+  ux-dialog-overlay
+    background-color: rgba(#000, 0.1)
 
-body ux-dialog
-  display: block
-  border-radius: 5px
-  border: 0
-  box-shadow: 0 5px 15px rgba(#000, 0.2)
-  &.xs
-    max-width: 200px
-  &.sm
-    max-width: 450px
-  &.md
-    max-width: 700px
-  &.lg
-    max-width: 850px
-  &.xl
-    max-width: 1000px
-  &.xxl
-    max-width: 1250px
+  ux-dialog-container
+    > div
+      display: flex
+      margin: 0 !important
+      padding: 0 !important
+      width: 100%
+      min-height: 100%
+      height: unset !important
+      > div
+        padding: 3rem
 
-
-  ka-heading
-    margin: 0
-    border: 0
-    background: transparent
-    box-shadow: inset 0 -1px 0 #e0e0e0
-
-  > compose
+    ux-dialog
       display: block
+      border-radius: 5px
+      border: 0
+      box-shadow: 0 5px 15px rgba(#000, 0.2)
+      &.xs
+        max-width: 200px
+      &.sm
+        max-width: 450px
+      &.md
+        max-width: 700px
+      &.lg
+        max-width: 850px
+      &.xl
+        max-width: 1000px
+      &.xxl
+        max-width: 1250px
 
-  ux-dialog-body
-    display: block
-    border: 0
-    padding: 1rem
-    font-display: inherit
-    background: var(--background-color)
 
-  ux-dialog-footer
-    display: flex
-    align-items: center
-    justify-content: flex-end
-    border: 0
-    padding: 1rem
-    font-display: inherit
-    font-size: 1.4rem
-    color: inherit
-    text-align: left
-    box-shadow: inset 0 1px 0 #e0e0e0
+      ka-heading
+        margin: 0
+        border: 0
+        background: transparent
+        box-shadow: inset 0 -1px 0 #e0e0e0
 
-    ka-button
-      margin: 0 0 0 1rem
+      > compose
+          display: block
+
+      ux-dialog-body
+        display: block
+        border: 0
+        padding: 1rem
+        font-display: inherit
+        background: var(--background-color)
+
+      ux-dialog-footer
+        display: flex
+        align-items: center
+        justify-content: flex-end
+        border: 0
+        padding: 1rem
+        font-display: inherit
+        font-size: 1.4rem
+        color: inherit
+        text-align: left
+        box-shadow: inset 0 1px 0 #e0e0e0
+
+        ka-button
+          margin: 0 0 0 1rem
