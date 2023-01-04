@@ -27,6 +27,7 @@ export class UserService {
 
   reset() {
     this.data = null;
+    this.storage.clear();
   }
 
   fetch() {
