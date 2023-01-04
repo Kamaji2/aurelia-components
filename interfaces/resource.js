@@ -95,10 +95,10 @@ export class ResourceInterface {
     });
   }
 
-  async get(id) {
+  async get(id, data = {}) {
     await this.initialized;
     this.id = null;
-    let data = this.client.isKamaji ? { depth: 0 } : {};
+    data = Object.assign((this.client.isKamaji ? { depth: 0 } : {}), data);
     return this.client.get(`${this.endpoint}` + (id ? `/${id}` : ''), data).then((xhr) => {
       this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
       this._data = JSON.parse(JSON.stringify(this.data));
