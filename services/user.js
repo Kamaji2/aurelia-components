@@ -30,10 +30,10 @@ export class UserService {
     this.storage.clear();
   }
 
-  fetch() {
+  fetch(endpoint = 'me', data = { depth: 0 }) {
     this.data = null;
     return new Promise((resolve, reject) => {
-      this.api.get('me?depth=0').then((xhr) => {
+      this.api.get(endpoint, data).then((xhr) => {
         this.data = xhr.response;
         resolve(this);
       }).catch(() => {
