@@ -23,10 +23,10 @@
         </div>
       </template>
       <div class="col-3 buttons">
-        <button if.bind="!schema.readonly && $last" click.delegate="add()">
+        <button type="button" if.bind="!schema.readonly && $last" click.delegate="add()">
           <i class="fa-regular fa-plus"></i>
         </button>
-        <button
+        <button type="button"
           if.bind="!schema.readonly && !$first"
           click.delegate="remove(value)"
         >
