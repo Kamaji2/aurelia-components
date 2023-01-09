@@ -1,0 +1,5 @@
+<template>
+  <i if.bind="!icon && tool === 'copy-to-clipboard'" class="fa-regular fa-clone"></i>
+  <i if.bind="icon" class="${icon}"></i>
+  <slot></slot>
+</template>

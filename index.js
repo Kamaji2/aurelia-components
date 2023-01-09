@@ -27,7 +27,7 @@ export class AureliaComponentsConfiguration {
     this.useButtons();
     this.useDatetime();
     this.useControls();
-    this.useTooltip();
+    this.useTools();
     this.useTabs();
     this.useTable();
     this.useResource();
@@ -67,9 +67,10 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-textarea/ka-control-textarea')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-control/ka-control-range/ka-control-range')]);
   }
-  useTooltip() {
-    console.log('%c[kamaji2-aurelia-components] loading tooltip modules', 'color:#8b64cf;font-size:8px;');
+  useTools() {
+    console.log('%c[kamaji2-aurelia-components] loading tools modules', 'color:#8b64cf;font-size:8px;');
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/attributes/ka-tooltip/ka-tooltip')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-toolicon/ka-toolicon')]);
   }
   useTabs() {
     console.log('%c[kamaji2-aurelia-components] loading tabs modules', 'color:#8b64cf;font-size:8px;');
