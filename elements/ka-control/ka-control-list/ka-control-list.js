@@ -22,7 +22,7 @@ export class KaControlsList {
   }
 
   attached() {
-    if (!this.value) this.add();
+    if (!this.value) new Array(parseInt(this.schema?.min || 1, 10)).fill(0).forEach(() => { this.add(); });
   }
 
   schemaChanged(schema) {

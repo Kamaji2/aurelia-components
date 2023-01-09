@@ -23,13 +23,14 @@
         </div>
       </template>
       <div class="col-3 buttons">
-        <button type="button" if.bind="!schema.readonly && $last" click.delegate="add()">
+        <button type="button"
+        if.bind="!schema.readonly && $last && (!schema.max || $index+1 < schema.max)"
+        click.delegate="add()">
           <i class="fa-regular fa-plus"></i>
         </button>
         <button type="button"
-          if.bind="!schema.readonly && !$first"
-          click.delegate="remove(value)"
-        >
+          if.bind="!schema.readonly && !$first && (!schema.min || $index+1 > schema.min)"
+          click.delegate="remove(value)">
           <i class="fa-regular fa-trash-can"></i>
         </button>
       </div>
