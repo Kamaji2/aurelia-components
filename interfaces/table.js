@@ -2,6 +2,7 @@ import { helpers } from 'aurelia-components';
 import { v5 as uuidv5 } from 'uuid';
 import { DateTime } from "luxon";
 
+
 export class TableInterface {
   client = null;
   endpoint = null;
@@ -20,7 +21,8 @@ export class TableInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + (config?.endpoint) + (config?.filters), '2af1d572-a35c-4248-a38e-348c560cd468');
+    this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
+    console.debug(`[TableInterface] UUID ${this.uuid}`);
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Custom events
     this.events = document.createTextNode(null);
@@ -39,9 +41,9 @@ export class TableInterface {
       resolve();
     }).then(() => {
       Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
-      console.log('[TableInterface] Initialized');
+      console.debug(`[TableInterface][${this.uuid}] Initialized`);
     }).catch((error) => {
-      console.warn(`[TableInterface] Initialization failed: ${error}`);
+      console.warn(`[TableInterface][${this.uuid}] Initialization failed: ${error}`);
     });
   }
 
@@ -94,7 +96,7 @@ export class TableInterface {
       this.data = this.parseResponse(xhr.response);
       this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count']? xhr.headers.headers['x-total-count'].value : this.data.length;
       this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
-      console.log('[TableInterface] Load - Success');
+      console.debug(`[TableInterface][${this.uuid}] Load - Success`);
       this.isLoading = false;
       this.events.dispatchEvent(this.events.loadSuccess);
       return xhr;
@@ -102,7 +104,7 @@ export class TableInterface {
       //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
       this.data = [];
       this.total = 0;
-      console.error('[TableInterface] Load - Failure');
+      console.error(`[TableInterface][${this.uuid}] Load - Failure`);
       console.error(xhr.response);
       this.isLoading = false;
       this.isFailed = true;
@@ -128,7 +130,8 @@ export class TableSearchInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ':' + (JSON.stringify(config?.schema || {})) + (config?.endpoint) + (config.table?.endpoint) + (config.table?.filters), '2af1d572-a35c-4248-a38e-348c560cd468');
+    this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
+    console.debug(`[TableSearchInterface] UUID ${this.uuid}`);
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
     // Get session stored data
     this.data = JSON.parse(this.storage.getItem(`${this.uuid}-data`)) || this.data || {};
@@ -170,9 +173,9 @@ export class TableSearchInterface {
         else return reject('missing schema configuration');
       }).catch((error) => reject(error));
     }).then(() => {
-      console.log('[TableSearchInterface] Initialized');
+      console.debug(`[TableSearchInterface][${this.uuid}] Initialized`);
     }).catch((error) => {
-      console.warn(`[TableSearchInterface] Initialization failed: ${error}`);
+      console.warn(`[TableSearchInterface][${this.uuid}] Initialization failed: ${error}`);
     });
   }
 

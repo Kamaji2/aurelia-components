@@ -135,6 +135,11 @@ export const helpers = {
     }
     return helpers.deepMerge(target, ...sources);
   },
+  stringify: (object, replacer, spaces) => {
+    return JSON.stringify(object, replacer || function(field, value) {
+      return (typeof value === 'object' && !['Array', 'Object'].includes(value.constructor?.name)) ? '[Class]' : value;
+    }, spaces);
+  },
   capitalize: (string) => {
     return (string && string[0].toUpperCase() + string.slice(1)) || '';
   },

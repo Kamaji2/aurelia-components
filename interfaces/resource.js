@@ -53,7 +53,8 @@ export class ResourceInterface {
 
   constructor(config) {
     Object.assign(this, config || {});
-    this.uuid = uuidv5('resourceInterface:' + location.pathname + ':' + config.endpoint, '2af1d572-a35c-4248-a38e-348c560cd468');
+    this.uuid = uuidv5('resourceInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
+    console.debug(`[ResourceInterface] UUID ${this.uuid}`);
     // Custom events
     this.events = document.createTextNode(null);
     this.events.getSuccess = new CustomEvent('getSuccess', { detail: this });
@@ -93,9 +94,9 @@ export class ResourceInterface {
         else return reject('missing schema configuration');
       }).catch((error) => reject(error));
     }).then(() => {
-      console.log('[ResourceInterface] Initialized');
+      console.debug(`[ResourceInterface][${this.uuid}] Initialized`);
     }).catch((error) => {
-      console.warn(`[ResourceInterface] Initialization failed: ${error}`);
+      console.warn(`[ResourceInterface][${this.uuid}] Initialization failed: ${error}`);
     });
   }
 
@@ -110,13 +111,13 @@ export class ResourceInterface {
       this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
       this._data = JSON.parse(JSON.stringify(this.data));
       this.id = id;
-      console.log('[ResourceInterface] GET - Success');
+      console.debug(`[ResourceInterface][${this.uuid}] GET - Success`);
       this.isLoading = false;
       // Prepare and dispatch success event
       this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
       this.events.dispatchEvent(this.events[`getSuccess`]);
     }).catch((error) => {
-      console.error('[ResourceInterface] GET - Failure', error);
+      console.error(`[ResourceInterface][${this.uuid}] GET - Failure`, error);
       this.isLoading = false;
       this.isFailed = true;
       this.events.dispatchEvent(this.events.getFailure);
@@ -160,14 +161,14 @@ export class ResourceInterface {
         }).catch((error) => reject(error));
       }).catch((error) => reject(error));
     }).then((xhr) => {
-      console.log(`[ResourceInterface] ${method.toUpperCase()} - Success`);
+      console.debug(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Success`);
       this.isLoading = false;
       // Prepare and dispatch success event
       this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
       this.events.dispatchEvent(this.events[`${method}Success`]);
       return xhr;
     }).catch((error) => {
-      console.warn(`[ResourceInterface] ${method.toUpperCase()} - Failure`);
+      console.warn(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Failure`);
       this.isLoading = false;
       this.isFailed = true;
       // Prepare and dispatch failure event
