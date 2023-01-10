@@ -42,20 +42,20 @@ export class ApiService {
               }, 5000);
             });
           }
-          if (msg.statusCode === 401 && this.auth && this.auth.refreshToken && !msg.requestMessage.url.startsWith(this.baseUrl + this.auth.endpoints.refresh)) {
-            return this.auth.refresh().then(() => {
-              msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
-              return this.client.send(msg.requestMessage);
-            }, (error) => {
+          if (msg.statusCode === 401) {
+            if (this.auth && !this.auth.refreshToken) {
               this.auth.logout(this.router?.currentInstruction?.config?.name || null);
-              try {
-                if (this.router.routes.find((x) => x.name === 'logout' || x.href === 'logout'))
-                  this.router.navigateToRoute('logout');
-                else if (this.router.routes.find((x) => x.name === 'login' || x.href === 'login'))
-                  this.router.navigateToRoute('login');
-              } catch (error) { console.error(error); }
-              return error;
-            });
+              this.routeToLogout();
+            } else if (this.auth && this.auth.refreshToken && !msg.requestMessage.url.startsWith(this.baseUrl + this.auth.endpoints.refresh)) {
+              return this.auth.refresh().then(() => {
+                msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
+                return this.client.send(msg.requestMessage);
+              }, (error) => {
+                this.auth.logout(this.router?.currentInstruction?.config?.name || null);
+                this.routeToLogout();
+                return error;
+              });
+            }
           }
           return Promise.reject(msg);
         }
@@ -89,5 +89,18 @@ export class ApiService {
     for (let [key, value] of Object.entries(params))
       query.push(`${key}=` + encodeURIComponent(value));
     return query.join('&');
+  }
+
+  routeToLogout() {
+    try {
+      if (this.router.routes.find((x) => x.route.includes('logout')))
+        this.router.navigate('logout');
+      else if (this.router.routes.find((x) => x.name === 'logout' || x.href === 'logout'))
+        this.router.navigateToRoute('logout');
+      else if (this.router.routes.find((x) => x.route.includes('login')))
+        this.router.navigate('login');
+      else if (this.router.routes.find((x) => x.name === 'login' || x.href === 'login'))
+        this.router.navigateToRoute('login');
+    } catch (error) { console.error(error); }
   }
 }
