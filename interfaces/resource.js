@@ -2,6 +2,7 @@ import { helpers } from 'aurelia-components';
 import { v5 as uuidv5 } from 'uuid';
 
 export class ResourceInterface {
+  id = null;
   client = null;
   endpoint = null;
   controls = {};
@@ -110,7 +111,7 @@ export class ResourceInterface {
     return this.client.get(`${this.endpoint}` + (id ? `/${id}` : ''), data).then((xhr) => {
       this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
       this._data = JSON.parse(JSON.stringify(this.data));
-      this.id = id;
+      this.id = id; // id can be anything or undefined
       console.debug(`[ResourceInterface][${this.uuid}] GET - Success`);
       this.isLoading = false;
       // Prepare and dispatch success event
@@ -143,9 +144,9 @@ export class ResourceInterface {
   }
 
   save(method, id, data) {
-    if (!id && (this.id || this.id === undefined)) id = this.id;
+    id = id || this.id || null;
     if (!data && this.data) data = this.data;
-    if (!method) method = id || id === undefined ? 'patch' : 'post';
+    if (!method) method = (id || (!id && this.id === undefined)) ? 'patch' : 'post';
     return new Promise((resolve, reject) => {
       this.validate().then(() => {
         this.sanitize(data, method).then((data) => {
