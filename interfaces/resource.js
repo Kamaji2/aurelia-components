@@ -219,7 +219,8 @@ export class ResourceInterface {
   }
   sanitize(data, method) {
     return new Promise((resolve, reject) => {
-      data = JSON.parse(JSON.stringify(data));
+      //data = JSON.parse(JSON.stringify(data)); > this caused FileList data to be lost
+      data = Object.assign({}, data);
       if (method === 'patch' && this._data && Object.keys(this._data).length)
         data = helpers.diffObject(this._data, data, !this.client.isKamaji);
       let promises = [];
