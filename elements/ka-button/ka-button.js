@@ -6,9 +6,10 @@ require("./ka-button.sass");
 @inject(Element)
 export class KaButton {
   @bindable() disabled;
+  @bindable() icon = null;
   @bindable() busy = false;
   @bindable() href = null;
-  @bindable() icon = null;
+  @bindable() target = null;
 
   _ready = false;
 
@@ -31,7 +32,8 @@ export class KaButton {
         e.stopPropagation();
       } else if (this.href) {
         e.stopPropagation();
-        location.href = this.href;
+        if (this.target) window.open(this.href, this.target);
+        else location.href = this.href;
       } else {
         e.toggle = () => {
           this.busy = !this.busy;
