@@ -41,4 +41,14 @@ export class UserService {
       });
     });
   }
+
+  hasRole(roles) {
+    if (!this.data || !roles) return false;
+    let userRoles = this.data.roles || this.data.role || this.data.groups || this.data.group || null;
+    if (!Array.isArray(userRoles)) userRoles = [userRoles]; // could be userRoles = [null];
+    if (!userRoles.length || !userRoles[0]) return false;
+    userRoles = userRoles.map((role) => { return (role.value || role.id)?.toString() || role; });
+    if (!Array.isArray(roles)) roles = [roles];
+    return userRoles.some(userRole => roles.includes(userRole));
+  }
 }
