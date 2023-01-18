@@ -179,16 +179,13 @@ export class KaControlCombo {
       if (dts.table || dts.url) {
         let endpoint = this.buildQueryUrl();
         if (!this.api) throw new Error('ka-control-combo: missing http client configuration!');
-        this.api
-          .get(endpoint)
-          .then((x) => {
-            this.combostack = x.response;
-            this.preloadedCombostack = x.response;
-          })
-          .catch((x) => {
-            console.error('ka-control-combo: invalid datasource provided in schema!',
-              this.schema);
-          });
+        this.api.get(endpoint).then((xhr) => {
+          this.combostack = xhr.response;
+          this.preloadedCombostack = xhr.response;
+        }).catch((xhr) => {
+          console.error('ka-control-combo: invalid datasource provided in schema!',
+          this.schema);
+        });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
@@ -411,6 +408,11 @@ export class KaControlCombo {
     let endpoint = dts.table || dts.url;
     let urlParams = this.getUrlParams(endpoint);
 
+    // Build sort url param
+    if (this.schema.datasort) {
+      urlParams.sort = (urlParams.sort ? urlParams.sort + ',' : '') + this.schema.datasort;
+    }
+
     // Build fields and sort url params
     let keys, fields, sort;
     keys = dtt.match(/\{[a-zA-Z0-9_.]*?\}/g);
@@ -432,7 +434,7 @@ export class KaControlCombo {
     if (params && params.filters) { // Filters set into function caller
       urlParams.filters = (urlParams.filters ? urlParams.filters + '&' : '') + `(${params.filters})`;
     }
-    
+
     endpoint = endpoint.replace(/\?.*$/, '') + '?' + this.buildQueryString(urlParams);
     return endpoint;
   }
