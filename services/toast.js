@@ -6,8 +6,8 @@ export class ToastService {
   hold = false;
   stack = [];
 
-  show(message = "", elementClass = "", hold = false) {
-    this.stack.push({ message, elementClass, hold });
+  show(message = "", classNames = "", hold = false) {
+    this.stack.push({ message, classNames, hold });
     this.consume();
   }
 
@@ -22,13 +22,12 @@ export class ToastService {
       let current = this.stack.shift();
       let element = document.createElement("div");
       element.classList.add("ka-toast");
-      element.classList.add(`ka-toast-${current.elementClass}`);
-      element.innerHTML = `<div class="messages"><span>${(Array.isArray(
-        current.message
-      )
-        ? current.message
-        : [current.message]
-      ).join("</span><span>")}</span></div><a href="#"></a>`;
+      if (current.classNames) {
+        current.classNames.trim().split(' ').forEach((className) => {
+          element.classList.add(`ka-toast-${className}`);
+        });
+      }
+      element.innerHTML = `<div class="messages"><span>${(Array.isArray(current.message)? current.message: [current.message]).join("</span><span>")}</span></div><a href="#"></a>`;
       element.querySelector("a").addEventListener("click", ($event) => {
         $event.preventDefault();
         this.remove(element);

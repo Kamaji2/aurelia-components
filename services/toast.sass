@@ -94,18 +94,31 @@
       font-weight: 900
       content: "\f071"
       color: orange
-
+  
   &.ka-toast-accent
     padding: 0 2rem 0 0
+    color: #ffffff
     background-color: var(--accent-color)
     box-shadow: inset 0 0 0 1px rgba(#000, 0.1), 0 0 10px rgba(#000, 0.5)
     &::before
-      margin-right: 0
       font-family: "Font Awesome 6 Pro"
       font-weight: 900
-      content: "\f071"
+      content: "\f06a"
       color: #ffffff
-      background-color: transparent
+      background-color: #20202033
+
+  &.ka-toast-critical
+    padding: 0 2rem 0 0
+    color: #ffffff
+    background-color: var(--error-color)
+    box-shadow: inset 0 0 0 1px rgba(#000, 0.1), 0 0 10px rgba(#000, 0.5)
+    &::before
+      font-family: "Font Awesome 6 Pro"
+      font-weight: 900
+      content: "\e02e"
+      color: #ffffff
+      background-color: #20202033
+
 
   &.ka-toast-primary
     background-color: var(--primary-color)
