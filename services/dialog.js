@@ -1,7 +1,7 @@
-import { inject } from "aurelia-framework";
-import { DialogService as AureliaDialogService } from "aurelia-dialog";
+import { inject } from 'aurelia-framework';
+import { DialogService as AureliaDialogService } from 'aurelia-dialog';
 
-require("./dialog.sass");
+require('./dialog.sass');
 
 @inject(AureliaDialogService)
 export class DialogService {
@@ -17,55 +17,96 @@ export class DialogService {
     });
   }
   alert(params = {}, lock) {
-    params.type = "alert";
+    params.type = 'alert';
     return this.open(params, lock);
   }
   confirm(params = {}, lock) {
-    params.type = "confirm";
+    params.type = 'confirm';
     return this.open(params, lock);
   }
   continue(params = {}, lock) {
-    params.type = "continue";
+    params.type = 'continue';
     return this.open(params, lock);
   }
 }
 
-import { inlineView } from "aurelia-framework";
-import { DialogController } from "aurelia-dialog";
+import { inlineView } from 'aurelia-framework';
+import { TemplatingEngine, ViewResources, ViewSlot } from 'aurelia-templating'
+import { Container } from 'aurelia-dependency-injection';
+import { DialogController } from 'aurelia-dialog';
 
 @inlineView(`
   <template>
-    <ux-dialog class.bind="class">
+    <ux-dialog ref="element" class.bind="class">
       <ka-heading if.bind="title" level="3" icon.bind="icon" text.bind="title"></ka-heading>
-
-      <compose if.bind="viewModel" view-model.bind="viewModel" model.bind="model"></compose>
-      <compose if.bind="viewStrategy" view.bind="viewStrategy"></compose>
 
       <ux-dialog-body if.bind="body" innerhtml.bind="body"></ux-dialog-body>
 
+      <div ref="placeholder"></div>
+
       <ux-dialog-footer if.bind="type==='alert'">
-        <ka-button click.delegate="DialogController.ok(model || null)">\${'OK'|t}</ka-button>
+        <ka-button click.delegate="controller.ok(model || null)">\${'OK'|t}</ka-button>
       </ux-dialog-footer>
 
       <ux-dialog-footer if.bind="type==='confirm'">
-        <ka-button class="inverted" click.delegate="DialogController.cancel(model || null)">\${'Cancel'|t}</ka-button>
-        <ka-button click.delegate="DialogController.ok(model || null)">\${'Confirm'|t}</ka-button>
+        <ka-button class="inverted" click.delegate="controller.cancel(model || null)">\${'Cancel'|t}</ka-button>
+        <ka-button click.delegate="controller.ok(model || null)">\${'Confirm'|t}</ka-button>
       </ux-dialog-footer>
 
       <ux-dialog-footer if.bind="type==='continue'">
-        <ka-button class="inverted" click.delegate="DialogController.cancel(model || null)">\${'Cancel'|t}</ka-button>
-        <ka-button click.delegate="DialogController.ok(model || null)">\${'Continue'|t}</ka-button>
+        <ka-button class="inverted" click.delegate="controller.cancel(model || null)">\${'Cancel'|t}</ka-button>
+        <ka-button click.delegate="controller.ok(model || null)">\${'Continue'|t}</ka-button>
       </ux-dialog-footer>
+
+      <div id="ka-dialog-loader" ref="loader"><div></div></div>
 
     </ux-dialog>
   </template>
 `)
-@inject(DialogController)
+@inject(TemplatingEngine, ViewResources, Container, DialogController)
 export class DialogServiceViewModel {
-  constructor(DialogController) {
-    this.DialogController = DialogController;
+  viewModelReference = { currentViewModel: null };
+  constructor(TemplatingEngine, ViewResources, Container, controller) {
+    this.templatingEngine = TemplatingEngine;
+    this.viewResources = ViewResources;
+    this.container = Container;
+    this.controller = controller;
   }
   activate(params) {
     Object.assign(this, params);
+  }
+  attached() {
+    if (this.viewModel) this.init();
+  }
+
+  async init() {
+    const viewController = await this.templatingEngine.compose({
+      container: this.container,
+      model: this.model,
+      owningView: {
+        loader: {
+          show: () => {
+            if (!this.loader) return;
+            this.loader.classList.add('visible');
+          },
+          hide: () => {
+            if (!this.loader) return;
+            this.loader.classList.remove('visible');
+          }
+        },
+        ok: (model) => {
+          this.controller.ok(model);
+        },
+        cancel: (model) => {
+          this.controller.cancel(model);
+        }
+      },
+      viewModel: this.container.get(this.viewModel),
+      viewResources: this.viewResources,
+      viewSlot: new ViewSlot(this.placeholder, false)
+    });
+    this.placeholder.parentElement.removeChild(this.placeholder);
+    viewController.attached();
+    return viewController;
   }
 }
