@@ -7,6 +7,7 @@ export class ApiService {
   constructor(router) {
     this.router = router;
     this.isKamaji = true;
+    this.isOffline = false;
     this.language = null;
 
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
@@ -35,10 +36,14 @@ export class ApiService {
         },
         responseError: (msg) => {
           if (msg.statusCode === 0) { //net::ERR_FAILED
+            this.isOffline = true;
             console.warn('net::ERR_FAILED intercepted! Retry in 5 seconds... ');
             return new Promise((resolve) => { 
               setTimeout(() => {
-                this.client.send(msg.requestMessage).then(xhr => { resolve(xhr); });
+                this.client.send(msg.requestMessage).then(xhr => {
+                  this.isOffline = false;
+                  resolve(xhr);
+                });
               }, 5000);
             });
           }
