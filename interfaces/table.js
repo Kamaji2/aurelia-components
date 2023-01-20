@@ -192,14 +192,14 @@ export class TableSearchInterface {
     return Promise.all(promises);
   }
 
-  async search() {
+  async search(params = {}, data = null) {
     await this._initialize;
     return new Promise((resolve, reject) => {
       this.validate().then(() => {
-        let filters = [], params = {};
-        for (let [k,v] of Object.entries(this.data)) {
+        let filters = [];
+        for (let [k,v] of Object.entries(data || this.data)) {
           if (v && v !== 'null' && this.schema[k]) {
-            let operator = this.controls[k].element.getAttribute('operator') || '=';
+            let operator = this.controls[k] ? this.controls[k].element?.getAttribute('operator') || '=' : '=';
             // Format data for datetime
             if (this.schema[k].control === 'datetime' && ['>', '>='].includes(operator)) {
               v = DateTime.fromISO(v, { setZone: true }).toLocal();
@@ -226,7 +226,7 @@ export class TableSearchInterface {
             filters.push(`${k}${operator}${v}`);
           }
         }
-        if (filters.length) params.filters = filters.join('&');
+        if (filters.length) params.filters = params.filters ? `(${params.filters})&(${filters.join('&')})` : filters.join('&');
         this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));
         this.table.offset = 0;
         this.table.load(params).then(xhr => resolve(xhr)).catch(error => reject(error));
