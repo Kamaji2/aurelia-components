@@ -16,13 +16,15 @@ export class KaResourceToolbar {
     this.defaultSave();
     console.warn('ka-resource-toolbar: buttonSave function unset, using default!');
   };
+  @bindable() interface = null;
+  
   constructor(element, i18n, toast) {
     this.element = element;
     this.i18n = i18n;
     this.toast = toast;
   }
   bind(bindingContext) {
-    this.interface = bindingContext && bindingContext.constructor?.name === 'ResourceInterface' ? bindingContext : null;
+    this.interface = this.interface || (bindingContext && bindingContext.constructor?.name === 'ResourceInterface' ? bindingContext : null);
     if (!this.interface) {
       console.error('ka-resource-toolbar: missing resource interface!');
       return;
