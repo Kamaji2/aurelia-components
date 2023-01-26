@@ -16,7 +16,7 @@ export class KaControl {
 
   parentResourceName = 'resource'; // default ResourceInterface name to look for in parentContext
   buttons = []; // array of button identifiers to show on control - supported value are: clear, dropdown
-  observers = []; // array of expresison observers
+  observers = []; // array of expression observers
   isRange = false;
 
   constructor(element, binding, validator) {
@@ -35,82 +35,50 @@ export class KaControl {
       .when((self) => self.schema.control === 'check' && self.schema.required)
       .withMessage('Spunta obbligatoria')
 
-      .satisfies((value, self) =>
-          parseInt(value, 10) >= parseInt(self.schema.min, 10) &&
-          value <= parseInt(self.schema.max, 10))
-      .when((self) =>
-          self.schema.control === 'number' && self.schema.min && self.schema.max)
+      .satisfies((value, self) => parseInt(value, 10) >= parseInt(self.schema.min, 10) && value <= parseInt(self.schema.max, 10))
+      .when((self) => self.value && self.schema.control === 'number' && self.schema.min && self.schema.max)
       .withMessage('Il valore deve essere compreso tra ${schema.min} e ${schema.max}')
 
       .satisfies((value, self) => parseInt(value, 10) >= parseInt(self.schema.min, 10))
-      .when((self) =>
-          self.schema.control === 'number' &&
-          self.schema.min &&
-          !self.schema.max)
+      .when((self) => self.value && self.schema.control === 'number' && self.schema.min && !self.schema.max)
       .withMessage('Il valore deve essere uguale o maggiore di ${schema.min}')
 
       .satisfies((value, self) => parseInt(value, 10) <= parseInt(self.schema.max, 10))
-      .when((self) =>
-          self.schema.control === 'number' &&
-          !self.schema.min &&
-          self.schema.max)
+      .when((self) => self.value && self.schema.control === 'number' && !self.schema.min && self.schema.max)
       .withMessage('Il valore deve essere minore o uguale a ${schema.max}')
 
-      .satisfies((value, self) =>
-          value.length >= self.schema.min && value.length <= self.schema.max)
-      .when((self) =>
-          self.value &&
-          ['text', 'textarea', 'password'].includes(self.schema.control) &&
-          self.schema.min &&
-          self.schema.max)
+      .satisfies((value, self) => value.length >= self.schema.min && value.length <= self.schema.max)
+      .when((self) => self.value && ['text', 'textarea', 'password'].includes(self.schema.control) && self.schema.min && self.schema.max)
       .withMessage('Il numero di caratteri deve essere compreso tra ${schema.min} e ${schema.max}')
 
       .satisfies((value, self) => value.length >= self.schema.min)
-      .when((self) =>
-          self.value &&
-          ['text', 'textarea', 'password'].includes(self.schema.control) &&
-          self.schema.min &&
-          !self.schema.max)
+      .when((self) => self.value && ['text', 'textarea', 'password'].includes(self.schema.control) && self.schema.min && !self.schema.max)
       .withMessage('Il valore deve essere di almeno ${schema.min} caratteri')
 
       .satisfies((value, self) => value.length <= self.schema.max)
-      .when((self) =>
-          self.value &&
-          ['text', 'textarea', 'password'].includes(self.schema.control) &&
-          !self.schema.min &&
-          self.schema.max)
+      .when((self) => self.value && ['text', 'textarea', 'password'].includes(self.schema.control) && !self.schema.min && self.schema.max)
       .withMessage('Il valore non deve superare i ${schema.max} caratteri')
 
       .satisfies((value, self) => {
         let pattern = typeof self.schema.pattern === 'string' ? new RegExp(self.schema.pattern): self.schema.pattern;
         return value === null || value === '' || pattern.test(value);
       })
-      .when((self) =>
-          ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.pattern)
+      .when((self) => ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.pattern)
       .withMessage('Formato non valido')
 
-      .satisfies((value, self) =>
-        self.schema.validationRule.satisfies(value, self))
-      .when((self) =>
-          ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.validationRule)
+      .satisfies((value, self) => self.schema.validationRule.satisfies(value, self))
+      .when((self) => ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.validationRule)
       .withMessage('${schema.validationRule.withMessage}')
 
-      .satisfies((value, self) =>
-          value === null ||
-          value === '' ||
-          DateTime.fromFormat(value, 'yyyy-MM-dd').isValid)
+      .satisfies((value) => value === null || value === '' || DateTime.fromFormat(value, 'yyyy-MM-dd').isValid)
       .when((self) => (self.schema.control === 'date' || self.schema.control === 'age') && !self.isRange)
       .withMessage('Formato data non valido')
 
-      .satisfies((value, self) =>
-          value === null || value === '' || DateTime.fromISO(value).isValid || DateTime.fromSQL(value).isValid)
+      .satisfies((value) => value === null || value === '' || DateTime.fromISO(value).isValid || DateTime.fromSQL(value).isValid)
       .when((self) => (self.schema.control === 'datetime') && !self.isRange)
       .withMessage('Formato data/orario non valido')
 
-      .satisfies((value, self) =>
-          value === null ||
-          value === '' ||
-          DateTime.fromFormat(value, 'HH:mm:ss').isValid)
+      .satisfies((value) => value === null || value === '' || DateTime.fromFormat(value, 'HH:mm:ss').isValid)
       .when((self) => (self.schema.control === 'time') && !self.isRange)
       .withMessage('Formato orario non valido')
 

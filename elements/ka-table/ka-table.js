@@ -13,7 +13,7 @@ export class KaTable {
     // Resolve TableInterface binding
     this.interface = bindingContext && bindingContext.constructor?.name === 'TableInterface'? bindingContext: null;
     if (!this.interface) {
-      console.warn();('ka-table: missing table interface!');
+      console.warn('ka-table: missing table interface!');
       return;
     } else if (!this.interface.uuid) {
       console.warn('ka-table: cannot bind to table interface!');
