@@ -14,8 +14,10 @@ if [ -z "$RELEASE" ]; then
     RELEASE='patch'
 fi
 echo
-`npm version $RELEASE`
+npm config set git-tag-version false
+TAG=`npm version $RELEASE`
 git add --all
 git commit --all -m "$MESSAGE"
+`git tag $TAG`
 git push --follow-tags
 echo
