@@ -120,6 +120,7 @@ export class KaControlCombo {
     }
     if (value === null) {
       this.valuestack = [];
+      this.getValueModel();
     } else if (this.schema.datamultiple === true) {
       if (typeof value === 'string') {
         try {
@@ -150,10 +151,7 @@ export class KaControlCombo {
     this._value = value;
 
     // Build display value
-    setTimeout(() => {
-      this.buildValuestack();
-    },
-      this.api ? 0 : 100);
+    setTimeout(() => { this.buildValuestack(); }, this.api ? 0 : 100);
   }
 
   subscribeObservers() {
@@ -221,7 +219,7 @@ export class KaControlCombo {
           text = text.replace(key[0], replacement);
         }
       } else text = item[dtt] || '';
-      combostack.push({ value: String(item[dtv]), text: text });
+      combostack.push({ value: String(item[dtv]), text: text, model: item });
     }
     this._combostack = combostack;
   }
@@ -264,12 +262,15 @@ export class KaControlCombo {
               text = text.replace(key[0], replacement);
             }
           } else text = item[dtt] || '';
-          valuestack.find((i) => i.value === String(item[dtv])).text = text;
+          let entry = valuestack.find((i) => i.value === String(item[dtv]));
+          entry.text = text;
+          entry.model = item;
         }
       }));
     }
     Promise.all(promises).finally(() => {
       this.valuestack = valuestack;
+      this.getValueModel();
     });
   }
   get valuestack() {
@@ -281,6 +282,15 @@ export class KaControlCombo {
       return;
     }
     this._valuestack = stack;
+  }
+
+  getValueModel() {
+    if (!this.value) return this.valueModel = null;
+    if (this.schema.datamultiple === true) {
+      this.valueModel = this.valuestack.filter(x => this.value.includes(x.value)).map(x => x.model);
+    } else {
+      this.valueModel = this.valuestack.filter(x => String(this.value) === String(x.value)).map(x => x.model)[0];
+    }
   }
 
   open($event) {
@@ -323,6 +333,7 @@ export class KaControlCombo {
       this.close();
     }
     this.value = value;
+    this.getValueModel();
   }
 
   search() {
@@ -424,7 +435,7 @@ export class KaControlCombo {
       fields = dtt;
       sort = `+${dtt}`;
     }
-    urlParams.sort = (urlParams.sort ? urlParams.sort + ',' : '') + sort;
+    if (!(this.schema.datasort === false)) urlParams.sort = (urlParams.sort ? urlParams.sort + ',' : '') + sort;
     urlParams.fields = (urlParams.fields ? urlParams.fields + ',' : '') + `${dtv},${fields}`;
 
     // Build filters url param

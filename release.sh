@@ -19,5 +19,6 @@ TAG=`npm version $RELEASE`
 git add --all
 git commit --all -m "$MESSAGE"
 `git tag $TAG`
-git push --follow-tags
+git push
+git push --tags origin
 echo
