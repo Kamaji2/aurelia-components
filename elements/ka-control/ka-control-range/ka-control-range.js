@@ -42,7 +42,7 @@ export class KaControlRange {
   change() {
     setTimeout(() => {
       this.value = [this.valueFrom, this.valueTo].join('<=>').replace(/^<=>$/, '');
-      this.element.dispatchEvent(new Event("change", { bubbles: true }));
+      this.element.dispatchEvent(new Event('change', { bubbles: true }));
     }, 100);
   }
 }

@@ -29,9 +29,7 @@ export class KaControlCheck {
       $event.stopPropagation();
     } else {
       this.value = !this.value;
-      setTimeout(() => {
-        this.element.dispatchEvent(new Event("change", { bubbles: true }));
-      }, 100);
+      setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
     }
   }
 }

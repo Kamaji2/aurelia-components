@@ -145,9 +145,7 @@ export class KaControlCombo {
     }
 
     //console.debug('ka-control-combo: value changed!', value);
-    setTimeout(() => {
-      this.element.dispatchEvent(new Event('change', { bubbles: true }));
-    }, 100);
+    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
     this._value = value;
 
     // Build display value

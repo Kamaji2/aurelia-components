@@ -133,7 +133,7 @@ export class KaControl {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) {
       eval(`this.bindedResource.data.${this.name} = value`);
     }
-    this.element.dispatchEvent(new Event('change', { bubbles: true }));
+    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
     this.validate();
   }
   readonlyChanged(value) {

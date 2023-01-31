@@ -52,9 +52,7 @@ export class KaControlTime {
     this.backdrop.close();
   }
   change() {
-    setTimeout(() => {
-      this.element.dispatchEvent(new Event("change", { bubbles: true }));
-    }, 100);
+    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
   }
 }
 export class controlTimeValueConverter {
