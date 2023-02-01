@@ -1,5 +1,5 @@
 .ka-tooltip
-  pointer-events: none
+  user-select: none
   position: absolute
   z-index: 1100
 
@@ -27,11 +27,28 @@
     transform: rotate(45deg)
     background-color: inherit
 
+  &.inverted
+    color: var(--text-color)
+    background-color: #ffffff
+    box-shadow: 0 0 5px 0 #00000066
   &.primary
     background-color: var(--primary-color)
+  &.primary.inverted
+    color: var(--primary-color)
+    background-color: #ffffff
   &.secondary
     background-color: var(--secondary-color)
+  &.secondary.inverted
+    color: var(--secondary-color)
+    background-color: #ffffff
   &.accent
     background-color: var(--accent-color)
+  &.accent.inverted
+    color: var(--accent-color)
+    background-color: #ffffff
   &.warning
     background-color: var(--warning-color)
+  &.warning.inverted
+    color: var(--warning-color)
+    background-color: #ffffff
+  
