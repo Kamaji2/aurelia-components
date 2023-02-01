@@ -19,7 +19,6 @@ export class KaTooltipCustomAttribute {
     this.uuid = uuidv5(this.value + this.style + this.event + this.placement, '2af1d572-a35c-4248-a38e-348c560cd468');
     if (this.event === 'click') {
       const clickHandler = (event) => {
-        console.log('suka', this.uuid);
         if (event.composedPath().includes(this.element)) {
           this.show(event);
         } else {
