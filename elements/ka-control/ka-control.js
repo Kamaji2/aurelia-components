@@ -111,10 +111,7 @@ export class KaControl {
 
   schemaChanged(schema) {
     // Handle undefined schema
-    if (!schema || !schema.control) {
-      this.schema = { control: 'text', label: 'Undefined schema', readonly: true };
-      return;
-    }
+    if (!schema || !schema.control) return this.element.classList.add('undefined'); else this.element.classList.remove('undefined');
     // Force range control if ka-control has attribute operator set to "<=>"
     let control = schema.control;
     if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {
