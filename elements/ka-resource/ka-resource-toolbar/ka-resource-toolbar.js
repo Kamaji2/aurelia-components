@@ -49,7 +49,7 @@ export class KaResourceToolbar {
     this.interface.save().then(xhr => {
       let message = xhr.requestMessage.method === 'POST' ? this.i18n.tr('Record successfully created') : this.i18n.tr('Record successfully edited');
       this.toast.show(`${message}!`, 'success');
-      this.close();
+      this.close(xhr);
     }, error => {
       if (error.info?.context === 'sanitization') {
         this.toast.show(`${this.i18n.tr('Warning')}: ${this.i18n.tr(error.info?.message || error.detail?.message)}!`, 'warning');
