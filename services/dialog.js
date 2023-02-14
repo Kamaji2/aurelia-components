@@ -83,24 +83,7 @@ export class DialogServiceViewModel {
     const viewController = await this.templatingEngine.compose({
       container: this.container,
       model: this.model,
-      owningView: {
-        loader: {
-          show: () => {
-            if (!this.loader) return;
-            this.loader.classList.add('visible');
-          },
-          hide: () => {
-            if (!this.loader) return;
-            this.loader.classList.remove('visible');
-          }
-        },
-        ok: (model) => {
-          this.controller.ok(model);
-        },
-        cancel: (model) => {
-          this.controller.cancel(model);
-        }
-      },
+      owningView: new DialogServiceView(this.loader, this.controller),
       viewModel: this.container.get(this.viewModel),
       viewResources: this.viewResources,
       viewSlot: new ViewSlot(this.placeholder, false)
@@ -108,5 +91,28 @@ export class DialogServiceViewModel {
     this.placeholder.parentElement.removeChild(this.placeholder);
     viewController.attached();
     return viewController;
+  }
+}
+
+export class DialogServiceView {
+  loader = {
+    show: () => {
+      if (!this.loaderElement) return;
+      this.loaderElement.classList.add('visible');
+    },
+    hide: () => {
+      if (!this.loaderElement) return;
+      this.loaderElement.classList.remove('visible');
+    }
+  };
+  ok = (model) => {
+    this.dialogController.ok(model);
+  };
+  cancel = (model) => {
+    this.dialogController.cancel(model);
+  };
+  constructor(loaderElement, dialogController) {
+    this.loaderElement = loaderElement;
+    this.dialogController = dialogController;
   }
 }
