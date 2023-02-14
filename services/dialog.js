@@ -42,7 +42,10 @@ import { DialogController } from 'aurelia-dialog';
 
       <ux-dialog-body if.bind="body" innerhtml.bind="body"></ux-dialog-body>
 
-      <div ref="placeholder"></div>
+      <ux-dialog-body if.bind="wrapViewModel">
+        <div ref="placeholder"></div>
+      </ux-dialog-body>
+      <div else ref="placeholder"></div>
 
       <ux-dialog-footer if.bind="type==='alert'">
         <ka-button click.delegate="controller.ok(model || null)">\${'OK'|t}</ka-button>
