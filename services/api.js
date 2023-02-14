@@ -35,8 +35,9 @@ export class ApiService {
           return msg;
         },
         responseError: (msg) => {
-          if (msg.statusCode === 0) { //net::ERR_FAILED
+          if (msg.statusCode === 0 && (!msg.responseType || msg.responseType !== 'abort')) { //net::ERR_FAILED
             this.isOffline = true;
+            console.debug(msg);
             console.warn('net::ERR_FAILED intercepted! Retry in 5 seconds... ');
             return new Promise((resolve) => { 
               setTimeout(() => {
