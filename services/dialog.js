@@ -38,11 +38,11 @@ import { DialogController } from 'aurelia-dialog';
 @inlineView(`
   <template>
     <ux-dialog ref="element" class.bind="class">
-      <ka-heading if.bind="title" level="3" icon.bind="icon" text.bind="title"></ka-heading>
+      <ka-heading if.bind="title" level="2" icon.bind="icon" text.bind="title"></ka-heading>
 
       <ux-dialog-body if.bind="body" innerhtml.bind="body"></ux-dialog-body>
 
-      <ux-dialog-body if.bind="wrapViewModel">
+      <ux-dialog-body if.bind="wrapViewModel" class="ViewModelWrapper">
         <div ref="placeholder"></div>
       </ux-dialog-body>
       <div else ref="placeholder"></div>
