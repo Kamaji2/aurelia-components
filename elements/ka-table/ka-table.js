@@ -33,8 +33,9 @@ export class KaTable {
       if (!element) return;
 
       if (this.height === 'full') {
-        element.style.height = '0px';
-        element.style.height = parseInt(window.innerHeight - element.getBoundingClientRect().top) + 'px';
+        element.style.height = null;
+        let container = (element.closest('ux-dialog-body') || element.closest('router-view')).getBoundingClientRect();
+        element.style.height = parseInt(container.bottom - element.getBoundingClientRect().top) + 'px';
       }
       element.querySelectorAll('tbody td.ka-table-row-tools:last-child').forEach(function (element) {
         var floater = element.querySelector('.floater');

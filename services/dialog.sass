@@ -15,7 +15,8 @@ body
 
     ux-dialog
       position: relative
-      display: block
+      display: flex
+      flex-direction: column
       border-radius: 5px
       border: 0
       max-height: calc(100vh - 6rem)
@@ -34,17 +35,21 @@ body
       &.xxl
         max-width: 1250px
 
-      ux-dialog-body
+      > ka-heading
+        flex: 0 0 auto
+
+      > ux-dialog-body
+        flex: 1 1 100%
         display: block
         border: 0
         padding: 1rem
-        max-height: calc(100vh - 6rem - 10rem)
         overflow: auto
         background: var(--background-color)
         &.ViewModelWrapper
           padding: 0
 
-      ux-dialog-footer
+      > ux-dialog-footer
+        flex: 0 0 auto
         display: flex
         align-items: center
         justify-content: flex-end

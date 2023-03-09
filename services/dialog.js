@@ -37,7 +37,7 @@ import { DialogController } from 'aurelia-dialog';
 
 @inlineView(`
   <template>
-    <ux-dialog ref="element" class.bind="class">
+    <ux-dialog ref="element" class.bind="className">
       <ka-heading if.bind="title" level="2" icon.bind="icon" text.bind="title"></ka-heading>
 
       <ux-dialog-body if.bind="body" innerhtml.bind="body"></ux-dialog-body>
