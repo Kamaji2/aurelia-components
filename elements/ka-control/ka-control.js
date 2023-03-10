@@ -130,7 +130,7 @@ export class KaControl {
     this.readonly = schema.readonly;
     this.subscribeObservers();
   }
-  valueChanged() {
+  valueChanged(value) {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) {
       eval(`this.bindedResource.data.${this.name} = value`);
     }
