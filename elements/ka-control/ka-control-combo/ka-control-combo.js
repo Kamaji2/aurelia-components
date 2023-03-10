@@ -17,8 +17,8 @@ export class KaControlCombo {
 
   observers = [];
 
-  combostack = [];
-  valuestack = [];
+  _combostack = [];
+  _valuestack = [];
   preloadedCombostack = [];
 
   constructor(element, binding) {
@@ -34,18 +34,12 @@ export class KaControlCombo {
   clientChanged(client) {
     this.api = client;
     // Override http client if needed
-    if (
-      (!this.api && this.schema.datasource.table) ||
-      this.schema.datasource.url
-    ) {
+    if ((!this.api && this.schema.datasource.table) || this.schema.datasource.url) {
       this.api = new HttpClient();
       this.api.configure((x) => {
         x.withInterceptor({
           response: (msg) => {
-            if (
-              msg.responseType === 'json' &&
-              typeof msg.response === 'string'
-            ) {
+            if (msg.responseType === 'json' && typeof msg.response === 'string') {
               msg.response = JSON.parse(msg.response);
             }
             return msg;
@@ -64,8 +58,7 @@ export class KaControlCombo {
       try {
         schema.datasource = JSON.parse(schema.datasource);
       } catch (error) {
-        console.error('ka-control-combo: invalid datasource provided in schema!',
-          schema);
+        console.error('ka-control-combo: invalid datasource provided in schema!', schema);
         return;
       }
     }
@@ -145,18 +138,22 @@ export class KaControlCombo {
     }
 
     //console.debug('ka-control-combo: value changed!', value);
-    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
+    setTimeout(() => {
+      this.element.dispatchEvent(new Event('change', { bubbles: true })); 
+    }, 100);
     this._value = value;
 
     // Build display value
-    setTimeout(() => { this.buildValuestack(); }, this.api ? 0 : 100);
+    setTimeout(() => {
+      this.buildValuestack(); 
+    }, this.api ? 0 : 100);
   }
 
   subscribeObservers() {
     if (this.observers.length) return;
     for (let key of Object.keys(this.schema)) {
       if (key.startsWith('data')) {
-        this.observers.push(this.binding.expressionObserver(this, `schema.${key}`).subscribe((value) => {
+        this.observers.push(this.binding.expressionObserver(this, `schema.${key}`).subscribe(() => {
           this.buildCombostack();
           this.buildValuestack();
         }));
@@ -178,16 +175,14 @@ export class KaControlCombo {
         this.api.get(endpoint).then((xhr) => {
           this.combostack = xhr.response;
           this.preloadedCombostack = xhr.response;
-        }).catch((xhr) => {
-          console.error('ka-control-combo: invalid datasource provided in schema!',
-          this.schema);
+        }).catch(() => {
+          console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
         });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
       } else {
-        console.error('ka-control-combo: invalid datasource provided in schema!',
-          this.schema);
+        console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
         return;
       }
     }
@@ -205,14 +200,13 @@ export class KaControlCombo {
     let combostack = [];
     for (let item of stack) {
       let text = '';
-      let keys = dtt.match(/\{[a-zA-Z0-9_\.]*?\}/g);
+      let keys = dtt.match(/\{[a-zA-Z0-9_.]*?\}/g);
       if (keys) {
         text = dtt;
         for (let key of keys) {
           let replacement = '';
-          key = /\{([^\.]*)\.?(.*)\}/g.exec(key);
-          if (item[key[1]] && key[2] && item[key[1]][key[2]])
-            replacement = item[key[1]][key[2]];
+          key = /\{([^.]*)\.?(.*)\}/g.exec(key);
+          if (item[key[1]] && key[2] && item[key[1]][key[2]]) replacement = item[key[1]][key[2]];
           else if (item[key[1]]) replacement = item[key[1]];
           text = text.replace(key[0], replacement);
         }
@@ -220,6 +214,10 @@ export class KaControlCombo {
       combostack.push({ value: String(item[dtv]), text: text, model: item });
     }
     this._combostack = combostack;
+
+    if (combostack.length === 1 && this.schema.required) {
+      this.value = combostack[0].value;
+    }
   }
 
   buildValuestack() {
@@ -248,14 +246,13 @@ export class KaControlCombo {
         let response = x.response;
         for (let item of response) {
           let text = '';
-          let keys = dtt.match(/\{[a-zA-Z0-9_\.]*?\}/g);
+          let keys = dtt.match(/\{[a-zA-Z0-9_.]*?\}/g);
           if (keys) {
             text = dtt;
             for (let key of keys) {
               let replacement = '';
-              key = /\{([^\.]*)\.?(.*)\}/g.exec(key);
-              if (item[key[1]] && key[2] && item[key[1]][key[2]])
-                replacement = item[key[1]][key[2]];
+              key = /\{([^.]*)\.?(.*)\}/g.exec(key);
+              if (item[key[1]] && key[2] && item[key[1]][key[2]]) replacement = item[key[1]][key[2]];
               else if (item[key[1]]) replacement = item[key[1]];
               text = text.replace(key[0], replacement);
             }
@@ -285,15 +282,14 @@ export class KaControlCombo {
   getValueModel() {
     if (!this.value) return this.valueModel = null;
     if (this.schema.datamultiple === true) {
-      this.valueModel = this.valuestack.filter(x => this.value.includes(x.value)).map(x => x.model);
+      this.valueModel = this.valuestack.filter((x) => this.value.includes(x.value)).map((x) => x.model);
     } else {
-      this.valueModel = this.valuestack.filter(x => String(this.value) === String(x.value)).map(x => x.model)[0];
+      this.valueModel = this.valuestack.filter((x) => String(this.value) === String(x.value)).map((x) => x.model)[0];
     }
   }
 
   open($event) {
-    if (this.schema.readonly || ($event && $event.target.tagName === 'I'))
-      return;
+    if (this.schema.readonly || ($event && $event.target.tagName === 'I')) return;
     this._combostack.forEach((x) => (x.selected = this._value && this._value.includes(x.value)));
     this.element.dispatchEvent(new Event('focus', { bubbles: true }));
     this.backdrop.open(this.drawer).then(() => {
@@ -365,8 +361,7 @@ export class KaControlCombo {
         let terms = term.trim().split(' ');
         if (terms.length > 1) {
           keys.forEach((key, index) => {
-            if (terms[index])
-              filters.push(`${key.replace(/{|}/g, '')}${dsh.operator}${terms[index]}`);
+            if (terms[index]) filters.push(`${key.replace(/{|}/g, '')}${dsh.operator}${terms[index]}`);
           });
         } else {
           keys.forEach((key) => {
@@ -460,8 +455,7 @@ export class kaControlComboHighlightValueConverter {
   toView(text, term) {
     if (!term) return text;
     let index = text.toLowerCase().indexOf(term.toLowerCase());
-    if (index >= 0)
-      text =
+    if (index >= 0) text =
         text.substring(0, index) +
         '<strong>' +
         text.substring(index, index + term.length) +
