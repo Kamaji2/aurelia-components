@@ -35,13 +35,14 @@ export class ApiService {
           return msg;
         },
         responseError: (msg) => {
-          if (msg.statusCode === 0 && (!msg.responseType || msg.responseType !== 'abort')) { //net::ERR_FAILED
+          if (msg.statusCode === 0 && (!msg.responseType || msg.responseType !== 'abort')) {
+            //net::ERR_FAILED
             this.isOffline = true;
             console.debug(msg);
             console.warn('net::ERR_FAILED intercepted! Retry in 5 seconds... ');
-            return new Promise((resolve) => { 
+            return new Promise((resolve) => {
               setTimeout(() => {
-                this.client.send(msg.requestMessage).then(xhr => {
+                this.client.send(msg.requestMessage).then((xhr) => {
                   this.isOffline = false;
                   resolve(xhr);
                 });
@@ -56,7 +57,8 @@ export class ApiService {
               return this.auth.refresh().then(() => {
                 msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
                 return this.client.send(msg.requestMessage);
-              }, (error) => {
+              },
+              (error) => {
                 this.auth.logout(this.router?.currentInstruction?.config?.name || null);
                 this.routeToLogout();
                 return error;
@@ -92,21 +94,18 @@ export class ApiService {
 
   buildQueryString(params) {
     let query = [];
-    for (let [key, value] of Object.entries(params))
-      query.push(`${key}=` + encodeURIComponent(value));
+    for (let [key, value] of Object.entries(params)) query.push(`${key}=` + encodeURIComponent(value));
     return query.join('&');
   }
 
   routeToLogout() {
     try {
-      if (this.router.routes.find((x) => x.route.includes('logout')))
-        this.router.navigate('logout');
-      else if (this.router.routes.find((x) => x.name === 'logout' || x.href === 'logout'))
-        this.router.navigateToRoute('logout');
-      else if (this.router.routes.find((x) => x.route.includes('login')))
-        this.router.navigate('login');
-      else if (this.router.routes.find((x) => x.name === 'login' || x.href === 'login'))
-        this.router.navigateToRoute('login');
-    } catch (error) { console.error(error); }
+      if (this.router.routes.find((x) => x.route.includes('logout'))) this.router.navigate('logout');
+      else if (this.router.routes.find((x) => x.name === 'logout' || x.href === 'logout')) this.router.navigateToRoute('logout');
+      else if (this.router.routes.find((x) => x.route.includes('login'))) this.router.navigate('login');
+      else if (this.router.routes.find((x) => x.name === 'login' || x.href === 'login')) this.router.navigateToRoute('login');
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

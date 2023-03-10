@@ -93,7 +93,8 @@ export class KaControlCombo {
     // Build combo items list
     setTimeout(() => {
       this.buildCombostack();
-    }, this.api ? 0 : 100);
+    },
+    this.api ? 0 : 100);
 
     this.subscribeObservers();
   }
@@ -105,10 +106,7 @@ export class KaControlCombo {
       return;
     }
     // Validate value allowing string 'null' value
-    if (
-      (!value && !this._value) ||
-      (value !== 'null' && value === JSON.stringify(this._value))
-    ) {
+    if ((!value && !this._value) || (value !== 'null' && value === JSON.stringify(this._value))) {
       return;
     }
     if (value === null) {
@@ -124,14 +122,12 @@ export class KaControlCombo {
         }
       }
       if (!Array.isArray(value)) {
-        console.warn('ka-control-combo: value should be an array! Trying to convert it...',
-          value);
+        console.warn('ka-control-combo: value should be an array! Trying to convert it...', value);
         value = [String(value)];
       }
     } else {
       if (typeof value !== 'string' && typeof value !== 'number') {
-        console.error('ka-control-combo: value must be a string or an integer!',
-          value);
+        console.error('ka-control-combo: value must be a string or an integer!', value);
         return;
       }
       value = [String(value)];
@@ -139,14 +135,15 @@ export class KaControlCombo {
 
     //console.debug('ka-control-combo: value changed!', value);
     setTimeout(() => {
-      this.element.dispatchEvent(new Event('change', { bubbles: true })); 
+      this.element.dispatchEvent(new Event('change', { bubbles: true }));
     }, 100);
     this._value = value;
 
     // Build display value
     setTimeout(() => {
-      this.buildValuestack(); 
-    }, this.api ? 0 : 100);
+      this.buildValuestack();
+    },
+    this.api ? 0 : 100);
   }
 
   subscribeObservers() {
@@ -172,12 +169,15 @@ export class KaControlCombo {
       if (dts.table || dts.url) {
         let endpoint = this.buildQueryUrl();
         if (!this.api) throw new Error('ka-control-combo: missing http client configuration!');
-        this.api.get(endpoint).then((xhr) => {
-          this.combostack = xhr.response;
-          this.preloadedCombostack = xhr.response;
-        }).catch(() => {
-          console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
-        });
+        this.api
+          .get(endpoint)
+          .then((xhr) => {
+            this.combostack = xhr.response;
+            this.preloadedCombostack = xhr.response;
+          })
+          .catch(() => {
+            console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
+          });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
@@ -280,7 +280,7 @@ export class KaControlCombo {
   }
 
   getValueModel() {
-    if (!this.value) return this.valueModel = null;
+    if (!this.value) return (this.valueModel = null);
     if (this.schema.datamultiple === true) {
       this.valueModel = this.valuestack.filter((x) => this.value.includes(x.value)).map((x) => x.model);
     } else {
@@ -353,7 +353,6 @@ export class KaControlCombo {
       // if schema.datasearch.filters is set, this overrides any other filtering logic
       // schema.datasearch.filters can contain only the {term} keyword to be replaced
       filters.push(dsh.filters.replaceAll('{term}', term));
-
     } else {
       // dtt can be something like '{key1} {key2} {key3}' or 'Label1 {key1} label2 {key2}'
       let keys = dtt.match(/{(.*?)}/g);
@@ -374,7 +373,6 @@ export class KaControlCombo {
       }
     }
     filters = filters.join('&');
-
 
     let endpoint = this.buildQueryUrl({ filters: filters });
     if (this.searchRequest && this.searchRequest.cancel) {
@@ -432,10 +430,12 @@ export class KaControlCombo {
     urlParams.fields = (urlParams.fields ? urlParams.fields + ',' : '') + `${dtv},${fields}`;
 
     // Build filters url param
-    if (dtf) { // Filters set into schema.datafilter
+    if (dtf) {
+      // Filters set into schema.datafilter
       urlParams.filters = (urlParams.filters ? urlParams.filters + '&' : '') + `(${dtf})`;
     }
-    if (params && params.filters) { // Filters set into function caller
+    if (params && params.filters) {
+      // Filters set into function caller
       urlParams.filters = (urlParams.filters ? urlParams.filters + '&' : '') + `(${params.filters})`;
     }
 
@@ -455,12 +455,7 @@ export class kaControlComboHighlightValueConverter {
   toView(text, term) {
     if (!term) return text;
     let index = text.toLowerCase().indexOf(term.toLowerCase());
-    if (index >= 0) text =
-        text.substring(0, index) +
-        '<strong>' +
-        text.substring(index, index + term.length) +
-        '</strong>' +
-        text.substring(index + term.length);
+    if (index >= 0) text = text.substring(0, index) + '<strong>' + text.substring(index, index + term.length) + '</strong>' + text.substring(index + term.length);
     return text;
   }
 }

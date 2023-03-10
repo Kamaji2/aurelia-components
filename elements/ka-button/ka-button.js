@@ -1,8 +1,8 @@
-import { inject, customElement, bindable } from "aurelia-framework";
+import { inject, customElement, bindable } from 'aurelia-framework';
 
-require("./ka-button.sass");
+require('./ka-button.sass');
 
-@customElement("ka-button")
+@customElement('ka-button')
 @inject(Element)
 export class KaButton {
   @bindable() disabled;
@@ -20,14 +20,14 @@ export class KaButton {
   bind(bindingContext) {
     this.parent = bindingContext;
 
-    this.disabled = this.disabled === "" ? true : this.disabled;
-    this.disabled = this.disabled === null || typeof this.disabled === "undefined"? false : this.disabled;
-    this.disabled = this.disabled === "false" ? false : Boolean(this.disabled);
+    this.disabled = this.disabled === '' ? true : this.disabled;
+    this.disabled = this.disabled === null || typeof this.disabled === 'undefined' ? false : this.disabled;
+    this.disabled = this.disabled === 'false' ? false : Boolean(this.disabled);
   }
 
   attached() {
     this._ready = true;
-    this.element.addEventListener("click", (e) => {
+    this.element.addEventListener('click', (e) => {
       if (this.disabled || this.busy) {
         e.stopPropagation();
       } else if (this.href) {
@@ -42,18 +42,18 @@ export class KaButton {
     });
 
     let active = () => {
-      if (!this.disabled && !this.busy) this.element.classList.toggle("active");
+      if (!this.disabled && !this.busy) this.element.classList.toggle('active');
     };
-    this.element.addEventListener("mousedown", active);
-    this.element.addEventListener("touchstart", active);
-    this.element.addEventListener("mouseup", active);
-    this.element.addEventListener("touchend", active);
+    this.element.addEventListener('mousedown', active);
+    this.element.addEventListener('touchstart', active);
+    this.element.addEventListener('mouseup', active);
+    this.element.addEventListener('touchend', active);
 
     // Prevent multiple fast clicks hack
-    this.element.addEventListener("click", (event) => {
+    this.element.addEventListener('click', (event) => {
       if (this.click_pending) {
         event.preventDefault();
-        event.stopPropagation(); 
+        event.stopPropagation();
       } else this.click_pending = true;
       setTimeout(() => {
         this.click_pending = false;
@@ -63,11 +63,10 @@ export class KaButton {
     this.init();
   }
 
-  click() {
-  }
+  click() {}
 
   disabledChanged(value) {
-    value = value === "false" ? false : Boolean(value);
+    value = value === 'false' ? false : Boolean(value);
     this.disabled = value;
     if (this._ready) this.init();
   }
@@ -76,9 +75,9 @@ export class KaButton {
   }
 
   init() {
-    if (this.disabled === true) this.element.classList.add("disabled");
-    else this.element.classList.remove("disabled");
-    if (this.busy) this.element.classList.add("busy");
-    else this.element.classList.remove("busy");
+    if (this.disabled === true) this.element.classList.add('disabled');
+    else this.element.classList.remove('disabled');
+    if (this.busy) this.element.classList.add('busy');
+    else this.element.classList.remove('busy');
   }
 }

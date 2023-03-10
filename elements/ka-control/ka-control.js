@@ -60,7 +60,7 @@ export class KaControl {
       .withMessage('Il valore non deve superare i ${schema.max} caratteri')
 
       .satisfies((value, self) => {
-        let pattern = typeof self.schema.pattern === 'string' ? new RegExp(self.schema.pattern): self.schema.pattern;
+        let pattern = typeof self.schema.pattern === 'string' ? new RegExp(self.schema.pattern) : self.schema.pattern;
         return value === null || value === '' || pattern.test(value);
       })
       .when((self) => ['text', 'textarea', 'password', 'number'].includes(self.schema.control) && self.schema.pattern)
@@ -75,11 +75,11 @@ export class KaControl {
       .withMessage('Formato data non valido')
 
       .satisfies((value) => value === null || value === '' || DateTime.fromISO(value).isValid || DateTime.fromSQL(value).isValid)
-      .when((self) => (self.schema.control === 'datetime') && !self.isRange)
+      .when((self) => self.schema.control === 'datetime' && !self.isRange)
       .withMessage('Formato data/orario non valido')
 
       .satisfies((value) => value === null || value === '' || DateTime.fromFormat(value, 'HH:mm:ss').isValid)
-      .when((self) => (self.schema.control === 'time') && !self.isRange)
+      .when((self) => self.schema.control === 'time' && !self.isRange)
       .withMessage('Formato orario non valido')
 
       .on(this);
@@ -100,7 +100,10 @@ export class KaControl {
     if (!this.name && this.schema) this.schemaChanged(this.schema);
     // Handle buttons configuration
     if (this.element.hasAttribute('buttons')) {
-      this.buttons = this.element.getAttribute('buttons').split(',').map(button => button.trim());
+      this.buttons = this.element
+        .getAttribute('buttons')
+        .split(',')
+        .map((button) => button.trim());
     }
   }
 
@@ -111,13 +114,14 @@ export class KaControl {
 
   schemaChanged(schema) {
     // Handle undefined schema
-    if (!schema || !schema.control) return this.element.classList.add('undefined'); else this.element.classList.remove('undefined');
+    if (!schema || !schema.control) return this.element.classList.add('undefined');
+    else this.element.classList.remove('undefined');
     // Force range control if ka-control has attribute operator set to "<=>"
     let control = schema.control;
     if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {
       control = 'range';
       this.isRange = true;
-      this.buttons = this.buttons.filter(b => b !== 'dropdown');
+      this.buttons = this.buttons.filter((b) => b !== 'dropdown');
     }
     // Setup ka-control subcomponent
     this.viewStrategy = new InlineViewStrategy(`<template><ka-control-${control} view-model.ref="control" schema.bind="schema" value.bind="value | nullifyEmpty & validate" client.bind="client" focus.trigger="focus()" blur.trigger="blur()" change.trigger="change($event)"></ka-control-${control}></template>`);
@@ -126,11 +130,13 @@ export class KaControl {
     this.readonly = schema.readonly;
     this.subscribeObservers();
   }
-  valueChanged(value) {
+  valueChanged() {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) {
       eval(`this.bindedResource.data.${this.name} = value`);
     }
-    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
+    setTimeout(() => {
+      this.element.dispatchEvent(new Event('change', { bubbles: true }));
+    }, 100);
     this.validate();
   }
   readonlyChanged(value) {
@@ -219,7 +225,7 @@ export class KaControl {
       };
       setSchemaBinding();
       // Reset binding if resource schema gets entirely replaced
-      this.resourceSchemaBinding = this.binding.expressionObserver(this, `bindedResource.schema`).subscribe((value) => setSchemaBinding());
+      this.resourceSchemaBinding = this.binding.expressionObserver(this, `bindedResource.schema`).subscribe(() => setSchemaBinding());
     } else if (this.schema) {
       this.schemaChanged(this.schema);
     }
@@ -239,7 +245,7 @@ export class KaControl {
       };
       setDataBinding();
       // Reset binding if resource schema gets entirely replaced
-      this.resourceValueBinding = this.binding.expressionObserver(this, `bindedResource.data`).subscribe((value) => setDataBinding());
+      this.resourceValueBinding = this.binding.expressionObserver(this, `bindedResource.data`).subscribe(() => setDataBinding());
     }
     this.bindedResource = resource;
     this.bindedToResource = true;
@@ -254,12 +260,12 @@ export class KaControl {
   }
   checkNested(obj, levels) {
     let level = levels.shift();
-    if (obj === undefined || !obj.hasOwnProperty(level)) return false;
+    if (obj === undefined || !Object.prototype.hasOwnProperty.call(obj, level)) return false;
     return levels.length ? this.checkNested(obj[level], levels) : true;
   }
   createNested(obj, levels) {
     let level = levels.shift();
-    if (!obj.hasOwnProperty(level)) obj[level] = levels.length ? {} : null;
+    if (!Object.prototype.hasOwnProperty.call(obj, level)) obj[level] = levels.length ? {} : null;
     return levels.length ? this.createNested(obj[level], levels) : null;
   }
 }

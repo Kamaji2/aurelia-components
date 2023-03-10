@@ -1,14 +1,3 @@
 <template>
-  <textarea
-    type="text"
-    value.bind="value"
-    disabled.bind="schema.readonly"
-    placeholder.bind="schema.placeholder || ''"
-    keydown.delegate="keydown()"
-    keyup.delegate="keyup($event)"
-    focus.trigger="focus()"
-    blur.trigger="blur()"
-    class="display-value ${schema.readonly?'readonly':''}"
-  >
-  </textarea>
+  <textarea type="text" value.bind="value" disabled.bind="schema.readonly" placeholder.bind="schema.placeholder || ''" keydown.delegate="keydown()" keyup.delegate="keyup($event)" focus.trigger="focus()" blur.trigger="blur()" class="display-value ${schema.readonly?'readonly':''}"> </textarea>
 </template>

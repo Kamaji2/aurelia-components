@@ -76,9 +76,7 @@
     <div class="ka-layout-burger" click.delegate="toggle()" ref="burgerHeader">
       <i class="fa-light fa-bars"></i>
     </div>
-    <h1 if.bind="router.currentInstruction.config.title">
-      ${router.currentInstruction.config.title}
-    </h1>
+    <h1 if.bind="router.currentInstruction.config.title">${router.currentInstruction.config.title}</h1>
     <span else style="flex: 1"></span>
 
     <!-- Profile -->

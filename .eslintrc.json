@@ -3,9 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": [
-    "eslint:recommended"
-  ],
+  "extends": ["eslint:recommended"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "requireConfigFile": false,
@@ -15,20 +13,33 @@
     "ecmaVersion": "latest",
     "sourceType": "module",
     "babelOptions": {
-      "plugins": [
-        ["@babel/plugin-proposal-decorators", { "legacy": true }]
-      ]
+      "plugins": [["@babel/plugin-proposal-decorators", { "legacy": true }]]
     }
   },
-  "overrides": [
-  ],
+  "overrides": [],
+  "ignorePatterns": ["*ckeditor*"],
+  "globals": {
+    "require": "readonly",
+    "ENVIRONMENT": "readonly"
+  },
   "rules": {
+    "indent": ["error", 2],
     "array-bracket-newline": ["error", { "multiline": true }],
+    "array-element-newline": ["error", "consistent"],
     "dot-location": ["error", "property"],
     "multiline-ternary": ["error", "never"],
     "object-curly-spacing": ["error", "always", { "objectsInObjects": true, "arraysInObjects": true }],
+    "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
+    "comma-spacing": ["error", { "before": false, "after": true }],
     "function-paren-newline": ["error", "never"],
+    "func-call-spacing": ["error", "never"],
+    "function-call-argument-newline": ["error", "consistent"],
     "space-in-parens": ["error", "never"],
-    "comma-dangle": ["error", "never"]
+    "comma-dangle": ["error", "never"],
+    "arrow-parens": ["error", "always"],
+    "brace-style": ["error", "1tbs"],
+    "nonblock-statement-body-position": ["error", "beside"],
+    "no-tabs": ["error"],
+    "newline-per-chained-call": 0
   }
 }

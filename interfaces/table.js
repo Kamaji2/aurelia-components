@@ -1,7 +1,6 @@
 import { helpers } from 'aurelia-components';
 import { v5 as uuidv5 } from 'uuid';
-import { DateTime } from "luxon";
-
+import { DateTime } from 'luxon';
 
 export class TableInterface {
   client = null;
@@ -23,7 +22,7 @@ export class TableInterface {
     Object.assign(this, config || {});
     this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
     console.debug(`[TableInterface] UUID ${this.uuid}`);
-    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
+    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
     // Custom events
     this.events = document.createTextNode(null);
     this.events.load = new CustomEvent('load', { detail: this });
@@ -36,15 +35,17 @@ export class TableInterface {
   initialize() {
     if (this._initialize) return this._initialize;
     return new Promise((resolve, reject) => {
-      if (!this.endpoint || !this.client) return reject('missing endpoint or client configuration, interface won\'t be able to call api endpoints');
+      if (!this.endpoint || !this.client) return reject("missing endpoint or client configuration, interface won't be able to call api endpoints");
       this.initialized = true;
       resolve();
-    }).then(() => {
-      Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
-      console.debug(`[TableInterface][${this.uuid}] Initialized`);
-    }).catch((error) => {
-      console.warn(`[TableInterface][${this.uuid}] Initialization failed: ${error}`);
-    });
+    })
+      .then(() => {
+        Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
+        console.debug(`[TableInterface][${this.uuid}] Initialized`);
+      })
+      .catch((error) => {
+        console.warn(`[TableInterface][${this.uuid}] Initialization failed: ${error}`);
+      });
   }
 
   async load(params = null, sort = null) {
@@ -92,28 +93,31 @@ export class TableInterface {
 
     // Finally make the api call
     this.events.dispatchEvent(this.events.load);
-    return this.client.get(`${this.endpoint}?${query}`).then((xhr) => {
-      this.data = this.parseResponse(xhr.response);
-      this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count']? xhr.headers.headers['x-total-count'].value : this.data.length;
-      this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
-      console.debug(`[TableInterface][${this.uuid}] Load - Success`);
-      this.isLoading = false;
-      this.events.dispatchEvent(this.events.loadSuccess);
-      return xhr;
-    }, (xhr) => {
-      //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
-      this.data = [];
-      this.total = 0;
-      console.error(`[TableInterface][${this.uuid}] Load - Failure`);
-      console.error(xhr.response);
-      this.isLoading = false;
-      this.isFailed = true;
-      this.events.dispatchEvent(this.events.loadFailure);
-    })
-    .catch((error) => {
-      console.error(error);
-      this.data = null;
-    });
+    return this.client
+      .get(`${this.endpoint}?${query}`)
+      .then((xhr) => {
+        this.data = this.parseResponse(xhr.response);
+        this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count'] ? xhr.headers.headers['x-total-count'].value : this.data.length;
+        this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
+        console.debug(`[TableInterface][${this.uuid}] Load - Success`);
+        this.isLoading = false;
+        this.events.dispatchEvent(this.events.loadSuccess);
+        return xhr;
+      },
+      (xhr) => {
+        //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
+        this.data = [];
+        this.total = 0;
+        console.error(`[TableInterface][${this.uuid}] Load - Failure`);
+        console.error(xhr.response);
+        this.isLoading = false;
+        this.isFailed = true;
+        this.events.dispatchEvent(this.events.loadFailure);
+      })
+      .catch((error) => {
+        console.error(error);
+        this.data = null;
+      });
   }
 
   parseResponse(response) {
@@ -132,7 +136,7 @@ export class TableSearchInterface {
     Object.assign(this, config || {});
     this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
     console.debug(`[TableSearchInterface] UUID ${this.uuid}`);
-    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE]? window[ENVIRONMENT.APP_STORAGE]: localStorage;
+    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
     // Get session stored data
     this.data = JSON.parse(this.storage.getItem(`${this.uuid}-data`)) || this.data || {};
     // Initialize
@@ -144,49 +148,68 @@ export class TableSearchInterface {
     return new Promise((resolve, reject) => {
       const solve = () => {
         this.initialized = true;
-        setTimeout(() => { resolve(); }, 500);
+        setTimeout(() => {
+          resolve();
+        }, 500);
       };
-      if (!this.table) return reject('missing table reference, interface won\'t work as expected');
+      if (!this.table) return reject("missing table reference, interface won't work as expected");
       // Self reference inside TableInterface
       this.table.searchInterface = this;
       return new Promise((resolve, reject) => {
         if (this.settings.initializeWithDataset) {
-          this.table.client.get(`datasets/${this.table.endpoint}`).then((xhr) => {
-            let schema = {};
-            xhr.response.forEach((control) => { schema[control.field] = control; }); 
-            this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
-            resolve();
-          }).catch((error) => {
-            console.error(error);
-            reject(`could not retrieve dataset for ${this.table.endpoint}`);
-          });
+          this.table.client
+            .get(`datasets/${this.table.endpoint}`)
+            .then((xhr) => {
+              let schema = {};
+              xhr.response.forEach((control) => {
+                schema[control.field] = control;
+              });
+              this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
+              resolve();
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(`could not retrieve dataset for ${this.table.endpoint}`);
+            });
         } else resolve();
-      }).then(() => {
-        if (this.schema && Object.keys(this.schema).length) {
-          Object.values(this.schema).forEach((control) => {
-            control.readonly = false;
-            control.required = false;
-            control.datamultiple = true;
-          });
-          return solve();
-        }
-        else return reject('missing schema configuration');
-      }).catch((error) => reject(error));
-    }).then(() => {
-      console.debug(`[TableSearchInterface][${this.uuid}] Initialized`);
-    }).catch((error) => {
-      console.warn(`[TableSearchInterface][${this.uuid}] Initialization failed: ${error}`);
-    });
+      })
+        .then(() => {
+          if (this.schema && Object.keys(this.schema).length) {
+            Object.values(this.schema).forEach((control) => {
+              control.readonly = false;
+              control.required = false;
+              control.datamultiple = true;
+            });
+            return solve();
+          } else return reject('missing schema configuration');
+        })
+        .catch((error) => reject(error));
+    })
+      .then(() => {
+        console.debug(`[TableSearchInterface][${this.uuid}] Initialized`);
+      })
+      .catch((error) => {
+        console.warn(`[TableSearchInterface][${this.uuid}] Initialization failed: ${error}`);
+      });
   }
 
   async validate(controls = null) {
     await this._initialize;
     let promises = [];
     controls = controls || Object.values(this.controls);
-    controls.forEach(control => {
-      if (control) { // Control can be null if in the meantime view removes it (eg: with an if.bind)
+    controls.forEach((control) => {
+      if (control) {
+        // Control can be null if in the meantime view removes it (eg: with an if.bind)
         control.setError(); // Reset in case there is already an error manually attached to the control
-        promises.push(new Promise((resolve, reject) => { control.validate().then(result => { if (result.valid) resolve(); else reject('control didn\'t pass validation'); }).catch(error => reject(error)); }));
+        promises.push(new Promise((resolve, reject) => {
+          control
+            .validate()
+            .then((result) => {
+              if (result.valid) resolve();
+              else reject("control didn't pass validation");
+            })
+            .catch((error) => reject(error));
+        }));
       }
     });
     return Promise.all(promises);
@@ -195,48 +218,55 @@ export class TableSearchInterface {
   async search(params = {}, data = null) {
     await this._initialize;
     return new Promise((resolve, reject) => {
-      this.validate().then(() => {
-        let filters = [];
-        for (let [k,v] of Object.entries(data || this.data)) {
-          if (v && v !== 'null' && this.schema[k]) {
-            let operator = this.controls[k] ? this.controls[k].element?.getAttribute('operator') || '=' : '=';
-            // Format data for datetime
-            if (this.schema[k].control === 'datetime' && ['>', '>='].includes(operator)) {
-              v = DateTime.fromISO(v, { setZone: true }).toLocal();
-              v = v.isValid ? v.startOf('day').toUTC().toSQL({ includeOffset: false }) : null;
-            } else if (this.schema[k].control === 'datetime' && ['<', '<='].includes(operator)) {
-              v = DateTime.fromISO(v, { setZone: true }).toLocal();
-              v = v.isValid ? v.endOf('day').toUTC().toSQL({ includeOffset: false }) : null;
+      this.validate()
+        .then(() => {
+          let filters = [];
+          for (let [k, v] of Object.entries(data || this.data)) {
+            if (v && v !== 'null' && this.schema[k]) {
+              let operator = this.controls[k] ? this.controls[k].element?.getAttribute('operator') || '=' : '=';
+              // Format data for datetime
+              if (this.schema[k].control === 'datetime' && ['>', '>='].includes(operator)) {
+                v = DateTime.fromISO(v, { setZone: true }).toLocal();
+                v = v.isValid ? v.startOf('day').toUTC().toSQL({ includeOffset: false }) : null;
+              } else if (this.schema[k].control === 'datetime' && ['<', '<='].includes(operator)) {
+                v = DateTime.fromISO(v, { setZone: true }).toLocal();
+                v = v.isValid ? v.endOf('day').toUTC().toSQL({ includeOffset: false }) : null;
+              }
+              // Format data for date range
+              if (this.schema[k].control === 'date' && this.controls[k].isRange) {
+                let [v1, v2] = v.split('<=>');
+                v1 = DateTime.fromFormat(v1, 'yyyy-MM-dd').isValid ? v1 : null;
+                v2 = DateTime.fromFormat(v2, 'yyyy-MM-dd').isValid ? v2 : null;
+                if (v1) filters.push(`${k}>=${v1}`);
+                if (v2) filters.push(`${k}<=${v2}`);
+                continue;
+                // Format data for other range types
+              } else if (this.controls[k].isRange) {
+                let [v1, v2] = v.split('<=>');
+                if (v1) filters.push(`${k}>=${v1}`);
+                if (v2) filters.push(`${k}<=${v2}`);
+                continue;
+              }
+              filters.push(`${k}${operator}${v}`);
             }
-            // Format data for date range
-            if (this.schema[k].control === 'date' && this.controls[k].isRange) {
-              let [v1, v2] = v.split('<=>');
-              v1 = DateTime.fromFormat(v1, "yyyy-MM-dd").isValid ? v1 : null;
-              v2 = DateTime.fromFormat(v2, "yyyy-MM-dd").isValid ? v2 : null;
-              if (v1) filters.push(`${k}>=${v1}`);
-              if (v2) filters.push(`${k}<=${v2}`);
-              continue;
-            // Format data for other range types
-            } else if (this.controls[k].isRange) {
-              let [v1, v2] = v.split('<=>');
-              if (v1) filters.push(`${k}>=${v1}`);
-              if (v2) filters.push(`${k}<=${v2}`);
-              continue;
-            }
-            filters.push(`${k}${operator}${v}`);
           }
-        }
-        if (filters.length) params.filters = params.filters ? `(${params.filters})&(${filters.join('&')})` : filters.join('&');
-        this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));
-        this.table.offset = 0;
-        this.table.load(params).then(xhr => resolve(xhr)).catch(error => reject(error));
-      }).catch(error => reject(error));
+          if (filters.length) params.filters = params.filters ? `(${params.filters})&(${filters.join('&')})` : filters.join('&');
+          this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));
+          this.table.offset = 0;
+          this.table
+            .load(params)
+            .then((xhr) => resolve(xhr))
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
     });
   }
 
   async reset(soft = false) {
     await this._initialize;
-    for (let key of Object.keys(this.data)) { this.data[key] = null; }
+    for (let key of Object.keys(this.data)) {
+      this.data[key] = null;
+    }
     if (!soft) {
       this.storage.removeItem(`${this.uuid}-data`);
       this.table.offset = 0;

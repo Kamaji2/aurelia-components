@@ -1,36 +1,17 @@
 <template>
-  <div
-    class="item ${schema.readonly?'readonly':''}"
-    repeat.for="value of _value"
-  >
+  <div class="item ${schema.readonly?'readonly':''}" repeat.for="value of _value">
     <div class="row g-0">
       <template repeat.for="itemSchema of schema.datasource.model.schema">
         <div class="${itemSchema.class || 'col'}">
           <label if.bind="itemSchema.label">${itemSchema.label}</label>
-          <input
-            type="text"
-            value.bind="value[itemSchema.field] | nullifyEmpty"
-            disabled.bind="schema.readonly"
-            placeholder.bind="itemSchema.label || itemSchema.field"
-            keydown.delegate="keydown()"
-            keyup.delegate="keyup($event)"
-            change.delegate="change()"
-            focus.trigger="focus()"
-            blur.trigger="blur()"
-            ka-tooltip.bind="itemSchema.label"
-            class="display-value ${schema.readonly?'readonly':''}"
-          />
+          <input type="text" value.bind="value[itemSchema.field] | nullifyEmpty" disabled.bind="schema.readonly" placeholder.bind="itemSchema.label || itemSchema.field" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.delegate="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label" class="display-value ${schema.readonly?'readonly':''}" />
         </div>
       </template>
       <div class="col-3 buttons">
-        <button type="button"
-        if.bind="!schema.readonly && $last && (!schema.max || $index+1 < schema.max)"
-        click.delegate="add()">
+        <button type="button" if.bind="!schema.readonly && $last && (!schema.max || $index+1 < schema.max)" click.delegate="add()">
           <i class="fa-regular fa-plus"></i>
         </button>
-        <button type="button"
-          if.bind="!schema.readonly && !$first && (!schema.min || $index+1 > schema.min)"
-          click.delegate="remove(value)">
+        <button type="button" if.bind="!schema.readonly && !$first && (!schema.min || $index+1 > schema.min)" click.delegate="remove(value)">
           <i class="fa-regular fa-trash-can"></i>
         </button>
       </div>

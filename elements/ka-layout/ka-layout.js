@@ -1,10 +1,10 @@
-import { inject, customElement, bindable } from "aurelia-framework";
-import { Router } from "aurelia-router";
-import { LayoutService, helpers } from "aurelia-components";
+import { inject, customElement, bindable } from 'aurelia-framework';
+import { Router } from 'aurelia-router';
+import { LayoutService, helpers } from 'aurelia-components';
 
-require("./ka-layout.sass");
+require('./ka-layout.sass');
 
-@customElement("ka-layout")
+@customElement('ka-layout')
 @inject(Element, LayoutService, Router)
 export class KaLayout {
   @bindable() config = null;
@@ -17,30 +17,28 @@ export class KaLayout {
     this.layout = layout;
     this.router = router;
     // Handle click on burger to expand/collapse aside navigation
-    document.addEventListener("click", (e) => {
-      if (e.target.closest(".no-toggle")) return;
-      if (
-        e.target.classList.contains("expand") ||
-        e.target.classList.contains("collapse")
-      )
-        return;
-      for (let st of this.element.querySelectorAll("[data-subtool]")) {
-        st.parentElement.classList.remove("visible");
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.no-toggle')) return;
+      if (e.target.classList.contains('expand') || e.target.classList.contains('collapse')) return;
+      for (let st of this.element.querySelectorAll('[data-subtool]')) {
+        st.parentElement.classList.remove('visible');
       }
-      let isBurger =
-        e.target === this.burgerAside ||
-        e.target === this.burgerHeader ||
-        (e.target.parentElement &&
-          (e.target.parentElement === this.burgerAside ||
-            e.target.parentElement === this.burgerHeader));
-      if (!isBurger && !this._collapsed && window.innerWidth < 860)
-        this.toggle();
+      let isBurger = e.target === this.burgerAside || e.target === this.burgerHeader || (e.target.parentElement && (e.target.parentElement === this.burgerAside || e.target.parentElement === this.burgerHeader));
+      if (!isBurger && !this._collapsed && window.innerWidth < 860) this.toggle();
     });
     // Share selected functions to LayoutService
-    this.layout.aside.show = () => { this.asideShow.call(this) };
-    this.layout.aside.hide = () => { this.asideHide.call(this) };
-    this.layout.loader.show = () => { this.loaderShow.call(this) };
-    this.layout.loader.hide = () => { this.loaderHide.call(this) };
+    this.layout.aside.show = () => {
+      this.asideShow.call(this);
+    };
+    this.layout.aside.hide = () => {
+      this.asideHide.call(this);
+    };
+    this.layout.loader.show = () => {
+      this.loaderShow.call(this);
+    };
+    this.layout.loader.hide = () => {
+      this.loaderHide.call(this);
+    };
   }
 
   attached() {
@@ -51,7 +49,7 @@ export class KaLayout {
   }
 
   init() {
-    if (!this.config) console.warn("[ka-layout] Missing configuration");
+    if (!this.config) console.warn('[ka-layout] Missing configuration');
     let config = {
       brand: null,
       user: { roles: [] },
@@ -66,32 +64,30 @@ export class KaLayout {
 
   toggle() {
     this._collapsed = !this._collapsed;
-    if (this._collapsed) this.element.classList.add("collapsed");
-    else this.element.classList.remove("collapsed");
+    if (this._collapsed) this.element.classList.add('collapsed');
+    else this.element.classList.remove('collapsed');
   }
   asideShow() {
     this._collapsed = false;
-    this.element.classList.remove("collapsed");
+    this.element.classList.remove('collapsed');
   }
   asideHide() {
     this._collapsed = true;
-    this.element.classList.add("collapsed");
+    this.element.classList.add('collapsed');
   }
   loaderShow() {
     if (!this.loader) return;
-    this.loader.classList.add("visible");
+    this.loader.classList.add('visible');
   }
   loaderHide() {
     if (!this.loader) return;
-    this.loader.classList.remove("visible");
+    this.loader.classList.remove('visible');
   }
 
   activateBadges(items) {
     for (let item of items) {
-      if (item.nav && item.nav.length > 0 && this.authorized(item))
-        this.activateBadges(item.nav);
-      if (!item.badge || !item.badge.promise || !this.authorized(item))
-        continue;
+      if (item.nav && item.nav.length > 0 && this.authorized(item)) this.activateBadges(item.nav);
+      if (!item.badge || !item.badge.promise || !this.authorized(item)) continue;
       let callback = () => {
         new Promise((resolve, reject) => {
           return item.badge.promise(resolve, reject);
@@ -112,29 +108,20 @@ export class KaLayout {
     $event.stopPropagation();
     let subtool = this.element.querySelector(`[data-subtool="${index}"]`);
     if (!subtool) return;
-    subtool.style.right =
-      window.innerWidth -
-      ($event.currentTarget.getBoundingClientRect().left +
-        $event.currentTarget.getBoundingClientRect().width) +
-      "px";
+    subtool.style.right = window.innerWidth - ($event.currentTarget.getBoundingClientRect().left + $event.currentTarget.getBoundingClientRect().width) + 'px';
 
     // Remove class visible
-    if (
-      this.element.querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`)
-    ) {
-      this.element
-        .querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`)
-        .forEach((x) => {
-          if (x.parentElement.classList.contains("visible"))
-            x.parentElement.classList.remove("visible");
-        });
+    if (this.element.querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`)) {
+      this.element.querySelectorAll(`ul[data-subtool]:not([data-subtool="${index}"])`).forEach((x) => {
+        if (x.parentElement.classList.contains('visible')) x.parentElement.classList.remove('visible');
+      });
     }
     // Toggle class visible
-    subtool.parentElement.classList.toggle("visible");
+    subtool.parentElement.classList.toggle('visible');
   }
 
   authorized(item) {
-    let userRoles = this.config.user? this.config.user.role || this.config.user.roles || []: [];
+    let userRoles = this.config.user ? this.config.user.role || this.config.user.roles || [] : [];
     if (!Array.isArray(userRoles)) userRoles = [userRoles];
     return !item.authRoles || (item.authRoles && userRoles.some((e) => item.authRoles.includes(e)));
   }

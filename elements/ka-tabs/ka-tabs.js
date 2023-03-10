@@ -22,9 +22,15 @@ export class KaTabs {
       });
     });
     this._initialize = new Promise((resolve) => {
-      this.syncSelect(location.hash.replace('#', ''), false, true).then(() => { resolve(); }).catch(() => {
-        this.syncSelect(this.tabs[0].id, false, false).then(() => { resolve(); });
-      });
+      this.syncSelect(location.hash.replace('#', ''), false, true)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          this.syncSelect(this.tabs[0].id, false, false).then(() => {
+            resolve();
+          });
+        });
     });
   }
 
@@ -34,9 +40,11 @@ export class KaTabs {
   }
   syncSelect(id, replaceState = true, traverse = false) {
     return new Promise((resolve, reject) => {
-      let tab = this.tabs.find((tab) => { return tab.id === id });
+      let tab = this.tabs.find((tab) => {
+        return tab.id === id;
+      });
       if (!tab) return reject();
-  
+
       this.tabs.forEach((t, i) => {
         if (i < this.tabs.indexOf(tab)) {
           t.active = false;
@@ -61,7 +69,7 @@ export class KaTabs {
           parentTabs.controller.select(parentTab.id, false, true);
         }
       }
-      
+
       if (replaceState) window.history.replaceState({}, '', `#${tab.id}`);
       resolve(tab);
     });

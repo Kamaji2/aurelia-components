@@ -48,14 +48,16 @@ export class AuthService {
   login(username, password) {
     this.reset();
     return new Promise((resolve, reject) => {
-      this.api.post(this.endpoints.authentication, { username, password, grant_type: 'password' }).then((xhr) => {
-        this.accessToken = xhr.response.access_token;
-        this.refreshToken = xhr.response.refresh_token;
-        resolve(this);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+      this.api
+        .post(this.endpoints.authentication, { username, password, grant_type: 'password' })
+        .then((xhr) => {
+          this.accessToken = xhr.response.access_token;
+          this.refreshToken = xhr.response.refresh_token;
+          resolve(this);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     }).catch((error) => {
       console.error('Authentication promise error', error);
       throw error;
@@ -65,19 +67,24 @@ export class AuthService {
   service(username, password) {
     this.reset();
     return new Promise((resolve, reject) => {
-      this.api.post(this.endpoints.authentication, { username, password, grant_type: 'password' }).then((xhr) => {
-        if (!xhr.response.service_token)
-          return reject('Service token missing');
-        this.api.post(`${this.endpoints.service}/${xhr.response.service_token}`).then((xhr) => {
-          this.accessToken = xhr.response.access_token;
-          this.refreshToken = xhr.response.refresh_token;
-          resolve(this);
-        }).catch((error) => {
+      this.api
+        .post(this.endpoints.authentication, { username, password, grant_type: 'password' })
+        .then((xhr) => {
+          if (!xhr.response.service_token) return reject('Service token missing');
+          this.api
+            .post(`${this.endpoints.service}/${xhr.response.service_token}`)
+            .then((xhr) => {
+              this.accessToken = xhr.response.access_token;
+              this.refreshToken = xhr.response.refresh_token;
+              resolve(this);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        })
+        .catch((error) => {
           reject(error);
         });
-      }).catch((error) => {
-        reject(error);
-      });
     }).catch((error) => {
       console.error('Authentication promise error', error);
       throw error;
@@ -87,14 +94,17 @@ export class AuthService {
   authorize(sid, suat) {
     this.reset();
     return new Promise((resolve, reject) => {
-      this.api.post(this.endpoints.authorization, { sid, suat }).then((xhr) => {
-        this.accessToken = xhr.response.access_token;
-        this.refreshToken = xhr.response.refresh_token;
-        this.authorization = { sid, suat };
-        resolve(this);
-      }).catch((error) => {
-        reject(error);
-      });
+      this.api
+        .post(this.endpoints.authorization, { sid, suat })
+        .then((xhr) => {
+          this.accessToken = xhr.response.access_token;
+          this.refreshToken = xhr.response.refresh_token;
+          this.authorization = { sid, suat };
+          resolve(this);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     }).catch((error) => {
       console.error('Authorization promise error', error);
       throw error;
@@ -104,19 +114,24 @@ export class AuthService {
   refresh() {
     if (this._refreshPromise) return this._refreshPromise;
     return (this._refreshPromise = new Promise((resolve, reject) => {
-      this.api.post(`${this.endpoints.refresh}/${this.refreshToken}`).then((xhr) => {
-        this.accessToken = xhr.response.access_token;
-        this.refreshToken = xhr.response.refresh_token;
-        resolve(this);
-      }).catch((error) => {
-        reject(error);
-      });
-    }).catch((error) => {
-      console.error('Refresh promise error', error);
-      throw error;
-    }).finally(() => {
-      this._refreshPromise = null;
-    }));
+      this.api
+        .post(`${this.endpoints.refresh}/${this.refreshToken}`)
+        .then((xhr) => {
+          this.accessToken = xhr.response.access_token;
+          this.refreshToken = xhr.response.refresh_token;
+          resolve(this);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    })
+      .catch((error) => {
+        console.error('Refresh promise error', error);
+        throw error;
+      })
+      .finally(() => {
+        this._refreshPromise = null;
+      }));
   }
 
   logout(referrer = null) {

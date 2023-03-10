@@ -1,8 +1,6 @@
 import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
-import { DateTime } from 'luxon';
-import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
-require("./ka-control-range.sass");
+require('./ka-control-range.sass');
 
 @customElement('ka-control-range')
 @inject(Element)

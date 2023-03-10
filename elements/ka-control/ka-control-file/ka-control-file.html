@@ -1,17 +1,4 @@
 <template>
-  <input
-    type="text"
-    value.bind="displayValue"
-    disabled.bind="schema.readonly"
-    placeholder.bind="schema.placeholder || ''"
-    class="display-value ${schema.readonly?'readonly':''}"
-  />
-  <input
-    type="file"
-    files.bind="value"
-    multiple.bind="schema.datamultiple"
-    disabled.bind="schema.readonly"
-    focus.trigger="focus()"
-    blur.trigger="blur()"
-  />
+  <input type="text" value.bind="displayValue" disabled.bind="schema.readonly" placeholder.bind="schema.placeholder || ''" class="display-value ${schema.readonly?'readonly':''}" />
+  <input type="file" files.bind="value" multiple.bind="schema.datamultiple" disabled.bind="schema.readonly" focus.trigger="focus()" blur.trigger="blur()" />
 </template>

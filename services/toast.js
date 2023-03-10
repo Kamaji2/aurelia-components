@@ -1,4 +1,4 @@
-require("./toast.sass");
+require('./toast.sass');
 
 export class ToastService {
   duration = 4000;
@@ -6,7 +6,7 @@ export class ToastService {
   hold = false;
   stack = [];
 
-  show(message = "", classNames = "", hold = false) {
+  show(message = '', classNames = '', hold = false) {
     this.stack.push({ message, classNames, hold });
     this.consume();
   }
@@ -20,22 +20,25 @@ export class ToastService {
     if (this.stack.length && !this.hold) {
       this.hold = true;
       let current = this.stack.shift();
-      let element = document.createElement("div");
-      element.classList.add("ka-toast");
+      let element = document.createElement('div');
+      element.classList.add('ka-toast');
       if (current.classNames) {
-        current.classNames.trim().split(' ').forEach((className) => {
-          element.classList.add(`ka-toast-${className}`);
-        });
+        current.classNames
+          .trim()
+          .split(' ')
+          .forEach((className) => {
+            element.classList.add(`ka-toast-${className}`);
+          });
       }
-      element.innerHTML = `<div class="messages"><span>${(Array.isArray(current.message)? current.message: [current.message]).join("</span><span>")}</span></div><a href="#"></a>`;
-      element.querySelector("a").addEventListener("click", ($event) => {
+      element.innerHTML = `<div class="messages"><span>${(Array.isArray(current.message) ? current.message : [current.message]).join('</span><span>')}</span></div><a href="#"></a>`;
+      element.querySelector('a').addEventListener('click', ($event) => {
         $event.preventDefault();
         this.remove(element);
       });
       document.body.append(element);
 
       setTimeout(() => {
-        element.classList.add("visible");
+        element.classList.add('visible');
       }, this.transition);
 
       if (!current.hold) {
@@ -50,7 +53,7 @@ export class ToastService {
   }
 
   remove(element) {
-    element.classList.remove("visible");
+    element.classList.remove('visible');
     setTimeout(() => {
       element.remove();
       this.hold = false;

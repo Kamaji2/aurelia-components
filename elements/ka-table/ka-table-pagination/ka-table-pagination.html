@@ -11,15 +11,16 @@
 
     <!-- Counter -->
     <span click.delegate="showOptions($event)" class="count" ka-tooltip="value.bind: 'Pagination options' | t; placement.bind: optionsShown ? 'top' : 'bottom';">
-      ${interface.offset + 1} - ${(interface.limit + interface.offset) < interface.total ? (interface.limit + interface.offset) : interface.total} di ${interface.total} <!-- Options -->
-        <div if.bind="optionsShown" class="options-tab row">
-          <div class="col">
-            <ka-control schema.bind="schema.limit" value.bind="limit | integerCast" buttons="dropdown"></ka-control>
-          </div>
-          <div class="col">
-            <ka-control schema.bind="schema.page" value.bind="page | integerCast:'page'" buttons="dropdown"></ka-control>
-          </div>
+      ${interface.offset + 1} - ${(interface.limit + interface.offset) < interface.total ? (interface.limit + interface.offset) : interface.total} di ${interface.total}
+      <!-- Options -->
+      <div if.bind="optionsShown" class="options-tab row">
+        <div class="col">
+          <ka-control schema.bind="schema.limit" value.bind="limit | integerCast" buttons="dropdown"></ka-control>
         </div>
+        <div class="col">
+          <ka-control schema.bind="schema.page" value.bind="page | integerCast:'page'" buttons="dropdown"></ka-control>
+        </div>
+      </div>
     </span>
     <div if.bind="optionsShown" class="options-background" click.delegate="hideOptions()"></div>
 

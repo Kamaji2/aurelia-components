@@ -1,14 +1,4 @@
 <template>
-  <input
-    type="checkbox"
-    checked.bind="value"
-    disabled.bind="schema.readonly"
-    focus.trigger="focus()"
-    blur.trigger="blur()"
-    class="${schema.readonly?'readonly':''}" />
-  <div
-    innerhtml.bind="schema.description || ''"
-    click.delegate="click($event)"
-    class="description ${schema.readonly?'readonly':''}">
-  </div>
+  <input type="checkbox" checked.bind="value" disabled.bind="schema.readonly" focus.trigger="focus()" blur.trigger="blur()" class="${schema.readonly?'readonly':''}" />
+  <div innerhtml.bind="schema.description || ''" click.delegate="click($event)" class="description ${schema.readonly?'readonly':''}"></div>
 </template>

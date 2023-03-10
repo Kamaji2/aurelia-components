@@ -12,7 +12,9 @@ export { ToastService } from './services/toast';
 
 export function configure(config, callback) {
   config = new AureliaComponentsConfiguration(config);
-  if (callback instanceof Function) { callback(config); } else {
+  if (callback instanceof Function) {
+    callback(config);
+  } else {
     config.useAll();
   }
   config.apply();
@@ -137,9 +139,12 @@ export const helpers = {
     return helpers.deepMerge(target, ...sources);
   },
   stringify: (object, replacer, spaces) => {
-    return JSON.stringify(object, replacer || function(field, value) {
-      return (typeof value === 'object' && !['Array', 'Object'].includes(value.constructor?.name)) ? '[Class]' : value;
-    }, spaces);
+    return JSON.stringify(object,
+      replacer ||
+        function (field, value) {
+          return typeof value === 'object' && !['Array', 'Object'].includes(value.constructor?.name) ? '[Class]' : value;
+        },
+      spaces);
   },
   capitalize: (string) => {
     return (string && string[0].toUpperCase() + string.slice(1)) || '';
@@ -152,31 +157,20 @@ export const helpers = {
           name: item.name || item.href,
           href: item.href,
           route: item.route || item.href,
-          title:
-            item.title ||
-            item.label ||
-            helpers.capitalize(item.name || item.href),
+          title: item.title || item.label || helpers.capitalize(item.name || item.href),
           moduleId: item.moduleId,
           activationStrategy: 'replace',
           settings: {
             hasLayout: !!item.hasLayout,
             hasLanguages: !!item.hasLanguages,
-            authRequired:
-              (item.authGroups && item.authGroups.length > 0) ||
-              (item.authRoles && item.authRoles.length > 0) ||
-              (inherit &&
-                inherit.authGroups &&
-                inherit.authGroups.length > 0) ||
-              (inherit && inherit.authRoles && inherit.authRoles.length > 0) ||
-              !!item.authRequired,
+            authRequired: (item.authGroups && item.authGroups.length > 0) || (item.authRoles && item.authRoles.length > 0) || (inherit && inherit.authGroups && inherit.authGroups.length > 0) || (inherit && inherit.authRoles && inherit.authRoles.length > 0) || !!item.authRequired,
             authGroups: item.authGroups || null,
             authRoles: item.authRoles || null
           }
         };
         routes.push(route);
       }
-      if (item.nav)
-        routes = routes.concat(helpers.routesFromNav(item.nav, item));
+      if (item.nav) routes = routes.concat(helpers.routesFromNav(item.nav, item));
     }
     return routes;
   }

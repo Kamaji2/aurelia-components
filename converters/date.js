@@ -1,7 +1,7 @@
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 export class DateFormatValueConverter {
-  toView(value, format = "dd/MM/yyyy") {
+  toView(value, format = 'dd/MM/yyyy') {
     let date = DateTime.fromISO(value, { setZone: true }).toLocal();
     if (!date.isValid) {
       date = DateTime.fromSQL(value, { zone: 'utc' }).toLocal();

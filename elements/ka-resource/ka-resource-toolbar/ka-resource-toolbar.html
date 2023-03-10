@@ -4,19 +4,8 @@
     <div class="col buttons buttons-left"><slot name="buttons-left"></slot></div>
     <div class="col buttons buttons-right">
       <slot></slot>
-      <ka-button
-        if.bind="buttons.includes('cancel')"
-        click.delegate="buttonCancel()"
-        icon="fa-solid fa-xmark"
-        class="inverted">
-        ${'Cancel'|t}
-      </ka-button>
-      <ka-button
-        if.bind="buttons.includes('save')"
-        click.delegate="buttonSave()"
-        icon="fa-solid fa-check">
-        ${'Save'|t}
-      </ka-button>
+      <ka-button if.bind="buttons.includes('cancel')" click.delegate="buttonCancel()" icon="fa-solid fa-xmark" class="inverted"> ${'Cancel'|t} </ka-button>
+      <ka-button if.bind="buttons.includes('save')" click.delegate="buttonSave()" icon="fa-solid fa-check"> ${'Save'|t} </ka-button>
     </div>
   </div>
 </template>

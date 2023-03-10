@@ -11,7 +11,7 @@ export class KaTable {
   }
   bind(bindingContext) {
     // Resolve TableInterface binding
-    this.interface = bindingContext && bindingContext.constructor?.name === 'TableInterface'? bindingContext: null;
+    this.interface = bindingContext && bindingContext.constructor?.name === 'TableInterface' ? bindingContext : null;
     if (!this.interface) {
       console.warn('ka-table: missing table interface!');
       return;
@@ -23,7 +23,7 @@ export class KaTable {
     this.element.id = this.uuid;
     // Observe change on this.interface.isLoading
     this.observers.push(this.binding.expressionObserver(this, 'interface.isLoading').subscribe((value) => {
-      if (value) this.element.classList.add('isLoading')
+      if (value) this.element.classList.add('isLoading');
       else this.element.classList.remove('isLoading');
     }));
   }
@@ -55,16 +55,22 @@ export class KaTable {
     window[`resize-handler-${this.uuid}`] = resizeHandler;
     window.addEventListener('resize', window[`resize-handler-${this.uuid}`]);
     // Scroll event listener
-    this.element.addEventListener('scroll', event => {
-      event.target.querySelectorAll('.floater.float').forEach(floater => {
+    this.element.addEventListener('scroll', (event) => {
+      event.target.querySelectorAll('.floater.float').forEach((floater) => {
         floater.style.transform = `translateX(${event.target.scrollLeft}px)`;
       });
     });
-    
+
     if (!this.interface) return;
     // Trigger resizeHandler when TableInterface loads new data
     this.interface.events.addEventListener('loadSuccess', () => {
-      setTimeout(() => { try { window[`resize-handler-${this.uuid}`](); } catch (error) { console.warn('ka-table: cannot run resize handler on load!'); } }, 0);
+      setTimeout(() => {
+        try {
+          window[`resize-handler-${this.uuid}`]();
+        } catch (error) {
+          console.warn('ka-table: cannot run resize handler on load!');
+        }
+      }, 0);
     });
     // Trigger resizeHandler if TableInterface has already loaded data when attaching this component to dom
     if (this.interface.data?.length) window[`resize-handler-${this.uuid}`]();

@@ -3,20 +3,14 @@
   <table class="ka-table-like">
     <thead>
       <tr>
-        <th repeat.for="itemSchema of schema">
-          ${itemSchema.label || itemSchema.field}
-        </th>
+        <th repeat.for="itemSchema of schema">${itemSchema.label || itemSchema.field}</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr repeat.for="value of _value">
         <td repeat.for="itemSchema of schema">
-          <ka-control
-            schema.bind="itemSchema"
-            value.bind="value[itemSchema.field]"
-            change.delegate="update()"
-          ></ka-control>
+          <ka-control schema.bind="itemSchema" value.bind="value[itemSchema.field]" change.delegate="update()"></ka-control>
         </td>
         <td class="ka-tr-tools">
           <button type="button" class="ka-table-button" click.delegate="remove(value)">
@@ -26,10 +20,7 @@
       </tr>
       <tr>
         <td repeat.for="itemSchema of schema">
-          <ka-control
-            schema.bind="itemSchema"
-            value.bind="newValue[itemSchema.field]"
-          ></ka-control>
+          <ka-control schema.bind="itemSchema" value.bind="newValue[itemSchema.field]"></ka-control>
         </td>
         <td class="ka-tr-tools">
           <button type="button" class="ka-table-button" click.delegate="add(newValue)">

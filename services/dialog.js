@@ -31,7 +31,7 @@ export class DialogService {
 }
 
 import { inlineView } from 'aurelia-framework';
-import { TemplatingEngine, ViewResources, ViewSlot } from 'aurelia-templating'
+import { TemplatingEngine, ViewResources, ViewSlot } from 'aurelia-templating';
 import { Container } from 'aurelia-dependency-injection';
 import { DialogController } from 'aurelia-dialog';
 

@@ -1,13 +1,8 @@
-import {
-  inject,
-  customElement,
-  bindable,
-  bindingMode,
-} from "aurelia-framework";
+import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
 
-require("./ka-control-number.sass");
+require('./ka-control-number.sass');
 
-@customElement("ka-control-number")
+@customElement('ka-control-number')
 @inject(Element)
 export class KaControlNumber {
   // Basic input control properties
@@ -25,9 +20,9 @@ export class KaControlNumber {
     if (event.key === 'Enter') this.element.dispatchEvent(new Event('enter', { bubbles: true }));
   }
   focus() {
-    this.element.dispatchEvent(new Event("focus", { bubbles: true }));
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
   }
   blur() {
-    this.element.dispatchEvent(new Event("blur", { bubbles: true }));
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
   }
 }

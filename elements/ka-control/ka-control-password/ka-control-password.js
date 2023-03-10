@@ -1,13 +1,8 @@
-import {
-  inject,
-  customElement,
-  bindable,
-  bindingMode,
-} from "aurelia-framework";
+import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
 
-require("./ka-control-password.sass");
+require('./ka-control-password.sass');
 
-@customElement("ka-control-password")
+@customElement('ka-control-password')
 @inject(Element)
 export class KaControlPassword {
   // Basic input control properties
@@ -25,16 +20,16 @@ export class KaControlPassword {
     if (event.key === 'Enter') this.element.dispatchEvent(new Event('enter', { bubbles: true }));
   }
   focus() {
-    this.element.dispatchEvent(new Event("focus", { bubbles: true }));
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
   }
   blur() {
-    this.element.dispatchEvent(new Event("blur", { bubbles: true }));
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
   }
 
   show() {
-    this.type = "text";
+    this.type = 'text';
   }
   hide() {
-    this.type = "password";
+    this.type = 'password';
   }
 }

@@ -1,15 +1,10 @@
-import {
-  inject,
-  customElement,
-  bindable,
-  bindingMode,
-} from "aurelia-framework";
-import { DateTime } from "luxon";
-import { KaControlBackdropService } from "../ka-control-backdrop/ka-control-backdrop";
+import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
+import { DateTime } from 'luxon';
+import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
-require("./ka-control-time.sass");
+require('./ka-control-time.sass');
 
-@customElement("ka-control-time")
+@customElement('ka-control-time')
 @inject(Element)
 export class KaControlTime {
   // Basic input control properties
@@ -22,11 +17,9 @@ export class KaControlTime {
   }
 
   attached() {
-    this.element
-      .querySelector("input.display-value")
-      .addEventListener("dblclick", () => {
-        this.open();
-      });
+    this.element.querySelector('input.display-value').addEventListener('dblclick', () => {
+      this.open();
+    });
   }
 
   keydown() {
@@ -36,10 +29,10 @@ export class KaControlTime {
     if (event.key === 'Enter') this.element.dispatchEvent(new Event('enter', { bubbles: true }));
   }
   focus() {
-    this.element.dispatchEvent(new Event("focus", { bubbles: true }));
+    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
   }
   blur() {
-    this.element.dispatchEvent(new Event("blur", { bubbles: true }));
+    this.element.dispatchEvent(new Event('blur', { bubbles: true }));
   }
   open() {
     this.opened = true;
@@ -52,20 +45,22 @@ export class KaControlTime {
     this.backdrop.close();
   }
   change() {
-    setTimeout(() => { this.element.dispatchEvent(new Event('change', { bubbles: true })); }, 100);
+    setTimeout(() => {
+      this.element.dispatchEvent(new Event('change', { bubbles: true }));
+    }, 100);
   }
 }
 export class controlTimeValueConverter {
-  toView(value, utc) {
+  toView(value) {
     if (!/\d{2}:\d{2}:\d{2}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, "HH:mm:ss");
+    let date = DateTime.fromFormat(value, 'HH:mm:ss');
     if (!date.isValid) return value;
-    return date.toFormat("HH:mm");
+    return date.toFormat('HH:mm');
   }
-  fromView(value, utc) {
+  fromView(value) {
     if (!/^\d{2}:\d{2}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, "HH:mm");
+    let date = DateTime.fromFormat(value, 'HH:mm');
     if (!date.isValid) return value;
-    return date.toFormat("HH:mm:00");
+    return date.toFormat('HH:mm:00');
   }
 }

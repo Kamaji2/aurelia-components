@@ -45,8 +45,7 @@ export class ResourceInterface {
       if (!this.client.isKamaji) return responseData;
       let data = {};
       Object.keys(this.schema).forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(responseData, field))
-          data[field] = responseData[field];
+        if (Object.prototype.hasOwnProperty.call(responseData, field)) data[field] = responseData[field];
       });
       return data;
     }
@@ -76,29 +75,37 @@ export class ResourceInterface {
       if (!this.endpoint || !this.client) return reject("missing endpoint or client configuration, interface won't be able to call api endpoints");
       return new Promise((resolve, reject) => {
         if (this.settings.initializeWithDataset) {
-          this.client.get(`datasets/${this.endpoint}`).then((xhr) => {
-            let schema = {}, data = {};
-            xhr.response.forEach((control) => {
-              schema[control.field] = control;
-              data[control.field] = null;
-            }); 
-            this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
-            this.data = this.data && Object.keys(this.data).length ? helpers.deepMerge(data, this.data) : data;
-            resolve();
-          }).catch((error) => {
-            console.error(error);
-            reject(`could not retrieve dataset for ${this.endpoint}`);
-          });
+          this.client
+            .get(`datasets/${this.endpoint}`)
+            .then((xhr) => {
+              let schema = {},
+                data = {};
+              xhr.response.forEach((control) => {
+                schema[control.field] = control;
+                data[control.field] = null;
+              });
+              this.schema = this.schema && Object.keys(this.schema).length ? helpers.deepMerge(schema, this.schema) : schema;
+              this.data = this.data && Object.keys(this.data).length ? helpers.deepMerge(data, this.data) : data;
+              resolve();
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(`could not retrieve dataset for ${this.endpoint}`);
+            });
         } else resolve();
-      }).then(() => {
-        if (this.schema && Object.keys(this.schema).length) return resolve();
-        else return reject('missing schema configuration');
-      }).catch((error) => reject(error));
-    }).then(() => {
-      console.debug(`[ResourceInterface][${this.uuid}] Initialized`);
-    }).catch((error) => {
-      console.warn(`[ResourceInterface][${this.uuid}] Initialization failed: ${error}`);
-    });
+      })
+        .then(() => {
+          if (this.schema && Object.keys(this.schema).length) return resolve();
+          else return reject('missing schema configuration');
+        })
+        .catch((error) => reject(error));
+    })
+      .then(() => {
+        console.debug(`[ResourceInterface][${this.uuid}] Initialized`);
+      })
+      .catch((error) => {
+        console.warn(`[ResourceInterface][${this.uuid}] Initialization failed: ${error}`);
+      });
   }
 
   async get(id, data = {}) {
@@ -107,28 +114,31 @@ export class ResourceInterface {
     this.isFailed = false;
     this.isActive = true;
     this.id = null;
-    data = Object.assign((this.client.isKamaji ? { depth: 0 } : {}), data);
-    return this.client.get(`${this.endpoint}` + (id ? `/${id}` : ''), data).then((xhr) => {
-      this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
-      this._data = JSON.parse(JSON.stringify(this.data));
-      this.id = id; // id can be anything or undefined
-      console.debug(`[ResourceInterface][${this.uuid}] GET - Success`);
-      this.isLoading = false;
-      // Prepare and dispatch success event
-      this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
-      this.events.dispatchEvent(this.events[`getSuccess`]);
-    }).catch((error) => {
-      console.error(`[ResourceInterface][${this.uuid}] GET - Failure`, error);
-      this.isLoading = false;
-      this.isFailed = true;
-      this.events.dispatchEvent(this.events.getFailure);
-      throw new ResourceError({
-        method: 'get',
-        context: 'xhr',
-        message: `${error.statusCode} ${error.statusText}`,
-        detail: error
+    data = Object.assign(this.client.isKamaji ? { depth: 0 } : {}, data);
+    return this.client
+      .get(`${this.endpoint}` + (id ? `/${id}` : ''), data)
+      .then((xhr) => {
+        this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
+        this._data = JSON.parse(JSON.stringify(this.data));
+        this.id = id; // id can be anything or undefined
+        console.debug(`[ResourceInterface][${this.uuid}] GET - Success`);
+        this.isLoading = false;
+        // Prepare and dispatch success event
+        this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
+        this.events.dispatchEvent(this.events[`getSuccess`]);
+      })
+      .catch((error) => {
+        console.error(`[ResourceInterface][${this.uuid}] GET - Failure`, error);
+        this.isLoading = false;
+        this.isFailed = true;
+        this.events.dispatchEvent(this.events.getFailure);
+        throw new ResourceError({
+          method: 'get',
+          context: 'xhr',
+          message: `${error.statusCode} ${error.statusText}`,
+          detail: error
+        });
       });
-    });
   }
   async post(data) {
     await this.initialized;
@@ -146,46 +156,54 @@ export class ResourceInterface {
   save(method, id, data) {
     id = id || this.id || null;
     if (!data && this.data) data = this.data;
-    if (!method) method = (id || (!id && this.id === undefined)) ? 'patch' : 'post';
+    if (!method) method = id || (!id && this.id === undefined) ? 'patch' : 'post';
     return new Promise((resolve, reject) => {
-      this.validate().then(() => {
-        this.sanitize(data, method).then((data) => {
-          this.client[method](this.endpoint + (id ? `/${id}` : ''), this.parsers[`${method}Request`](data)).then((xhr) => {
-            resolve(xhr);
-          }).catch((error) => {
-            reject(this.parseError(error) || {
-              context: 'xhr',
-              message: `${error.statusCode} ${error.statusText}`,
-              detail: error
-            });
-          });
-        }).catch((error) => reject(error));
-      }).catch((error) => reject(error));
-    }).then((xhr) => {
-      console.debug(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Success`);
-      this.isLoading = false;
-      // Prepare and dispatch success event
-      this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
-      this.events.dispatchEvent(this.events[`${method}Success`]);
-      return xhr;
-    }).catch((error) => {
-      console.warn(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Failure`);
-      this.isLoading = false;
-      this.isFailed = true;
-      // Prepare and dispatch failure event
-      this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
-      this.events.dispatchEvent(this.events[`${method}Failure`]);
-      // Prepare and throw custom ResourceError
-      if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
-        error = {
-          context: 'js',
-          message: `${error.name}: ${error.message}`,
-          detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
-          original: error
-        };
-      }
-      throw new ResourceError(Object.assign({ method }, error));
-    });
+      this.validate()
+        .then(() => {
+          this.sanitize(data, method)
+            .then((data) => {
+              this.client[method](this.endpoint + (id ? `/${id}` : ''), this.parsers[`${method}Request`](data))
+                .then((xhr) => {
+                  resolve(xhr);
+                })
+                .catch((error) => {
+                  reject(this.parseError(error) || {
+                    context: 'xhr',
+                    message: `${error.statusCode} ${error.statusText}`,
+                    detail: error
+                  });
+                });
+            })
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
+    })
+      .then((xhr) => {
+        console.debug(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Success`);
+        this.isLoading = false;
+        // Prepare and dispatch success event
+        this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
+        this.events.dispatchEvent(this.events[`${method}Success`]);
+        return xhr;
+      })
+      .catch((error) => {
+        console.warn(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Failure`);
+        this.isLoading = false;
+        this.isFailed = true;
+        // Prepare and dispatch failure event
+        this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
+        this.events.dispatchEvent(this.events[`${method}Failure`]);
+        // Prepare and throw custom ResourceError
+        if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
+          error = {
+            context: 'js',
+            message: `${error.name}: ${error.message}`,
+            detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
+            original: error
+          };
+        }
+        throw new ResourceError(Object.assign({ method }, error));
+      });
   }
   validate(controls = null) {
     let promises = [];
@@ -221,8 +239,7 @@ export class ResourceInterface {
     return new Promise((resolve, reject) => {
       //data = JSON.parse(JSON.stringify(data)); > this caused FileList data to be lost
       data = Object.assign({}, data);
-      if (method === 'patch' && this._data && Object.keys(this._data).length)
-        data = helpers.diffObject(this._data, data, !this.client.isKamaji);
+      if (method === 'patch' && this._data && Object.keys(this._data).length) data = helpers.diffObject(this._data, data, !this.client.isKamaji);
       let promises = [];
       const parseData = (object, path = '') => {
         if (!object) return null;
@@ -239,10 +256,11 @@ export class ResourceInterface {
               if (!control.schema) return passed();
               // Format control file
               if (control.schema.control === 'file' && object[key] && object[key].length && object[key][0] && object[key][0].name) {
-                let filedata = { filename: object[key][0].name }, reader = new FileReader();
+                let filedata = { filename: object[key][0].name },
+                  reader = new FileReader();
                 reader.readAsDataURL(object[key][0]);
                 reader.onload = () => {
-                  filedata.stream = reader.result.indexOf('base64,')? reader.result.slice(reader.result.indexOf('base64,') + 7): reader.result;
+                  filedata.stream = reader.result.indexOf('base64,') ? reader.result.slice(reader.result.indexOf('base64,') + 7) : reader.result;
                   object[key] = filedata;
                   passed();
                 };
@@ -274,17 +292,19 @@ export class ResourceInterface {
         }
       };
       parseData(data);
-      Promise.all(promises).then(() => {
-        if (!data || !Object.keys(data).length) {
-          reject({
-            context: 'sanitization',
-            message: 'No data to be sent',
-            detail: data
-          });
-        } else resolve(data);
-      }).catch((error) => {
-        reject(error);
-      });
+      Promise.all(promises)
+        .then(() => {
+          if (!data || !Object.keys(data).length) {
+            reject({
+              context: 'sanitization',
+              message: 'No data to be sent',
+              detail: data
+            });
+          } else resolve(data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   }
   parseError(xhr) {
@@ -303,7 +323,8 @@ export class ResourceInterface {
     if (response.errors && response.errors[0] && response.errors[0].msg) {
       // Handle server 4xx error codes
       if (response.errors[0].num && String(response.errors[0].num).match(/^4[0-9]{2}$/)) {
-        let label, field = Object.keys(response.errors[0].arg)[0] || null;
+        let label,
+          field = Object.keys(response.errors[0].arg)[0] || null;
         if (this.controls[field]) {
           label = this.controls[field].schema?.label || this.controls[field].schema?.field || this.controls[field].name || null;
           this.controls[field].setError(response.errors[0].msg);
@@ -312,7 +333,7 @@ export class ResourceInterface {
           context: 'validation',
           message: (label ? `${label}: ` : '') + response.errors[0].msg,
           detail: response.errors[0]
-        }
+        };
       }
     }
   }

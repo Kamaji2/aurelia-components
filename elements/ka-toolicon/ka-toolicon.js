@@ -1,4 +1,4 @@
-import { inject, customElement, bindable, InlineViewStrategy } from 'aurelia-framework';
+import { inject, customElement, bindable } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { ToastService } from 'aurelia-components';
 
@@ -16,7 +16,9 @@ export class KaToolicon {
     this.element = element;
     this.i18n = i18n;
     this.toast = toast;
-    this.element.addEventListener('click', () => { this.click(); });
+    this.element.addEventListener('click', () => {
+      this.click();
+    });
   }
 
   click() {
@@ -26,5 +28,4 @@ export class KaToolicon {
       this.toast.show(`${this.context} ${this.i18n.tr('copied to clipboard')}!`, 'success');
     }
   }
-
 }
