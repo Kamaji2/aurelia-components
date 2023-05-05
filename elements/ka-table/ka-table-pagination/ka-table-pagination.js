@@ -70,7 +70,7 @@ export class KaTablePagination {
     if (!value && old) value = old;
     else if (!value) return;
     this.interface.limit = value;
-    this.interface.offset = 0;
+    if (old !== undefined) this.interface.offset = 0; // Keep original offset if limit is being set insted of replaced
     if (typeof old !== 'undefined') this.applyOptions();
   }
 

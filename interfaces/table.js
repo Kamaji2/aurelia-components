@@ -251,8 +251,10 @@ export class TableSearchInterface {
             }
           }
           if (filters.length) params.filters = params.filters ? `(${params.filters})&(${filters.join('&')})` : filters.join('&');
-          this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));
-          this.table.offset = 0;
+          if (this.storage.getItem(`${this.uuid}-data`) !== JSON.stringify(this.data)) {
+            this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));
+            this.table.offset = 0; // Reset offset only if search data has changed
+          }
           this.table
             .load(params)
             .then((xhr) => resolve(xhr))
