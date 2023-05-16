@@ -95,13 +95,17 @@ ka-control-combo
       color: var(--text-color)
       white-space: nowrap
       text-overflow: ellipsis
-      &:hover
-        background-color: rgba(var(--primary-color-rgb), 0.1)
+      &.optgroup
+        color: rgba(var(--text-color-rgb), 0.6)
+
+      &:not(.optgroup)
+        &:hover
+          background-color: rgba(var(--primary-color-rgb), 0.1)
       &.selected
         color: var(--primary-color)
   &.multiple
     ul
-      li
+      li:not(.optgroup)
         padding-left: 30px
         &::before
           content: " "

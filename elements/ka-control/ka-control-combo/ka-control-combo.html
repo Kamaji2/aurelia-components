@@ -7,7 +7,7 @@
   <div ref="drawer" class="ka-control-combo-drawer ${schema.datamultiple === true ? 'multiple' : ''}">
     <input type="text" if.bind="schema.datapreload !== true || preloadedCombostack.length > 8" class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()" />
     <ul>
-      <li repeat.for="item of _combostack" click.delegate="select(item)" class="${item.selected?'selected':''}" innerhtml.bind="item.text | kaControlComboHighlight:term"></li>
+      <li repeat.for="item of _combostack" click.delegate="select(item)" class="${item.selected?'selected':''} ${item.model.optgroup?'optgroup':''}" innerhtml.bind="item.text | kaControlComboHighlight:term"></li>
     </ul>
   </div>
 </template>

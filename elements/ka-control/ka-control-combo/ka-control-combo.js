@@ -303,6 +303,7 @@ export class KaControlCombo {
     this.term = null;
   }
   select(item) {
+    if (item.model.optgroup) return;
     let value = this._value || [];
     let multiple = this.schema.datamultiple === true;
     let index = value.indexOf(item.value);
