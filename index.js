@@ -143,7 +143,7 @@ export const helpers = {
     return JSON.stringify(object,
       replacer ||
         function (field, value) {
-          return typeof value === 'object' && !['Array', 'Object'].includes(value.constructor?.name) ? '[Class]' : value;
+          return typeof value === 'object' && value !== null && !['Array', 'Object'].includes(value.constructor?.name) ? '[Class]' : value;
         },
       spaces);
   },

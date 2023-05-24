@@ -78,8 +78,7 @@ export class ResourceInterface {
           this.client
             .get(`datasets/${this.endpoint}`)
             .then((xhr) => {
-              let schema = {},
-                data = {};
+              let schema = {}, data = {};
               xhr.response.forEach((control) => {
                 schema[control.field] = control;
                 data[control.field] = null;
@@ -118,7 +117,7 @@ export class ResourceInterface {
     return this.client
       .get(`${this.endpoint}` + (id ? `/${id}` : ''), data)
       .then((xhr) => {
-        this.data = this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response));
+        this.data = Object.assign({}, this.data, this.parsers.getResponse(this.parsers.getKamajiResponse(xhr.response)));
         this._data = JSON.parse(JSON.stringify(this.data));
         this.id = id; // id can be anything or undefined
         console.debug(`[ResourceInterface][${this.uuid}] GET - Success`);
