@@ -215,7 +215,7 @@ export class KaControlCombo {
     }
     this._combostack = combostack;
 
-    if (combostack.length === 1 && this.schema.required) {
+    if (combostack.length === 1 && this.schema.required && this.value === null) {
       this.value = combostack[0].value;
     }
   }
