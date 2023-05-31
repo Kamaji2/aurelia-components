@@ -1,7 +1,7 @@
 <template>
   <div class="display-value ${schema.readonly ? 'readonly' : ''}" click.delegate="open($event)">
     <ul>
-      <li repeat.for="item of valuestack">${item.text}<i class="fa-light fa-close" if.bind="schema.datamultiple === true && !schema.readonly" click.delegate="select(item)"></i></li>
+      <li repeat.for="item of valuestack">${item.text|kaControlComboTextify}<i class="fa-light fa-close" if.bind="schema.datamultiple === true && !schema.readonly" click.delegate="select(item)"></i></li>
     </ul>
   </div>
   <div ref="drawer" class="ka-control-combo-drawer ${schema.datamultiple === true ? 'multiple' : ''}">

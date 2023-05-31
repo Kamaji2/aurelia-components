@@ -460,3 +460,8 @@ export class kaControlComboHighlightValueConverter {
     return text;
   }
 }
+export class kaControlComboTextifyValueConverter {
+  toView(text) {
+    return text.replace(/(<([^>]+)>)/gi, "");
+  }
+}

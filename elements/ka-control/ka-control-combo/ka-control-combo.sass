@@ -30,6 +30,7 @@ ka-control-combo
         flex-grow: 0
         flex-shrink: 1
         flex-basis: auto
+        transition: all 0.3s
         &:not(:last-child)
           margin-right: 0.3rem
           &:after
@@ -45,8 +46,13 @@ ka-control-combo
           color: #ffffff
           text-align: center
           background-color: var(--primary-color)
-        &:hover i
-          display: block
+        &:hover 
+          flex-grow: 0
+          flex-shrink: 0
+          max-width: calc(100% - 0.6rem)
+          max-width: --webkit-fill-available
+          i
+            display: block
   &.multiple
     .display-value:not(.readonly)
       padding-left: 0
@@ -87,10 +93,10 @@ ka-control-combo
     li
       position: relative
       margin: 0
-      padding: 0 1rem
+      padding: 0.5rem 1rem
       overflow: hidden
       font-size: 1.4rem
-      line-height: 3rem
+      line-height: 2rem
       cursor: pointer
       color: var(--text-color)
       white-space: nowrap
