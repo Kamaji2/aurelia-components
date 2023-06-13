@@ -94,6 +94,7 @@ export class KaTooltipCustomAttribute {
     if (!this.tooltip) return;
     this.tooltip.classList.remove('visible');
     setTimeout(() => {
+      if (!this.tooltip) return;
       document.body.removeChild(this.tooltip);
       this.tooltip = null;
     }, 300);
