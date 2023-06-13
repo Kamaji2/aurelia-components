@@ -42,7 +42,7 @@ export class KaTooltipCustomAttribute {
   detached() {
     window.removeEventListener('click', window[`click-handler-${this.uuid}`]);
     if (!this.tooltip) return;
-    document.getElementsByTagName('body')[0].removeChild(this.tooltip);
+    document.body.removeChild(this.tooltip);
     this.tooltip = null;
   }
 
@@ -57,7 +57,7 @@ export class KaTooltipCustomAttribute {
       this.tooltip.classList.add(style);
     });
     this.tooltip.innerHTML = `<div class="value">${this.value}</div><div class="arrow"></div>`;
-    document.getElementsByTagName('body')[0].insertBefore(this.tooltip, document.getElementsByTagName('body')[0].children[0]);
+    document.body.insertBefore(this.tooltip, document.body.children[0]);
     setTimeout(() => {
       if (!this.tooltip) return;
       this.tooltip.classList.add('visible');
@@ -94,7 +94,7 @@ export class KaTooltipCustomAttribute {
     if (!this.tooltip) return;
     this.tooltip.classList.remove('visible');
     setTimeout(() => {
-      document.getElementsByTagName('body')[0].removeChild(this.tooltip);
+      document.body.removeChild(this.tooltip);
       this.tooltip = null;
     }, 300);
   }
