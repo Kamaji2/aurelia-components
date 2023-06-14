@@ -164,7 +164,7 @@ export const helpers = {
           settings: {
             hasLayout: !!item.hasLayout,
             hasLanguages: !!item.hasLanguages,
-            authRequired: (item.authGroups && item.authGroups.length > 0) || (item.authRoles && item.authRoles.length > 0) || (inherit && inherit.authGroups && inherit.authGroups.length > 0) || (inherit && inherit.authRoles && inherit.authRoles.length > 0) || !!item.authRequired,
+            authRequired: (inherit && inherit.authRequired) || !!item.authRequired || (item.authGroups && item.authGroups.length > 0) || (item.authRoles && item.authRoles.length > 0),
             authGroups: item.authGroups || null,
             authRoles: item.authRoles || null
           }

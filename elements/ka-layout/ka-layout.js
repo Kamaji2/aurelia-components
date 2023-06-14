@@ -57,7 +57,28 @@ export class KaLayout {
       navigation: { items: [] },
       toolbar: { items: [] }
     };
-    this.config = helpers.deepMerge(config, this.config);
+    config = helpers.deepMerge(config, this.config);
+
+    let setHiddens = (items) => {
+      let hiddens = true;
+      for (let item of items) {
+        if (this.authorized(item) && !item.hidden && item.href) {
+          item.hidden = false;
+        } else if (this.authorized(item) && !item.hidden && item.nav) {
+          item.hidden = setHiddens(item.nav);
+        } else {
+          item.hidden = true;
+        }
+        if (item.hidden === false) {
+          hiddens = false;
+        }
+      }
+      return hiddens;
+    };
+    setHiddens(config.navigation.items);
+
+    this.config = config;
+
     this.activateBadges(this.config.navigation.items);
     if (window.innerWidth < 860) this.toggle();
   }
