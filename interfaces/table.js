@@ -7,12 +7,12 @@ export class TableInterface {
   endpoint = null;
   data = null;
   query = null;
-  filters = null;
+  filters = null; // String "date_created>=1981-09-25&status=active"
   meta = 1;
   limit = 10;
   offset = 0;
   total = 0;
-  sort = null;
+  sort = null; // Array of json objects [{ name: 'field_name', order: 'asc'||'desc'}]
   // status helpers
   isLoading = false;
   isFailed = false;

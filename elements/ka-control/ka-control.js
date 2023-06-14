@@ -86,6 +86,8 @@ export class KaControl {
   }
 
   bind(bindingContext) {
+    // Set class undefined as default
+    this.element.classList.add('undefined');
     // Reference to view-model containing this component
     this.parentContext = bindingContext;
     // Get parent resource name if passed inside name
@@ -114,8 +116,8 @@ export class KaControl {
 
   schemaChanged(schema) {
     // Handle undefined schema
-    if (!schema || !schema.control) return this.element.classList.add('undefined');
-    else this.element.classList.remove('undefined');
+    if (!schema || !schema.control) return;
+    this.element.classList.remove('undefined');
     // Force range control if ka-control has attribute operator set to "<=>"
     let control = schema.control;
     if (this.element.getAttribute('operator') === '<=>' && !control.endsWith('-range')) {

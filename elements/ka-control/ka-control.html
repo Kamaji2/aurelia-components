@@ -1,5 +1,5 @@
 <template>
-  <label if.bind="!schema">Undefined schema</label>
+  <label if.bind="!schema || !schema.control">Undefined schema</label>
   <label if.bind="schema.label">${schema.label | t} <span if.bind="schema.required">*</span></label>
 
   <div>
