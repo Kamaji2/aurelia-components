@@ -39,16 +39,17 @@ export class KaLayout {
     this.layout.loader.hide = () => {
       this.loaderHide.call(this);
     };
+    // Initialize
+    this.initialize();
   }
 
   attached() {
-    this.init();
   }
   detached() {
     for (let interval of this._intervals) clearInterval(interval);
   }
 
-  init() {
+  initialize() {
     if (!this.config) console.warn('[ka-layout] Missing configuration');
     let config = {
       brand: null,
@@ -58,7 +59,6 @@ export class KaLayout {
       toolbar: { items: [] }
     };
     config = helpers.deepMerge(config, this.config);
-
     let setHiddens = (items) => {
       let hiddens = true;
       for (let item of items) {
@@ -76,10 +76,12 @@ export class KaLayout {
       return hiddens;
     };
     setHiddens(config.navigation.items);
-
     this.config = config;
 
     this.activateBadges(this.config.navigation.items);
+
+    this.initialized = true;
+    
     if (window.innerWidth < 860) this.toggle();
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <aside>
+  <aside if.bind="initialized">
     <div class="ka-layout-burger" click.delegate="toggle()" ref="burgerAside">
       <i class="fa-light fa-bars"></i>
     </div>
@@ -72,7 +72,7 @@
     <slot name="afterNav"></slot>
   </aside>
 
-  <header>
+  <header if.bind="initialized">
     <div class="ka-layout-burger" click.delegate="toggle()" ref="burgerHeader">
       <i class="fa-light fa-bars"></i>
     </div>
