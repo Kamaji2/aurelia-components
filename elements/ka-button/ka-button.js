@@ -39,7 +39,7 @@ export class KaButton {
           this.busy = !this.busy;
         };
       }
-    });
+    }, { capture: true });
 
     let active = () => {
       if (!this.disabled && !this.busy) this.element.classList.toggle('active');
