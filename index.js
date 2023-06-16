@@ -26,6 +26,7 @@ export class AureliaComponentsConfiguration {
   }
   useAll() {
     this.useLayout();
+    this.useLottie();
     this.useHeading();
     this.useButtons();
     this.useDatetime();
@@ -39,6 +40,10 @@ export class AureliaComponentsConfiguration {
   useLayout() {
     console.debug(`%cDEBUG [${PACKAGE.name}-v${PACKAGE.version}] Loading layout modules`, 'color:#8b64cf;');
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-layout/ka-layout')]);
+  }
+  useLottie() {
+    console.debug(`%cDEBUG [${PACKAGE.name}-v${PACKAGE.version}] Loading lottie modules`, 'color:#8b64cf;');
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-lottie/ka-lottie')]);
   }
   useHeading() {
     console.debug(`%cDEBUG [${PACKAGE.name}-v${PACKAGE.version}] Loading heading modules`, 'color:#8b64cf;');

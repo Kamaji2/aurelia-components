@@ -2,7 +2,7 @@
   "name": "aurelia-components",
   "description": "Kamaji2 Aurelia Components",
   "author": "Mamoka Srl",
-  "version": "1.4.34",
+  "version": "1.4.35",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.0.2",
+    "lottie-web": "^5.12.2",
     "luxon": "^3.0.1",
     "uuid": "^8.3.2"
   },
