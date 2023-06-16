@@ -1,4 +1,4 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { inject, customElement } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { LayoutService, helpers } from 'aurelia-components';
 
@@ -7,8 +7,7 @@ require('./ka-layout.sass');
 @customElement('ka-layout')
 @inject(Element, LayoutService, Router)
 export class KaLayout {
-  @bindable() config = null;
-
+  config = null;
   _collapsed = false;
   _intervals = [];
 
@@ -39,8 +38,10 @@ export class KaLayout {
     this.layout.loader.hide = () => {
       this.loaderHide.call(this);
     };
-    // Initialize
-    this.initialize();
+    this.layout.configure = (config) => {
+      this.configure.call(this, config);
+    };
+    if (window.innerWidth < 860) this.toggle();
   }
 
   attached() {
@@ -49,16 +50,15 @@ export class KaLayout {
     for (let interval of this._intervals) clearInterval(interval);
   }
 
-  initialize() {
-    if (!this.config) console.warn('[ka-layout] Missing configuration');
-    let config = {
+  configure(config) {
+    this.config = helpers.deepMerge({
       brand: null,
       user: { roles: [] },
       profile: null, // { name: '', description: '' }
       navigation: { items: [] },
       toolbar: { items: [] }
-    };
-    config = helpers.deepMerge(config, this.config);
+    }, config || {});
+
     let setHiddens = (items) => {
       let hiddens = true;
       for (let item of items) {
@@ -75,14 +75,9 @@ export class KaLayout {
       }
       return hiddens;
     };
-    setHiddens(config.navigation.items);
-    this.config = config;
-
+    setHiddens(this.config.navigation.items);
     this.activateBadges(this.config.navigation.items);
-
     this.initialized = true;
-    
-    if (window.innerWidth < 860) this.toggle();
   }
 
   toggle() {
