@@ -99,31 +99,27 @@ export class TableInterface {
     // Finally make the api call
     this.events.dispatchEvent(this.events.load);
     let data = this.parsers.getRequest(Object.fromEntries(new URLSearchParams(query)));
-    return this.client
-      .get(`${this.endpoint}`, data)
-      .then((xhr) => {
-        this.data = this.parseResponse(xhr.response);
-        this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count'] ? xhr.headers.headers['x-total-count'].value : this.data.length;
-        this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
-        console.debug(`[TableInterface][${this.uuid}] Load - Success`);
-        this.isLoading = false;
-        this.events.dispatchEvent(this.events.loadSuccess);
-        return xhr;
-      },
-      (xhr) => {
-        //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
-        this.data = [];
-        this.total = 0;
-        console.error(`[TableInterface][${this.uuid}] Load - Failure`);
-        console.error(xhr.response);
-        this.isLoading = false;
-        this.isFailed = true;
-        this.events.dispatchEvent(this.events.loadFailure);
-      })
-      .catch((error) => {
-        console.error(error);
-        this.data = null;
-      });
+    return this.client.get(`${this.endpoint}`, data).then((xhr) => {
+      this.data = this.parseResponse(xhr.response);
+      this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count'] ? xhr.headers.headers['x-total-count'].value : this.data.length;
+      this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
+      console.debug(`[TableInterface][${this.uuid}] Load - Success`);
+      this.isLoading = false;
+      this.events.dispatchEvent(this.events.loadSuccess);
+      return xhr;
+    }, (xhr) => {
+      //TODO: this.client.dialogError(xhr, this.searchInterface?.controls || {});
+      this.data = [];
+      this.total = 0;
+      console.error(`[TableInterface][${this.uuid}] Load - Failure`);
+      console.error(xhr.response);
+      this.isLoading = false;
+      this.isFailed = true;
+      this.events.dispatchEvent(this.events.loadFailure);
+    }).catch((error) => {
+      console.error(error);
+      this.data = null;
+    });
   }
 
   parseResponse(response) {
@@ -139,6 +135,7 @@ export class TableSearchInterface {
   };
 
   constructor(config) {
+    this._config = JSON.parse(helpers.stringify(config)); // Keep a copy of original config
     Object.assign(this, config || {});
     this.uuid = uuidv5('tableSearchInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
     console.debug(`[TableSearchInterface] UUID ${this.uuid}`);
@@ -154,9 +151,7 @@ export class TableSearchInterface {
     return new Promise((resolve, reject) => {
       const solve = () => {
         this.initialized = true;
-        setTimeout(() => {
-          resolve();
-        }, 500);
+        setTimeout(() => { resolve(); }, 500);
       };
       if (!this.table) return reject("missing table reference, interface won't work as expected");
       // Self reference inside TableInterface
@@ -181,11 +176,11 @@ export class TableSearchInterface {
       })
         .then(() => {
           if (this.schema && Object.keys(this.schema).length) {
-            Object.values(this.schema).forEach((control) => {
+            for (const [key, control] of Object.entries(this.schema)) {
               control.readonly = false;
-              control.required = false;
-              control.datamultiple = true;
-            });
+              control.required = this._config.schema && this._config.schema[key] && this._config.schema[key].required === true ? true : false;
+              control.datamultiple = this._config.schema && this._config.schema[key] && this._config.schema[key].datamultiple === false ? false : true;
+            }
             return solve();
           } else return reject('missing schema configuration');
         })
