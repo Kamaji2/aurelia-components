@@ -18,6 +18,13 @@ export class TableInterface {
   isFailed = false;
   isActive = false;
 
+  // Data parser functions
+  parsers = {
+    getRequest: (data) => {
+      return data;
+    }
+  };
+
   constructor(config) {
     Object.assign(this, config || {});
     this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
@@ -38,14 +45,12 @@ export class TableInterface {
       if (!this.endpoint || !this.client) return reject("missing endpoint or client configuration, interface won't be able to call api endpoints");
       this.initialized = true;
       resolve();
-    })
-      .then(() => {
-        Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
-        console.debug(`[TableInterface][${this.uuid}] Initialized`);
-      })
-      .catch((error) => {
-        console.warn(`[TableInterface][${this.uuid}] Initialization failed: ${error}`);
-      });
+    }).then(() => {
+      Object.assign(this, JSON.parse(this.storage.getItem(`${this.uuid}-position`)) || {});
+      console.debug(`[TableInterface][${this.uuid}] Initialized`);
+    }).catch((error) => {
+      console.warn(`[TableInterface][${this.uuid}] Initialization failed: ${error}`);
+    });
   }
 
   async load(params = null, sort = null) {
@@ -93,8 +98,9 @@ export class TableInterface {
 
     // Finally make the api call
     this.events.dispatchEvent(this.events.load);
+    let data = this.parsers.getRequest(Object.fromEntries(new URLSearchParams(query)));
     return this.client
-      .get(`${this.endpoint}?${query}`)
+      .get(`${this.endpoint}`, data)
       .then((xhr) => {
         this.data = this.parseResponse(xhr.response);
         this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count'] ? xhr.headers.headers['x-total-count'].value : this.data.length;
