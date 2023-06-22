@@ -46,23 +46,48 @@ ka-table
           padding: 0 0.5rem
           max-width: 100%
           overflow: hidden
+          text-decoration: none
           text-overflow: ellipsis
           vertical-align: middle
           white-space: nowrap
+          color: inherit
           background: rgba(var(--text-color-rgb), 0.1)
           box-shadow: 0 0 0 1px rgba(var(--text-color-rgb), 0.3)
           &.primary
             background: rgba(var(--primary-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--primary-color-rgb), 0.4)
+            i
+              color: var(--primary-color)
+          &.secondary
+            background: rgba(var(--secondary-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--secondary-color-rgb), 0.4)
+            i
+              color: var(--secondary-color)
+          &.accent
+            background: rgba(var(--accent-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.4)
+            i
+              color: var(--accent-color)
           &.pending
             background: rgba(var(--pending-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--pending-color-rgb), 0.4)
+            i
+              color: var(--pending-color)
           &.success
             background: rgba(var(--success-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--success-color-rgb), 0.4)
+            i
+              color: var(--success-color)
           &.error
             background: rgba(var(--error-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--error-color-rgb), 0.4)
+            i
+              color: var(--error-color)
+          &.warning
+            background: rgba(var(--warning-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--warning-color-rgb), 0.4)
+            i
+              color: var(--warning-color)
         .badge
           display: inline-block
           border-radius: 2px
@@ -70,6 +95,7 @@ ka-table
           max-width: 100%
           overflow: hidden
           font-weight: 700
+          text-decoration: none
           text-overflow: ellipsis
           vertical-align: middle
           white-space: nowrap
@@ -79,6 +105,12 @@ ka-table
           &.primary
             background: rgba(var(--primary-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 1)
+          &.secondary
+            background: rgba(var(--secondary-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--secondary-color-rgb), 1)
+          &.accent
+            background: rgba(var(--accent-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 1)
           &.pending
             background: rgba(var(--pending-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--pending-color-rgb), 1)
@@ -88,6 +120,9 @@ ka-table
           &.error
             background: rgba(var(--error-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--error-color-rgb), 1)
+          &.warning
+            background: rgba(var(--warning-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--warning-color-rgb), 1)
 
   &.isLoading
     table tbody td:not(.ka-table-row-tools)
