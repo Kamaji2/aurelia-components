@@ -40,17 +40,17 @@ td.ka-table-row-tools
       transition: all 0.5s
       & + button
         box-shadow: inset -1px 0 0 $borderColor
-      &:not(.disabled):hover
+      &:not(.disabled):not([disabled]):hover
         color: rgba(var(--primary-color-rgb), 0.7)
-      &.primary:not(.disabled)
+      &.primary:not(.disabled):not([disabled])
         color: rgba(var(--primary-color-rgb), 0.7)
-      &.primary:not(.disabled):hover
+      &.primary:not(.disabled):not([disabled]):hover
         color: rgba(var(--primary-color-rgb), 1)
       &:last-of-type
         box-shadow: 0
       &:focus
         background-color: inherit
-      &.disabled
+      &.disabled, &[disabled]
         color: $borderColor
       &:before
         font-size: 2rem
