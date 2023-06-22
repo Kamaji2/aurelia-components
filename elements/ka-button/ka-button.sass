@@ -87,45 +87,53 @@ ka-button
   &.inverted
     color: var(--primary-color)
     background-color: #ffffff
+    box-shadow: inset 0 0 0px 1px rgba(var(--primary-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
     &:not(.disabled):hover
       color: var(--primary-color)
       &:before
         background-color: rgba(var(--primary-color-rgb), 0.1)
     .busy
       background-color: #fff
+      box-shadow: inherit
       &:before, &:after
         background-color: var(--primary-color)
   &.inverted.secondary
     color: var(--secondary-color)
     background-color: #ffffff
+    box-shadow: inset 0 0 0px 1px rgba(var(--secondary-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
     &:not(.disabled):hover
       color: var(--secondary-color)
       &:before
         background-color: rgba(var(--secondary-color-rgb), 0.1)
     .busy
       background-color: #fff
+      box-shadow: inherit
       &:before, &:after
         background-color: var(--secondary-color)
   &.inverted.accent
     color: var(--accent-color)
     background-color: #ffffff
+    box-shadow: inset 0 0 0px 1px rgba(var(--accent-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
     &:not(.disabled):hover
       color: var(--accent-color)
       &:before
         background-color: rgba(var(--accent-color-rgb), 0.1)
     .busy
       background-color: #fff
+      box-shadow: inherit
       &:before, &:after
         background-color: var(--accent-color)
   &.inverted.warning
     color: var(--warning-color)
     background-color: #ffffff
+    box-shadow: inset 0 0 0px 1px rgba(var(--warning-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
     &:not(.disabled):hover
       color: var(--warning-color)
       &:before
         background-color: rgba(var(--warning-color-rgb), 0.1)
     .busy
       background-color: #fff
+      box-shadow: inherit
       &:before, &:after
         background-color: var(--warning-color)
 
@@ -135,6 +143,7 @@ ka-button
       background-color: rgba(#c0c0c0, 0.7)
   &.disabled.inverted
     color: #c0c0c0
+    box-shadow: inset 0 0 0px 1px #c0c0c0, 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
   
   .ka-button-icon
     position: relative
@@ -164,6 +173,7 @@ ka-button
     right: 0
     bottom: 0
     left: 0
+    border-radius: 3px
     background-color: var(--primary-color)
     &:before, &:after
       content: ''

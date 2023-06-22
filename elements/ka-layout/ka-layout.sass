@@ -75,8 +75,6 @@ ka-layout
       overflow-y: auto
       > ul > .expanded > ul
         box-shadow: inset 0 -10px 10px -10px rgba(var(--text-color-rgb), 0.1)
-        .item-label
-          color: rgba(var(--text-color-rgb), 0.5)
         > .expanded > ul
           > li:last-child
             box-shadow: 0 -1px 0 0 rgba(var(--text-color-rgb), 0.1), 0 1px 0 0 rgba(var(--text-color-rgb), 0.1)
@@ -97,7 +95,12 @@ ka-layout
           cursor: pointer
           > div
             position: relative
-
+          
+          &:hover
+            > div > .item-label
+              color: rgba(var(--text-color-rgb), 1)
+            
+              
           i.collapse, i.expand
             display: none
             position: absolute
@@ -109,7 +112,7 @@ ka-layout
             line-height: 2rem
             transform: translateY(-50%)
             font-size: 1.1rem
-            color: rgba(var(--primary-color-rgb), 1)
+            color: rgba(var(--secondary-color-rgb), 1)
             text-align: center
             cursor: pointer
           &.expanded > div > i.collapse
@@ -125,17 +128,18 @@ ka-layout
             height: 2rem
             font-size: 2rem
             text-align: center
-            color: var(--primary-color)
+            color: var(--secondary-color)
             transform: translateY(-50%)
             transition: transform 0.2s ease-in-out
           .item-label
             display: block
             padding: 1.25rem 0 1.25rem 1rem
             font-size: 1.5rem
-            font-weight: 300
+            font-weight: 400
             line-height: 1.5rem
-            color: rgba(var(--text-color-rgb), 0.75)
-            transition: transform 0.2s ease-in-out
+            color: rgba(var(--text-color-rgb), 0.8)
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out
+              
           &.expanded, &.collapsed
             > div > .item-label
               width: calc(100% - 3rem)
@@ -156,14 +160,15 @@ ka-layout
               width: 0
               height: 100%
               z-index: -1
-              background: rgba(var(--text-color-rgb),0.03)
+              background: rgba(var(--secondary-color-rgb),0.03)
               transform: translate(-50%, 0)
-              transition: all 0.2s ease-in
+              transition: width 0.15s ease-in, opacity 0.3s ease-out
               opacity: 0
             &:hover:after
               width: 100%
               height: 100%
               opacity: 1
+
           .item-link.collapse, .item-link.expand
             display: block
           .item-badge
@@ -189,11 +194,12 @@ ka-layout
               left: 0
               z-index: -1
               border-radius: 1rem
-              background-color: rgba(var(--secondary-color-rgb), 0.7)
+              background-color: rgba(var(--primary-color-rgb), 0.7)
           ul
             position: relative
             li
-              background-color: rgba(var(--text-color-rgb), 0.02)
+              background-color: rgba(var(--secondary-color-rgb), 0.05)
+
     div[slot="afterNav"]
       padding: 1rem
     nav + div[slot="afterNav"] 

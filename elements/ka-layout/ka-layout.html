@@ -1,16 +1,16 @@
 <template>
-  <aside if.bind="initialized">
-    <div class="ka-layout-burger" click.delegate="toggle()" ref="burgerAside">
+  <aside>
+    <div if.bind="initialized" class="ka-layout-burger" click.delegate="toggle()" ref="burgerAside">
       <i class="fa-light fa-bars"></i>
     </div>
-    <div class="ka-layout-brand" if.bind="config.brand">
+    <div if.bind="initialized" class="ka-layout-brand" if.bind="config.brand">
       <div class="ka-layout-logo" style="background-image: url(${config.brand})"></div>
     </div>
 
     <slot name="beforeNav"></slot>
 
     <!-- Aside menù -->
-    <nav if.bind="config.navigation.items.length">
+    <nav if.bind="initialized && config.navigation.items.length">
       <!-- Level 01 -->
       <ul>
         <template repeat.for="item of config.navigation.items">
