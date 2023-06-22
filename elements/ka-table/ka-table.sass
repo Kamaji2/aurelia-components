@@ -40,6 +40,53 @@ ka-table
           font-size: 1.2rem
           line-height: 1.2
           color: rgba(var(--text-color-rgb), 0.7)
+        .status
+          display: inline-block
+          border-radius: 2px
+          padding: 0 0.5rem
+          max-width: 100%
+          overflow: hidden
+          text-overflow: ellipsis
+          white-space: nowrap
+          background: rgba(var(--text-color-rgb), 0.1)
+          box-shadow: 0 0 0 1px rgba(var(--text-color-rgb), 0.3)
+          &.primary
+            background: rgba(var(--pending-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--pending-color-rgb), 0.4)
+          &.pending
+            background: rgba(var(--pending-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--pending-color-rgb), 0.4)
+          &.success
+            background: rgba(var(--success-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--success-color-rgb), 0.4)
+          &.error
+            background: rgba(var(--error-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--error-color-rgb), 0.4)
+        .badge
+          display: inline-block
+          border-radius: 2px
+          padding: 0 0.5rem
+          max-width: 100%
+          overflow: hidden
+          font-weight: 700
+          text-overflow: ellipsis
+          white-space: nowrap
+          color: #ffffff
+          background: rgba(var(--text-color-rgb), 1)
+          box-shadow: 0 0 0 2px rgba(var(--text-color-rgb), 1)
+          &.primary
+            background: rgba(var(--pending-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--pending-color-rgb), 1)
+          &.pending
+            background: rgba(var(--pending-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--pending-color-rgb), 1)
+          &.success
+            background: rgba(var(--success-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--success-color-rgb), 1)
+          &.error
+            background: rgba(var(--error-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--error-color-rgb), 1)
+
   &.isLoading
     table tbody td:not(.ka-table-row-tools)
       filter: blur(2px)
