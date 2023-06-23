@@ -134,7 +134,7 @@ ka-layout
           .item-label
             display: block
             padding: 1.25rem 0 1.25rem 1rem
-            font-size: 1.5rem
+            font-size: 1.4rem
             font-weight: 400
             line-height: 1.5rem
             color: rgba(var(--text-color-rgb), 0.8)
@@ -199,6 +199,11 @@ ka-layout
             position: relative
             li
               background-color: rgba(var(--secondary-color-rgb), 0.05)
+              .item-label
+                padding-left: 1.5rem
+                font-weight: 300
+              ul li .item-label
+                padding-left: 2rem
 
     div[slot="afterNav"]
       padding: 1rem
