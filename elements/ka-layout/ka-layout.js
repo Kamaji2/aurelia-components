@@ -41,6 +41,7 @@ export class KaLayout {
     this.layout.configure = (config) => {
       this.configure.call(this, config);
     };
+    if (this.layout.config) this.configure(this.layout.config);
     if (window.innerWidth < 860) this.toggle();
   }
 
@@ -77,6 +78,7 @@ export class KaLayout {
     };
     setHiddens(this.config.navigation.items);
     this.activateBadges(this.config.navigation.items);
+    this.layout.config = this.config;
     this.initialized = true;
   }
 

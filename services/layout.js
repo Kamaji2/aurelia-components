@@ -1,5 +1,6 @@
 export class LayoutService {
+  config = null;
   aside = { show: () => {}, hide: () => {} };
   loader = { show: () => {}, hide: () => {} };
-  configure = () => { };
+  configure = (config) => { this.config = config; };
 }
