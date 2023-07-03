@@ -25,6 +25,17 @@ export class KaControlCombo {
     this.element = element;
     this.binding = binding;
     this.backdrop = new KaControlBackdropService(this, this.close);
+
+    this.element.tabIndex = 0;
+    this.element.addEventListener('keydown', (event) => {
+      if (event.target !== this.element) return;
+      if (['Enter', 'ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+        this.open(event);
+      } else if (['Tab'].includes(event.key)) {
+        this.close();
+      }
+    });
   }
 
   detached() {
@@ -291,7 +302,9 @@ export class KaControlCombo {
   open($event) {
     if (this.schema.readonly || ($event && $event.target.tagName === 'I')) return;
     this._combostack.forEach((x) => (x.selected = this._value && this._value.includes(x.value)));
-    this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+    setTimeout(() => {
+      this.element.dispatchEvent(new Event('focus', { bubbles: true }));
+    }, 1);
     this.backdrop.open(this.drawer).then(() => {
       if (this.searchInput) this.searchInput.focus();
     });
@@ -384,6 +397,15 @@ export class KaControlCombo {
       this.combostack = x.response;
       this._combostack.forEach((c) => (c.selected = this._value && this._value.includes(c.value)));
     });
+    return true;
+  }
+  searchKeyDown($event) {
+    if (['Enter', 'Tab'].includes($event.key)) {
+      $event.preventDefault();
+      this.close();
+      this.element.focus();
+      return false;
+    }
     return true;
   }
 

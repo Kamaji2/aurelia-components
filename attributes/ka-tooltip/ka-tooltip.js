@@ -41,7 +41,7 @@ export class KaTooltipCustomAttribute {
   }
   detached() {
     window.removeEventListener('click', window[`click-handler-${this.uuid}`]);
-    if (!this.tooltip) return;
+    if (!this.tooltip || !document.body.contains(this.tooltip)) return;
     document.body.removeChild(this.tooltip);
     this.tooltip = null;
   }

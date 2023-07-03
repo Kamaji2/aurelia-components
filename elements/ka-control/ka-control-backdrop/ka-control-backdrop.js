@@ -35,7 +35,7 @@ export class KaControlBackdropService {
   close() {
     return new Promise((resolve, reject) => {
       try {
-        if (this.drawer && this.backdrop) {
+        if (this.drawer && this.backdrop && document.body.contains(this.backdrop)) {
           this.element.appendChild(this.drawer);
           this.drawer.removeAttribute('style');
           document.body.removeChild(this.backdrop);
