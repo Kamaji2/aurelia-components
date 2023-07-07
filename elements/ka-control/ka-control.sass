@@ -131,7 +131,7 @@ ka-control
       border-bottom-right-radius: 3px
       padding: 0 0.5rem
       width: 100%
-      height: 2rem
+      height: 0
       overflow: hidden
       font-size: 1.1rem
       line-height: 2rem
@@ -141,7 +141,9 @@ ka-control
       background-color: #ffffff
       box-shadow: 0 5px 10px -5px rgba(0,0,0, 0.2)
       box-shadow: inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 10px 10px -8px rgba(var(--error-color-rgb), 0.3), 10px 0 10px -8px rgba(var(--error-color-rgb), 0.3), -10px 0 10px -8px rgba(var(--error-color-rgb), 0.3)
-      animation: 0.5s ka-control-slidedown
+      opacity: 0
+      transition: height 0.2s, opacity 0.2s
+      pointer-events: none
       &:before
         content: " "
         position: absolute
@@ -154,7 +156,7 @@ ka-control
           display: none
 
     .ka-control-description
-      display: none
+      display: block
       position: absolute
       z-index: 100
       margin-top: -1px
@@ -162,7 +164,7 @@ ka-control
       border-bottom-right-radius: 3px
       padding: 0 0.5rem
       width: 100%
-      height: 2rem
+      height: 0
       overflow: hidden
       font-size: 1.1rem
       line-height: 2rem
@@ -172,7 +174,9 @@ ka-control
       background-color: #ffffff
       box-shadow: 0 5px 10px -5px rgba(0,0,0, 0.2)
       box-shadow: inset 0 0 0 1px rgba(var(--primary-color-rgb), 0.3), 0 10px 10px -8px rgba(var(--primary-color-rgb), 0.3), 10px 0 10px -8px rgba(var(--primary-color-rgb), 0.3), -10px 0 10px -8px rgba(var(--primary-color-rgb), 0.3)
-      animation: 0.2s ka-control-slidedown
+      opacity: 0
+      transition: height 0.2s, opacity 0.2s
+      pointer-events: none
       &:before
         content: " "
         position: absolute
@@ -194,7 +198,11 @@ ka-control.focus
     background: #ffffff
     box-shadow: inset 0 0 0 1px rgba(var(--primary-color-rgb), 0.3), 0 0 10px 0 rgba(var(--primary-color-rgb), 0.3)
   &:not(.error) > .ka-control-overlay .ka-control-description
-    display: block
+    height: 2rem
+    opacity: 1 
+  &.error > .ka-control-overlay .ka-control-error
+    height: 2rem
+    opacity: 1 
 
 ka-control.error
   > label 
@@ -203,6 +211,8 @@ ka-control.error
   > div:first-of-type
     background-color: #ffffff
     box-shadow: inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 0 10px 0 rgba(var(--error-color-rgb), 0.3)
+  > .ka-control-overlay .ka-control-error
+    animation: 4s ka-control-slidedownup
 
 ka-control.readonly
   > div:first-of-type
@@ -248,6 +258,20 @@ ka-control.no-label
   to
     opacity: 1
     height: 2rem
+
+@keyframes ka-control-slidedownup
+  0%
+    opacity: 0
+    height: 0
+  5%
+    opacity: 1
+    height: 2rem
+  95%
+    opacity: 1
+    height: 2rem
+  100%
+    opacity: 0
+    height: 0
 
 @keyframes ka-control-shake
   10%, 90%
