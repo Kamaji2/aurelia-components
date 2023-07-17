@@ -180,15 +180,13 @@ export class KaControlCombo {
       if (dts.table || dts.url) {
         let endpoint = this.buildQueryUrl();
         if (!this.api) throw new Error('ka-control-combo: missing http client configuration!');
-        this.api
-          .get(endpoint)
-          .then((xhr) => {
-            this.combostack = xhr.response;
-            this.preloadedCombostack = xhr.response;
-          })
-          .catch(() => {
-            console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
-          });
+        if (!endpoint) return console.warn('ka-control-combo: no endpoint set for building combo stack');
+        this.api.get(endpoint).then((xhr) => {
+          this.combostack = xhr.response;
+          this.preloadedCombostack = xhr.response;
+        }).catch(() => {
+          console.error('ka-control-combo: invalid datasource provided in schema!', this.schema);
+        });
       } else if (Array.isArray(dts)) {
         this.combostack = dts;
         this.preloadedCombostack = dts;
@@ -253,6 +251,7 @@ export class KaControlCombo {
         filters: `${dtv}~~${unmatched.map((x) => x.value).join(',')}`
       });
       if (!this.api) throw new Error('ka-control-combo: missing http client configuration!');
+      if (!endpoint) return console.warn('ka-control-combo: no endpoint set for building value stack');
       promises.push(this.api.get(endpoint).then((x) => {
         let response = x.response;
         for (let item of response) {
@@ -426,7 +425,7 @@ export class KaControlCombo {
     //let dsh = this.schema.datasearch;
 
     if (!dts.table && !dts.url) {
-      console.error('ka-control-combo: cannot build query url if datasource is not a table or url!', this.schema.datasource);
+      console.warn('ka-control-combo: cannot build query url if datasource is not a table or url!', this.schema.datasource);
       return;
     }
 

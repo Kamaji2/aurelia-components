@@ -60,12 +60,17 @@ export class KaLayout {
       toolbar: { items: [] }
     }, config || {});
 
-    let setHiddens = (items) => {
+    const authorized = (item) => {
+      let userRoles = this.config.user ? this.config.user.role || this.config.user.roles || [] : [];
+      if (!Array.isArray(userRoles)) userRoles = [userRoles];
+      return !item.authRoles || (item.authRoles && userRoles.some((e) => item.authRoles.includes(e)));
+    };
+    const setHiddens = (items) => {
       let hiddens = true;
       for (let item of items) {
-        if (this.authorized(item) && !item.hidden && item.href) {
+        if (authorized(item) && !item.hidden && item.href) {
           item.hidden = false;
-        } else if (this.authorized(item) && !item.hidden && item.nav) {
+        } else if (authorized(item) && !item.hidden && item.nav) {
           item.hidden = setHiddens(item.nav);
         } else {
           item.hidden = true;
@@ -76,8 +81,25 @@ export class KaLayout {
       }
       return hiddens;
     };
+    const activateBadges = (items) => {
+      for (let item of items) {
+        if (item.nav && item.nav.length > 0 && !item.hidden) activateBadges(item.nav);
+        if (!item.badge || !item.badge.promise || item.hidden) continue;
+        const callback = () => {
+          new Promise((resolve, reject) => {
+            return item.badge.promise(resolve, reject);
+          }).then((x) => {
+            item.badge.value = x;
+          }).catch(() => {
+            item.badge.value = null;
+          });
+        };
+        this._intervals.push(setInterval(callback, item.badge.interval || 5000));
+        callback();
+      }
+    };
     setHiddens(this.config.navigation.items);
-    this.activateBadges(this.config.navigation.items);
+    activateBadges(this.config.navigation.items);
     this.layout.config = this.config;
     this.initialized = true;
   }
@@ -104,26 +126,6 @@ export class KaLayout {
     this.loader.classList.remove('visible');
   }
 
-  activateBadges(items) {
-    for (let item of items) {
-      if (item.nav && item.nav.length > 0 && this.authorized(item)) this.activateBadges(item.nav);
-      if (!item.badge || !item.badge.promise || !this.authorized(item)) continue;
-      let callback = () => {
-        new Promise((resolve, reject) => {
-          return item.badge.promise(resolve, reject);
-        })
-          .then((x) => {
-            item.badge.value = x;
-          })
-          .catch(() => {
-            item.badge.value = null;
-          });
-      };
-      this._intervals.push(setInterval(callback, item.badge.interval || 5000));
-      callback();
-    }
-  }
-
   subtool(index, $event) {
     $event.stopPropagation();
     let subtool = this.element.querySelector(`[data-subtool="${index}"]`);
@@ -139,13 +141,6 @@ export class KaLayout {
     // Toggle class visible
     subtool.parentElement.classList.toggle('visible');
   }
-
-  authorized(item) {
-    let userRoles = this.config.user ? this.config.user.role || this.config.user.roles || [] : [];
-    if (!Array.isArray(userRoles)) userRoles = [userRoles];
-    return !item.authRoles || (item.authRoles && userRoles.some((e) => item.authRoles.includes(e)));
-  }
-
   expand(item) {
     item.collapsed = false;
   }
