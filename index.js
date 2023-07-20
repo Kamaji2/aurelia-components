@@ -129,6 +129,13 @@ export const helpers = {
     }
     return Object.entries(data).length ? data : null;
   },
+  nullifyObject: (object, deep = true) => {
+    for (let key of Object.keys(object)) {
+      if (deep && helpers.isObject(object[key])) helpers.nullifyObject(object[key]);
+      else object[key] = null;
+    }
+    return object;
+  },
   deepMerge: (target, ...sources) => {
     target = JSON.parse(JSON.stringify(target));
     if (!sources.length) return target;
