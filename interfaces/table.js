@@ -9,6 +9,7 @@ export class TableInterface {
   query = null;
   filters = null; // String "date_created>=1981-09-25&status=active"
   meta = 1;
+  depth = null;
   limit = 10;
   offset = 0;
   total = 0;
@@ -80,6 +81,9 @@ export class TableInterface {
 
     // Handle meta
     if (this.meta) query.set('meta', this.meta);
+
+    // Handle depth
+    if (this.depth) query.set('depth', this.depth);
 
     // Handle sort
     this.sort = sort || this.sort || [];
