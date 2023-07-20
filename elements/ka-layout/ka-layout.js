@@ -68,7 +68,7 @@ export class KaLayout {
     const setHiddens = (items) => {
       let hiddens = true;
       for (let item of items) {
-        if (authorized(item) && !item.hidden && item.href) {
+        if (authorized(item) && !item.hidden && (item.href || item.call)) {
           item.hidden = false;
         } else if (authorized(item) && !item.hidden && item.nav) {
           item.hidden = setHiddens(item.nav);
