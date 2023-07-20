@@ -1,5 +1,6 @@
 import { inject, customElement, observable, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance } from 'aurelia-framework';
 import { ValidationController, ValidationRules, validateTrigger } from 'aurelia-validation';
+import { helpers } from 'aurelia-components';
 import { DateTime } from 'luxon';
 
 require('./ka-control.sass');
@@ -268,6 +269,7 @@ export class KaControl {
   createNested(obj, levels) {
     let level = levels.shift();
     if (!Object.prototype.hasOwnProperty.call(obj, level)) obj[level] = levels.length ? {} : null;
+    else if (levels.length && !helpers.isObject(obj[level])) obj[level] = [];
     return levels.length ? this.createNested(obj[level], levels) : null;
   }
 }

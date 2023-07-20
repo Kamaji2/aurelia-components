@@ -221,36 +221,49 @@ export class TableSearchInterface {
     return new Promise((resolve, reject) => {
       this.validate()
         .then(() => {
-          let filters = [];
-          for (let [k, v] of Object.entries(data || this.data)) {
-            if (v && v !== 'null' && this.schema[k]) {
-              let operator = this.controls[k] ? this.controls[k].element?.getAttribute('operator') || '=' : '=';
-              // Format data for datetime
-              if (this.schema[k].control === 'datetime' && ['>', '>='].includes(operator)) {
-                v = DateTime.fromISO(v, { setZone: true }).toLocal();
-                v = v.isValid ? v.startOf('day').toUTC().toSQL({ includeOffset: false }) : null;
-              } else if (this.schema[k].control === 'datetime' && ['<', '<='].includes(operator)) {
-                v = DateTime.fromISO(v, { setZone: true }).toLocal();
-                v = v.isValid ? v.endOf('day').toUTC().toSQL({ includeOffset: false }) : null;
+          const populateFilters = (data, path = []) => {
+            for (let [k, v] of Object.entries(data)) {
+              
+              let pk = path.concat(k).join('.');
+
+              let schema = this.schema; 
+              schema = eval(`schema.${pk}`);
+              let control = this.controls[pk];
+
+              if (v && v !== 'null' && helpers.isObject(v)) {
+                populateFilters(v, path.concat(k));
+              } else if (v && v !== 'null' && schema && control) {
+                let operator = control.element?.getAttribute('operator') || '=';
+                // Format data for datetime
+                if (schema.control === 'datetime' && ['>', '>='].includes(operator)) {
+                  v = DateTime.fromISO(v, { setZone: true }).toLocal();
+                  v = v.isValid ? v.startOf('day').toUTC().toSQL({ includeOffset: false }) : null;
+                } else if (schema.control === 'datetime' && ['<', '<='].includes(operator)) {
+                  v = DateTime.fromISO(v, { setZone: true }).toLocal();
+                  v = v.isValid ? v.endOf('day').toUTC().toSQL({ includeOffset: false }) : null;
+                }
+                // Format data for date range
+                if (schema.control === 'date' && control.isRange) {
+                  let [v1, v2] = v.split('<=>');
+                  v1 = DateTime.fromFormat(v1, 'yyyy-MM-dd').isValid ? v1 : null;
+                  v2 = DateTime.fromFormat(v2, 'yyyy-MM-dd').isValid ? v2 : null;
+                  if (v1) filters.push(`${pk}>=${v1}`);
+                  if (v2) filters.push(`${pk}<=${v2}`);
+                  continue;
+                  // Format data for other range types
+                } else if (control.isRange) {
+                  let [v1, v2] = v.split('<=>');
+                  if (v1) filters.push(`${pk}>=${v1}`);
+                  if (v2) filters.push(`${pk}<=${v2}`);
+                  continue;
+                }
+                filters.push(`${pk}${operator}${v}`);
               }
-              // Format data for date range
-              if (this.schema[k].control === 'date' && this.controls[k].isRange) {
-                let [v1, v2] = v.split('<=>');
-                v1 = DateTime.fromFormat(v1, 'yyyy-MM-dd').isValid ? v1 : null;
-                v2 = DateTime.fromFormat(v2, 'yyyy-MM-dd').isValid ? v2 : null;
-                if (v1) filters.push(`${k}>=${v1}`);
-                if (v2) filters.push(`${k}<=${v2}`);
-                continue;
-                // Format data for other range types
-              } else if (this.controls[k].isRange) {
-                let [v1, v2] = v.split('<=>');
-                if (v1) filters.push(`${k}>=${v1}`);
-                if (v2) filters.push(`${k}<=${v2}`);
-                continue;
-              }
-              filters.push(`${k}${operator}${v}`);
             }
-          }
+          };
+          let filters = [];
+          populateFilters(data || this.data);
+          console.log(filters);
           if (filters.length) params.filters = params.filters ? `(${params.filters})&(${filters.join('&')})` : filters.join('&');
           if (this.storage.getItem(`${this.uuid}-data`) !== JSON.stringify(this.data)) {
             this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));
@@ -267,9 +280,7 @@ export class TableSearchInterface {
 
   async reset(soft = false) {
     await this._initialize;
-    for (let key of Object.keys(this.data)) {
-      this.data[key] = null;
-    }
+    helpers.nullifyObject(this.data);
     if (!soft) {
       this.storage.removeItem(`${this.uuid}-data`);
       this.table.offset = 0;
