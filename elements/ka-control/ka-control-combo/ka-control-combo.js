@@ -204,8 +204,10 @@ export class KaControlCombo {
       this._combostack = [];
       return;
     }
+    let dts = this.schema.datasource;
     let dtv = this.schema.datavalue;
     let dtt = this.schema.datatext;
+    let dtp = this.schema.datapreload;
     let combostack = [];
     for (let item of stack) {
       let text = '';
@@ -224,7 +226,7 @@ export class KaControlCombo {
     }
     this._combostack = combostack;
 
-    if (combostack.length === 1 && this.schema.required && this.value === null) {
+    if (!(!dtp && (dts.table || dts.url)) && combostack.length === 1 && this.schema.required && this.value === null) {
       this.value = combostack[0].value;
     }
   }
