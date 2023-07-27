@@ -27,6 +27,14 @@ export class KaControlsList {
       console.error('ka-control-list: missing datasource in schema!', schema);
       return;
     }
+    if (typeof schema.datasource === 'string') {
+      try {
+        schema.datasource = JSON.parse(schema.datasource);
+      } catch (error) {
+        console.error('ka-control-list: invalid datasource provided in schema!', schema);
+        return;
+      }
+    }
     if (!schema.datasource.model) {
       console.error('ka-control-list: model missing from datasource!', schema.datasource);
       return;
