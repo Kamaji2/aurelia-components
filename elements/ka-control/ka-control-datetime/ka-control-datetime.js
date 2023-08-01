@@ -29,7 +29,7 @@ export class KaControlDate {
 
   valueChanged(newValue, oldValue) {
     // Reformat value on value change, if necessary
-    this.formatValue(newValue, oldValue);
+    setTimeout(() => { this.formatValue(String(newValue), String(oldValue)); }, 1);
   }
 
   formatValue(newValue, oldValue) {
@@ -38,10 +38,8 @@ export class KaControlDate {
     const zone =  isUTC ? { zone: 'utc', setZone: true } : {};
     const dateTime = [DateTime.fromISO(newValue, zone), DateTime.fromSQL(newValue, zone)].find((dateTime) => dateTime.isValid);
     if (!dateTime || !dateTime.isValid) return;
-    newValue = (isUTC ? dateTime : dateTime).toISO({ suppressMilliseconds: true, includeOffset: isUTC });
-    if (newValue !== oldValue) {
-      this.value = newValue;
-    }
+    newValue = dateTime.toISO({ suppressMilliseconds: true, includeOffset: isUTC });
+    if (newValue !== this.value) this.value = newValue;
   }
 
   keydown() {
