@@ -1,6 +1,6 @@
 <template>
-  <input type="text" value.bind="value | controlTime:schema.params.utc" disabled.bind="schema.readonly" placeholder.bind="schema.placeholder || ''" keydown.delegate="keydown()" keyup.delegate="keyup($event)" focus.trigger="focus()" blur.trigger="blur()" class="display-value ${schema.readonly?'readonly':''}" />
+  <input type="text" value.bind="value | controlTime" disabled.bind="schema.readonly" placeholder.bind="schema.placeholder || ''" keydown.delegate="keydown()" keyup.delegate="keyup($event)" focus.trigger="focus()" blur.trigger="blur()" class="display-value ${schema.readonly?'readonly':''}" />
   <div ref="drawer" class="ka-control-time-drawer">
-    <ka-datetime type="time" value.bind="value" change.trigger="change()"></ka-datetime>
+    <ka-datetime type="time" value.bind="value" utc.bind="false" change.trigger="change()"></ka-datetime>
   </div>
 </template>

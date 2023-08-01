@@ -7,6 +7,7 @@ require('./ka-datetime.sass');
 @inject(Element)
 export class KaDatetime {
   @bindable() type = 'date';
+  @bindable() utc = true;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
 
   constructor(element) {
@@ -35,7 +36,9 @@ export class KaDatetime {
     this.minutes = Array.from({ length: 60 }).map((minute, index) => {
       return index;
     });
+  }
 
+  bind() {
     this.init();
   }
 
@@ -44,26 +47,25 @@ export class KaDatetime {
   }
   get dateTime() {
     if (!this.value) return DateTime.now();
-    let value = this.value;
-    if (this.type === 'date') value = DateTime.fromFormat(value, 'yyyy-MM-dd');
-    else if (this.type === 'datetime') value = !(this.utc === false) ? DateTime.fromISO(value, { setZone: true }).toLocal() : DateTime.fromISO(value);
-    else if (this.type === 'time') value = DateTime.fromFormat(value, 'HH:mm:ss');
-    return value && value.isValid ? value : DateTime.now();
+    const zone = this.utc ? { zone: 'utc', setZone: true } : {};
+    const dateTime = [DateTime.fromISO(this.value, zone), DateTime.fromSQL(this.value, zone)].find((dateTime) => dateTime.isValid);
+    if (!dateTime || !dateTime.isValid) return DateTime.now();
+    return this.utc ? dateTime.toLocal() : dateTime;
   }
   set dateTime(value) {
     if (this.type === 'date') this.value = value.toFormat('yyyy-MM-dd');
-    else if (this.type === 'datetime') this.value = !(this.utc === false) ? value.set({ seconds: 0, milliseconds: 0 }).toUTC().toISO({ suppressMilliseconds: true }) : value.set({ seconds: 0, milliseconds: 0 }).toISO({ suppressMilliseconds: true });
+    else if (this.type === 'datetime') this.value = (this.utc ? value.toUTC() : value).set({ seconds: 0, milliseconds: 0 }).toISO({ suppressMilliseconds: true, includeOffset: this.utc });
     else if (this.type === 'time') this.value = value.toFormat('HH:mm:00');
   }
 
   init() {
-    let date = this.dateTime;
+    let dateTime = this.dateTime;
     this.selected = {
-      day: date.get('day'),
-      month: date.get('month'),
-      year: date.get('year'),
-      hour: date.get('hour'),
-      minute: date.get('minute')
+      day: dateTime.get('day'),
+      month: dateTime.get('month'),
+      year: dateTime.get('year'),
+      hour: dateTime.get('hour'),
+      minute: dateTime.get('minute')
     };
 
     this.years = [];
@@ -71,7 +73,7 @@ export class KaDatetime {
       this.years.push(i);
     }
     this.weeks = [];
-    let monthInterval = Interval.fromDateTimes(date.startOf('month'), date.endOf('month'));
+    let monthInterval = Interval.fromDateTimes(dateTime.startOf('month'), dateTime.endOf('month'));
     for (let i = 0; i < monthInterval.count('weeks'); i++) {
       let startWeek = monthInterval.start.plus({ weeks: i }).startOf('week');
       let weekInterval = Interval.fromDateTimes(startWeek, startWeek.endOf('week'));

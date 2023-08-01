@@ -16,10 +16,32 @@ export class KaControlDate {
     this.backdrop = new KaControlBackdropService(this, this.close);
   }
 
+  bind() {
+    // Reformat value on initial data binding, if necessary
+    this.formatValue(this.value, null);
+  }
+
   attached() {
     this.element.querySelector('input.display-value').addEventListener('dblclick', () => {
       this.open();
     });
+  }
+
+  valueChanged(newValue, oldValue) {
+    // Reformat value on value change, if necessary
+    this.formatValue(newValue, oldValue);
+  }
+
+  formatValue(newValue, oldValue) {
+    if (!newValue || newValue === oldValue) return;
+    const isUTC = !(this.schema?.params?.utc === false);
+    const zone =  isUTC ? { zone: 'utc', setZone: true } : {};
+    const dateTime = [DateTime.fromISO(newValue, zone), DateTime.fromSQL(newValue, zone)].find((dateTime) => dateTime.isValid);
+    if (!dateTime || !dateTime.isValid) return;
+    newValue = (isUTC ? dateTime : dateTime).toISO({ suppressMilliseconds: true, includeOffset: isUTC });
+    if (newValue !== oldValue) {
+      this.value = newValue;
+    }
   }
 
   keydown() {
@@ -50,22 +72,14 @@ export class KaControlDate {
   }
 }
 export class controlDatetimeValueConverter {
-  toView(value, utc) {
-    if (/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/.test(value)) {
-      let dateISO = !(utc === false) ? DateTime.fromISO(value, { setZone: true }).toLocal() : DateTime.fromISO(value);
-      if (!dateISO.isValid) return value;
-      return dateISO.toFormat('dd/MM/yyyy HH:mm');
-    } else if (/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.test(value)) {
-      let dateSQL = !(utc === false) ? DateTime.fromSQL(value, { setZone: true }).toLocal() : DateTime.fromSQL(value);
-      if (!dateSQL.isValid) return value;
-      return dateSQL.toFormat('dd/MM/yyyy HH:mm');
-    } else return value;
+  toView(value, utc = true) {
+    const dateTime = DateTime.fromISO(value);
+    if (!dateTime || !dateTime.isValid) return value;
+    return (utc ? dateTime.toLocal() : dateTime).toFormat('dd/MM/yyyy HH:mm');
   }
-  fromView(value, utc) {
-    if (!/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(value)) return value;
-    let date = DateTime.fromFormat(value, 'dd/MM/yyyy HH:mm');
-    if (!date.isValid) return value;
-    if (!(utc === false)) date = date.toUTC();
-    return date.set({ seconds: 0, milliseconds: 0 }).toISO({ suppressMilliseconds: true });
+  fromView(value, utc = true) {
+    const dateTime = DateTime.fromFormat(value, 'dd/MM/yyyy HH:mm');
+    if (!dateTime || !dateTime.isValid) return value;
+    return (utc ? dateTime.toUTC() : dateTime).set({ seconds: 0, milliseconds: 0 }).toISO({ suppressMilliseconds: true, includeOffset: utc });
   }
 }
