@@ -397,6 +397,8 @@ export class KaControlCombo {
     this.searchRequest.then((x) => {
       this.combostack = x.response;
       this._combostack.forEach((c) => (c.selected = this._value && this._value.includes(c.value)));
+      // Dispatch resize event on backdrop in order to eventually reposition the drawer
+      setTimeout(() => { this.backdrop.backdropElement.dispatchEvent(new Event('resize')); }, 0);
     });
     return true;
   }
