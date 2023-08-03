@@ -1,116 +1,103 @@
 ka-datetime
   display: block
-  //border: 1px solid #e0e0e0
-  .selectors
-    color: rgba(var(--text-color-rgb), 0.5)
-    box-shadow: inset 0 -1px 0 #e0e0e0
-    &:last-of-type
-      box-shadow: inset 0 1px 0 #e0e0e0
-    [class*=col]
-      &:nth-child(1)
-        button
-          box-shadow: inset -1px 0 0 #e0e0e0
-      &:nth-child(2)
-        > div
-          position: relative
-          margin: 0 0 0 auto
-          //max-width: 100px
-          text-align: right
-          select
-            text-transform: capitalize
-            box-shadow: inset 1px 0 0 #e0e0e0
-      &:nth-child(3)
-        > div
-          position: relative
-          margin: 0 auto 0 0
-          width: 65px
-          text-align: right
-          select
-            box-shadow: inset -1px 0 0 #e0e0e0, inset 1px 0 0 #e0e0e0
-      &:nth-child(4)
-        button
-          box-shadow: inset 1px 0 0 #e0e0e0
-        
-    button
-      cursor: pointer
-      appearance: none
-      display: block
+  .primary-nav
+    align-items: center
+    min-height: 4rem
+    text-align: center
+    border-bottom: 0.5px solid #c7c7c7
+    button, select
       border: 0
-      outline: none
-      margin: 0
-      padding: 0
-      width: 3rem
-      height: 3rem
-      font-size: 1.4rem
-      line-height: 3rem
-      color: inherit
-      background: transparent
-      transition: all 0.5s
-      &:hover
-        color: var(--text-color)
-        background: rgba(var(--primary-color-rgb), 0.05)
-      
-    select
-      cursor: pointer
-      appearance: none
-      display: block
-      border: 0
-      outline: none
-      margin: 0
-      padding: 0 1rem
       width: 100%
-      height: 3rem
-      font-size: 1.2rem
-      line-height: 3rem
-      color: var(--text-color)
-      background: transparent
-      box-shadow: inset -1px 0 0 #e0e0e0, inset 1px 0 0 #e0e0e0, inset 0 -1px 0 #e0e0e0
-      transition: all 0.5s
-      &:hover
-        color: var(--text-color)
-        background: rgba(var(--primary-color-rgb), 0.05)
-      + .dropdown
-        pointer-events: none
-        display: block
+      height: 4rem
+      text-align: center
+      background-color: transparent
+      cursor: pointer
+      appearance: none
+      &:focus-visible
+        outline: 0
+    .select-container
+      position: relative
+      .fa-angle-down
         position: absolute
-        top: 0
-        right: 0
-        width: 3rem
-        height: 3rem
-        font-size: 1.4rem
-        line-height: 3rem
-        text-align: center
-        
+        top: 50%
+        right: 1rem
+        transform: translateY(-50%)
+        cursor: pointer
+        pointer-events: none
+    .nav-prev, .nav-next
+      flex: 0 0 4rem
+      background-color: var(--primary-color)
+      button i
+        color: #fff
+    .nav-month, .nav-hours, .nav-minutes
+      border-right: 0.5px solid #c7c7c7
+    .nav-hours, .nav-minutes
+      border-top: 0.5px solid #c7c7c7
+
   .weekdays
-    color: var(--text-color)
+    flex-wrap: nowrap
     font-size: 1rem
     font-weight: 700
-    line-height: 2rem
+    line-height: 3rem
+    color: var(--text-color)
     text-align: center
     text-transform: uppercase
-  
   .days
-    button
-      cursor: pointer
-      appearance: none
-      display: block
-      border: 0
-      outline: none
-      margin: 0
+    .col
       padding: 0
-      width: 100%
-      height: 2rem
-      font-size: 1rem
-      line-height: 2rem
-      color: inherit
-      text-align: center
-      background: transparent
-      &:not([disabled]):hover
-        color: var(--primary-color)
-        background: rgba(var(--primary-color-rgb), 0.1)
-      &.selected, &.selected:hover
-        color: #ffffff
-        background: rgba(var(--primary-color-rgb), 1)
-      &[disabled]
-        opacity: 0.5
-  
+      button
+        display: block
+        margin: 0
+        outline: none
+        border: 0
+        padding: 0
+        width: 100%
+        height: 3rem
+        font-size: 1.2rem
+        line-height: 3rem
+        color: inherit
+        text-align: center
+        background: transparent
+        cursor: pointer
+        appearance: none
+        &:not([disabled]):hover
+          color: var(--primary-color)
+          background: rgba(var(--secondary-color-rgb), 0.1)
+        &.selected, &.selected:hover
+          color: #ffffff
+          background: var(--secondary-color)
+        &[disabled]
+          opacity: 0.5
+
+
+ka-control-backdrop > div[ref="drawer"]
+  &.xs ka-datetime, &.sm ka-datetime
+    .primary-nav
+      position: relative
+      button, select
+        height: 2rem
+      select
+        font-size: 1.2rem
+      .nav-year, .nav-month
+        flex: 0 0 calc(100% - 8rem)
+        margin: 0 auto
+      .nav-year
+        border-top: 0.5px solid #c7c7c7
+      .nav-prev, .nav-next
+        position: absolute
+        top: 0
+        border: 0
+        width: 4rem
+        height: 100%
+        button
+          height: 100%
+      .nav-prev
+        left: 0
+      .nav-next
+        right: 0
+  &.xs ka-datetime
+    .primary-nav
+      .nav-year, .nav-month
+        flex: 0 0 100%
+      .nav-prev, .nav-next
+        display: none

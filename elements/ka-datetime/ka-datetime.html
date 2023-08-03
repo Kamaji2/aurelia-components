@@ -1,65 +1,78 @@
 <template>
   <slot></slot>
+  <!-- date & datetime -->
   <template if.bind="['date', 'datetime'].includes(type)">
-    <div class="row g-0 selectors">
-      <div class="col-auto">
+    <div class="row g-0 primary-nav">
+      <!-- minus one month -->
+      <div class="col nav-prev">
         <button click.delegate="shiftValues({ month: -1 })">
           <i class="fa-regular fa-angle-left"></i>
         </button>
       </div>
-      <div class="col">
-        <div>
-          <select value.bind="selected.month" change.trigger="setValues({ month: selected.month })">
+      <!-- select month -->
+      <div class="col nav-month">
+        <div class="select-container">
+          <select value.bind="current.month" change.trigger="setValues({ month: current.month })" style="text-transform: capitalize;">
             <option repeat.for="month of months" model.bind="month.numeric">${month.long}</option>
           </select>
-          <i class="dropdown fa-regular fa-angle-down"></i>
+          <i class="fa fa-angle-down"></i>
         </div>
       </div>
-      <div class="col-auto">
-        <div>
-          <select value.bind="selected.year" change.trigger="setValues({ year: selected.year })">
+      <!-- select year -->
+      <div class="col nav-year">
+        <div class="select-container">
+          <select value.bind="current.year" change.trigger="setValues({ year: current.year })">
             <option repeat.for="year of years" model.bind="year">${year}</option>
           </select>
-          <i class="dropdown fa-regular fa-angle-down"></i>
+          <i class="fa fa-angle-down"></i>
         </div>
       </div>
-      <div class="col-auto">
+      <!-- plus one month -->
+      <div class="col nav-next">
         <button click.delegate="shiftValues({ month: 1 })">
           <i class="fa-regular fa-angle-right"></i>
         </button>
       </div>
     </div>
 
-    <div class="row weekdays">
-      <div repeat.for="weekday of weekdays" class="col">${weekday.short}</div>
+    <div class="row g-0 weekdays">
+      <div repeat.for="weekday of weekdays" class="col">${weekday.initials}</div>
     </div>
 
-    <div class="row days" repeat.for="week of weeks">
+    <div class="row g-0 days" repeat.for="week of weeks">
+      <!-- select day -->
       <div repeat.for="day of week" class="col">
-        <button class="${day.day === selected.day ? 'selected':''}" disabled.bind="day.month !== selected.month" click.delegate="setValues({ day: day.day })">${day.text}</button>
+        <button 
+          class="${day.day === selected.day && day.month === selected.month && day.year === selected.year ? 'selected' : ''}"
+          disabled.bind="day.month !== current.month"
+          click.delegate="setValues({ day: day.day, month: current.month })"
+        >
+        ${day.text}
+        </button>
       </div>
     </div>
   </template>
+  <!-- only time -->
   <template if.bind="['time', 'datetime'].includes(type)">
-    <div class="row g-0 selectors">
-      <div class="col-auto"></div>
-      <div class="col">
-        <div>
-          <select value.bind="selected.hour" change.trigger="setValues({ hours: selected.hour })">
+    <div class="row g-0 primary-nav" style="min-height: 3rem; box-shadow: none;">
+      <!-- select hour -->
+      <div class="col-6 nav-hours">
+        <div class="select-container">
+          <select value.bind="current.hour" change.trigger="setValues({ hours: current.hour })" style="height: 3rem;">
             <option repeat.for="hour of hours" model.bind="hour">${hour < 10 ? '0' : '' }${hour}</option>
           </select>
-          <i class="dropdown fa-regular fa-angle-down"></i>
+          <i class="fa fa-angle-down"></i>
         </div>
       </div>
-      <div class="col">
-        <div>
-          <select value.bind="selected.minute" change.trigger="setValues({ minutes: selected.minute })">
+      <!-- select minute -->
+      <div class="col-6 nav-minutes">
+        <div class="select-container">
+          <select value.bind="current.minute" change.trigger="setValues({ minutes: current.minute })" style="height: 3rem;">
             <option repeat.for="minute of minutes" model.bind="minute">${minute < 10 ? '0' : '' }${minute}</option>
           </select>
-          <i class="dropdown fa-regular fa-angle-down"></i>
+          <i class="fa fa-angle-down"></i>
         </div>
       </div>
-      <div class="col-auto"></div>
     </div>
   </template>
 </template>
