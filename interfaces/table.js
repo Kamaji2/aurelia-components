@@ -8,6 +8,7 @@ export class TableInterface {
   data = null;
   query = null;
   filters = null; // String "date_created>=1981-09-25&status=active"
+  fields = null; // String "id,date_created,name,surname"
   meta = 1;
   depth = null;
   limit = 10;
@@ -77,6 +78,12 @@ export class TableInterface {
     if (this.filters) {
       let filters = query.has('filters') ? `(${decodeURIComponent(query.get('filters'))})&` : '';
       query.set('filters', `${filters}(${this.filters})`);
+    }
+
+    // Handle fields
+    if (this.fields) {
+      let fields = query.has('fields') ? `${decodeURIComponent(query.get('fields'))},` : '';
+      query.set('fields', `${fields}(${this.fields})`);
     }
 
     // Handle meta
