@@ -77,7 +77,7 @@ export class TableInterface {
     // Handle filters (aka prefilters)
     if (this.filters) {
       let filters = query.has('filters') ? `(${decodeURIComponent(query.get('filters'))})&` : '';
-      query.set('filters', `${filters}(${this.filters})`);
+      query.set('filters', `${filters}${this.filters}`);
     }
 
     // Handle fields
