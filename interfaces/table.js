@@ -77,13 +77,13 @@ export class TableInterface {
     // Handle filters (aka prefilters)
     if (this.filters) {
       let filters = query.has('filters') ? `(${decodeURIComponent(query.get('filters'))})&` : '';
-      query.set('filters', `${filters}${this.filters}`);
+      query.set('filters', `${filters}(${this.filters})`);
     }
 
     // Handle fields
     if (this.fields) {
       let fields = query.has('fields') ? `${decodeURIComponent(query.get('fields'))},` : '';
-      query.set('fields', `${fields}(${this.fields})`);
+      query.set('fields', `${fields}${this.fields}`);
     }
 
     // Handle meta
