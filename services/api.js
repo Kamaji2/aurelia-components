@@ -4,11 +4,15 @@ import { HttpClient } from 'aurelia-http-client';
 
 @inject(Router)
 export class ApiService {
+  /**
+   * @deprecated 
+   */
+  language = null;
+
   constructor(router) {
     this.router = router;
     this.isKamaji = true;
     this.isOffline = false;
-    this.language = null;
 
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
     this.baseUrl = this.storage.getItem('APP_KAMAJI_BASE_URL') || ENVIRONMENT.APP_KAMAJI_BASE_URL || this.storage.getItem('APP_API_BASE_URL') || ENVIRONMENT.APP_API_BASE_URL;
@@ -23,9 +27,15 @@ export class ApiService {
           if (this.auth && this.auth.accessToken && !msg.url.startsWith(this.baseUrl + this.auth.endpoints.refresh) && !msg.headers.has('Authorization')) {
             msg.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
           }
+
+          /**
+           * @deprecated 
+           */
           if (this.language && !msg.headers.has('Accept-Language')) {
             msg.headers.add('Accept-Language', this.language);
           }
+
+          this.runRequestInterceptorTasks(msg);
           return msg;
         },
         response: (msg) => {
@@ -69,6 +79,19 @@ export class ApiService {
         }
       });
     });
+  }
+
+  addRequestInterceptorTask(name, func) {
+    if (!this.requestInterceptorTasks) this.requestInterceptorTasks = {};
+    this.requestInterceptorTasks[name] = func;
+  }
+  removeRequestInterceptorTask(name) {
+    if (!this.requestInterceptorTasks) return;
+    delete this.requestInterceptorTasks[name];
+  }
+  runRequestInterceptorTasks(msg) {
+    if (!this.requestInterceptorTasks) return;
+    Object.values(this.requestInterceptorTasks).forEach((func) => func.call(this, msg));  
   }
 
   get(endpoint, params) {
