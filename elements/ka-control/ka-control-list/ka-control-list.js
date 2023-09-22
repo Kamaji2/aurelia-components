@@ -97,7 +97,6 @@ export class KaControlsList {
       if (!this._value.length) this.add();
       return;
     }
-    //console.debug('ka-control-list: value changed!', _value);
     this._value = _value;
   }
 

@@ -3,11 +3,10 @@
     <div class="row g-0">
       <template repeat.for="itemSchema of schema.datasource.model.schema">
         <div class="${itemSchema.class || 'col'}">
-          <label if.bind="itemSchema.label">${itemSchema.label}</label>
-          <input type="text" value.bind="value[itemSchema.field] | nullifyEmpty" disabled.bind="schema.readonly" placeholder.bind="itemSchema.label || itemSchema.field" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.delegate="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label" class="display-value ${schema.readonly?'readonly':''}" />
+          <ka-control schema.bind="itemSchema" value.bind="value[itemSchema.field] | nullifyEmpty" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.trigger="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label || itemSchema.placeholder || itemSchema.field"></ka-control>
         </div>
       </template>
-      <div class="col-3 buttons">
+      <div class="buttons">
         <button type="button" if.bind="!schema.readonly && $last && (!schema.max || $index+1 < schema.max)" click.delegate="add()">
           <i class="fa-regular fa-plus"></i>
         </button>
