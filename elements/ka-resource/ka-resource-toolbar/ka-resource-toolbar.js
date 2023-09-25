@@ -9,12 +9,12 @@ export class KaResourceToolbar {
     console.warn('ka-resource-toolbar: close function unset!');
   };
   @bindable() buttonCancel = () => {
-    this.defaultCancel();
     console.warn('ka-resource-toolbar: buttonCancel function unset, using default!');
+    this.defaultCancel();
   };
   @bindable() buttonSave = () => {
-    this.defaultSave();
     console.warn('ka-resource-toolbar: buttonSave function unset, using default!');
+    this.defaultSave();
   };
   @bindable() interface = null;
 
