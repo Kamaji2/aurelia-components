@@ -100,6 +100,7 @@ export class KaLayout {
     };
     setHiddens(this.config.navigation.items);
     activateBadges(this.config.navigation.items);
+    setHiddens(this.config.toolbar.items);
     this.layout.config = this.config;
     this.initialized = true;
   }
