@@ -34,9 +34,10 @@ export class TableInterface {
     this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
     // Custom events
     this.events = document.createTextNode(null);
-    this.events.load = new CustomEvent('load', { detail: this });
-    this.events.loadSuccess = new CustomEvent('loadSuccess', { detail: this });
-    this.events.loadFailure = new CustomEvent('loadFailure', { detail: this });
+    this.events.load = new CustomEvent('load', { detail: { interface: this } });
+    this.events.loadSuccess = new CustomEvent('loadSuccess', { detail: { interface: this } });
+    this.events.loadFailure = new CustomEvent('loadFailure', { detail: { interface: this } });
+
     // Initialize
     this._initialize = this.initialize();
   }
@@ -116,6 +117,8 @@ export class TableInterface {
       this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));
       console.debug(`[TableInterface][${this.uuid}] Load - Success`);
       this.isLoading = false;
+      this.events.loadSuccess.detail.xhr = xhr;
+      this.events.loadSuccess.detail.data = this.data;
       this.events.dispatchEvent(this.events.loadSuccess);
       return xhr;
     }, (xhr) => {
@@ -126,6 +129,7 @@ export class TableInterface {
       console.error(xhr.response);
       this.isLoading = false;
       this.isFailed = true;
+      this.events.loadFailure.detail.xhr = xhr;
       this.events.dispatchEvent(this.events.loadFailure);
     }).catch((error) => {
       console.error(error);

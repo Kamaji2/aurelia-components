@@ -57,14 +57,14 @@ export class ResourceInterface {
     console.debug(`[ResourceInterface] UUID ${this.uuid}`);
     // Custom events
     this.events = document.createTextNode(null);
-    this.events.getSuccess = new CustomEvent('getSuccess', { detail: this });
-    this.events.getFailure = new CustomEvent('getFailure', { detail: this });
-    this.events.postSuccess = new CustomEvent('postSuccess', { detail: this });
-    this.events.postFailure = new CustomEvent('postFailure', { detail: this });
-    this.events.putSuccess = new CustomEvent('putSuccess', { detail: this });
-    this.events.putFailure = new CustomEvent('putFailure', { detail: this });
-    this.events.patchSuccess = new CustomEvent('patchSuccess', { detail: this });
-    this.events.patchFailure = new CustomEvent('patchFailure', { detail: this });
+    this.events.getSuccess = new CustomEvent('getSuccess', { detail: { interface: this } });
+    this.events.getFailure = new CustomEvent('getFailure', { detail: { interface: this } });
+    this.events.postSuccess = new CustomEvent('postSuccess', { detail: { interface: this } });
+    this.events.postFailure = new CustomEvent('postFailure', { detail: { interface: this } });
+    this.events.putSuccess = new CustomEvent('putSuccess', { detail: { interface: this } });
+    this.events.putFailure = new CustomEvent('putFailure', { detail: { interface: this } });
+    this.events.patchSuccess = new CustomEvent('patchSuccess', { detail: { interface: this } });
+    this.events.patchFailure = new CustomEvent('patchFailure', { detail: { interface: this } });
     // Initialize
     this.initialized = this.initialize();
   }
@@ -123,13 +123,15 @@ export class ResourceInterface {
         console.debug(`[ResourceInterface][${this.uuid}] GET - Success`);
         this.isLoading = false;
         // Prepare and dispatch success event
-        this.events[`getSuccess`] = new CustomEvent(`getSuccess`, { detail: this.data });
-        this.events.dispatchEvent(this.events[`getSuccess`]);
+        this.events.getSuccess.detail.xhr = xhr;
+        this.events.getSuccess.detail.data = this.data;
+        this.events.dispatchEvent(this.events.getSuccess);
       })
       .catch((error) => {
         console.error(`[ResourceInterface][${this.uuid}] GET - Failure`, error);
         this.isLoading = false;
         this.isFailed = true;
+        this.events.getFailure.detail.xhr = error;
         this.events.dispatchEvent(this.events.getFailure);
         throw new ResourceError({
           method: 'get',
@@ -181,7 +183,7 @@ export class ResourceInterface {
         console.debug(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Success`);
         this.isLoading = false;
         // Prepare and dispatch success event
-        this.events[`${method}Success`] = new CustomEvent(`${method}Success`, { detail: xhr.response });
+        this.events[`${method}Success`].detail.xhr = xhr;
         this.events.dispatchEvent(this.events[`${method}Success`]);
         return xhr;
       })
@@ -190,7 +192,7 @@ export class ResourceInterface {
         this.isLoading = false;
         this.isFailed = true;
         // Prepare and dispatch failure event
-        this.events[`${method}Failure`] = new CustomEvent(`${method}Failure`, { detail: error });
+        this.events[`${method}Failure`].detail.xhr = error;
         this.events.dispatchEvent(this.events[`${method}Failure`]);
         // Prepare and throw custom ResourceError
         if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
