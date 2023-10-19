@@ -10,7 +10,7 @@ export class KaControlsList {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
 
   _value = [];
-  newValue = {};
+  controls = {};
 
   constructor(element) {
     this.element = element;

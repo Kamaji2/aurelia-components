@@ -3,7 +3,7 @@
     <div class="row g-0">
       <template repeat.for="itemSchema of schema.datasource.model.schema">
         <div class="${itemSchema.class || 'col'}">
-          <ka-control schema.bind="itemSchema" value.bind="value[itemSchema.field] | nullifyEmpty" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.trigger="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label || itemSchema.placeholder || itemSchema.field"></ka-control>
+          <ka-control view-model.ref="$parent.$parent.controls[$parent.$index + '_' + (itemSchema.field || $index)]" schema.bind="itemSchema" value.bind="value[itemSchema.field] | nullifyEmpty" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.trigger="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label || itemSchema.placeholder || itemSchema.field"></ka-control>
         </div>
       </template>
       <div class="buttons">
