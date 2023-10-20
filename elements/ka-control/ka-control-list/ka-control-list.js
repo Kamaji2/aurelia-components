@@ -17,9 +17,13 @@ export class KaControlsList {
   }
 
   attached() {
-    if (!this.value) new Array(parseInt(this.schema?.min || 1, 10)).fill(0).forEach(() => {
-      this.add();
-    });
+    if (!this.value) {
+      new Array(parseInt(this.schema?.min || 1, 10)).fill(0).forEach(() => {
+        this.add();
+      });
+    } else {
+      this.value = JSON.stringify(this._value);
+    }
   }
 
   schemaChanged(schema) {
