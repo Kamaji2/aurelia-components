@@ -46,14 +46,16 @@ ka-button
 
   &
     color: #fff
-    background-color: var(--primary-color)
+    &:not(.transparent)
+      background-color: var(--primary-color)
     &:not(.disabled):hover
       color: #fff
       &:before
         background-color: rgba(#fff, 0.2)
   &.secondary
     color: #fff
-    background-color: var(--secondary-color)
+    &:not(.transparent)
+      background-color: var(--secondary-color)
     &:not(.disabled):hover
       color: #fff
       &:before
@@ -64,7 +66,8 @@ ka-button
         background-color: #fff
   &.accent
     color: #fff
-    background-color: var(--accent-color)
+    &:not(.transparent)
+      background-color: var(--accent-color)
     &:not(.disabled):hover
       color: #fff
       &:before
@@ -75,7 +78,8 @@ ka-button
         background-color: #fff
   &.warning
     color: #fff
-    background-color: var(--warning-color)
+    &:not(.transparent)
+      background-color: var(--warning-color)
     &:not(.disabled):hover
       color: #fff
       &:before
@@ -86,8 +90,9 @@ ka-button
         background-color: #fff
   &.inverted
     color: var(--primary-color)
-    background-color: #ffffff
     box-shadow: inset 0 0 0px 1px rgba(var(--primary-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
+    &:not(.transparent)
+      background-color: #ffffff
     &:not(.disabled):hover
       color: var(--primary-color)
       &:before
@@ -99,8 +104,9 @@ ka-button
         background-color: var(--primary-color)
   &.inverted.secondary
     color: var(--secondary-color)
-    background-color: #ffffff
     box-shadow: inset 0 0 0px 1px rgba(var(--secondary-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
+    &:not(.transparent)
+      background-color: #ffffff
     &:not(.disabled):hover
       color: var(--secondary-color)
       &:before
@@ -112,8 +118,9 @@ ka-button
         background-color: var(--secondary-color)
   &.inverted.accent
     color: var(--accent-color)
-    background-color: #ffffff
     box-shadow: inset 0 0 0px 1px rgba(var(--accent-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
+    &:not(.transparent)
+      background-color: #ffffff
     &:not(.disabled):hover
       color: var(--accent-color)
       &:before
@@ -125,8 +132,9 @@ ka-button
         background-color: var(--accent-color)
   &.inverted.warning
     color: var(--warning-color)
-    background-color: #ffffff
     box-shadow: inset 0 0 0px 1px rgba(var(--warning-color-rgb), 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
+    &:not(.transparent)
+      background-color: #ffffff
     &:not(.disabled):hover
       color: var(--warning-color)
       &:before
@@ -137,13 +145,14 @@ ka-button
       &:before, &:after
         background-color: var(--warning-color)
 
-  &.disabled:not(.inverted)
-    color: #fff
-    &:before
-      background-color: rgba(#c0c0c0, 0.7)
-  &.disabled.inverted
-    color: #c0c0c0
-    box-shadow: inset 0 0 0px 1px #c0c0c0, 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
+  &:not(.transparent)
+    &.disabled:not(.inverted)
+      color: #fff
+      &:before
+        background-color: rgba(#c0c0c0, 0.7)
+    &.disabled.inverted
+      color: #c0c0c0
+      box-shadow: inset 0 0 0px 1px #c0c0c0, 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2)
   
   .ka-button-icon
     position: relative
@@ -167,28 +176,38 @@ ka-button
     &:empty
       display: none
   
-  .busy
-    position: absolute
-    top: 0
-    right: 0
-    bottom: 0
-    left: 0
-    border-radius: 3px
-    background-color: var(--primary-color)
-    &:before, &:after
-      content: ''
+  &.transparent
+    &.disabled
+      opacity: 0.3
+    .ka-button-label
+      background: none !important
+
+  &.busy
+    color: transparent !important
+    .busy
       position: absolute
-      border-radius: 50%
-      width: 1rem
-      height: 1rem
-      top: 50%
-      background-color: #fff
-      transform: translate(-50%, -50%)
-      will-change: left, transform
-    &:after
-      animation: left-to-right 0.5s linear infinite
-    &:before
-      animation: right-to-left 0.5s linear infinite
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      border-radius: 3px
+      background-color: var(--primary-color)
+      &:before, &:after
+        content: ''
+        position: absolute
+        border-radius: 50%
+        width: 1rem
+        height: 1rem
+        top: 50%
+        background-color: #fff
+        transform: translate(-50%, -50%)
+        will-change: left, transform
+      &:after
+        animation: left-to-right 0.5s linear infinite
+      &:before
+        animation: right-to-left 0.5s linear infinite
+    &.transparent .busy 
+      background-color: transparent !important
     
 
 @keyframes left-to-right
