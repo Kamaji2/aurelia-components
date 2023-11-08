@@ -9,11 +9,15 @@ export class KaControlsList {
   @bindable() schema = null;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
 
-  _value = [];
+  items = [];
   controls = {};
 
   constructor(element) {
     this.element = element;
+  }
+
+  get itemValues() {
+    return this.items.map((item) => item.data);
   }
 
   attached() {
@@ -22,7 +26,7 @@ export class KaControlsList {
         this.add();
       });
     } else {
-      this.value = JSON.stringify(this._value);
+      this.value = JSON.stringify(this.itemValues);
     }
   }
 
@@ -67,10 +71,10 @@ export class KaControlsList {
   }
 
   change() {
-    if (!this._value.map((x) => Object.values(x).join('')).join('').length) {
+    if (!this.itemValues.map((v) => Object.values(v).join('')).join('').length) {
       this.value = null;
     } else {
-      this.value = JSON.stringify(this._value);
+      this.value = JSON.stringify(this.itemValues);
     }
   }
 
@@ -81,7 +85,7 @@ export class KaControlsList {
       return;
     }
     // Validate value
-    if (!value || value === JSON.stringify(this._value)) {
+    if (!value || value === JSON.stringify(this.itemValues)) {
       return;
     }
     let _value = value;
@@ -98,22 +102,30 @@ export class KaControlsList {
       return;
     }
     if (!_value.length) {
-      if (!this._value.length) this.add();
+      if (!this.items.length) this.add();
       return;
     }
-    this._value = _value;
+    this.items = _value.map((v) => { 
+      return { 
+        schema: JSON.parse(JSON.stringify(this.schema.datasource.model.schema)),
+        data: v
+      };
+    });
   }
 
   add() {
-    let value = {};
-    for (let schema of this.schema.datasource.model.schema) {
-      value[schema.field] = null;
+    const item = {
+      schema: JSON.parse(JSON.stringify(this.schema.datasource.model.schema)),
+      data: {}
+    };
+    for (let schema of item.schema) {
+      item.data[schema.field] = null;
     }
-    this._value.push(value);
+    this.items.push(item);
   }
 
-  remove(value) {
-    this._value = this._value.filter((v) => v !== value);
+  remove(item) {
+    this.items = this.items.filter((i) => i !== item);
     this.change();
   }
 }

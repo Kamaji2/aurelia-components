@@ -1,16 +1,16 @@
 <template>
-  <div class="item ${schema.readonly?'readonly':''}" repeat.for="value of _value">
+  <div class="item ${schema.readonly?'readonly':''}" repeat.for="item of items">
     <div class="row g-0">
-      <template repeat.for="itemSchema of schema.datasource.model.schema">
+      <template repeat.for="itemSchema of item.schema">
         <div class="${itemSchema.class || 'col'}">
-          <ka-control view-model.ref="$parent.$parent.controls[$parent.$index + '_' + (itemSchema.field || $index)]" schema.bind="itemSchema" value.bind="value[itemSchema.field] | nullifyEmpty" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.trigger="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label || itemSchema.placeholder || itemSchema.field"></ka-control>
+          <ka-control view-model.ref="$parent.$parent.controls[$parent.$index + '_' + (itemSchema.field || $index)]" schema.bind="itemSchema" value.bind="item.data[itemSchema.field] | nullifyEmpty" keydown.delegate="keydown()" keyup.delegate="keyup($event)" change.trigger="change()" focus.trigger="focus()" blur.trigger="blur()" ka-tooltip.bind="itemSchema.label || itemSchema.placeholder || itemSchema.field"></ka-control>
         </div>
       </template>
       <div class="buttons">
         <button type="button" if.bind="!schema.readonly && $last && (!schema.max || $index+1 < schema.max)" click.delegate="add()">
           <i class="fa-regular fa-plus"></i>
         </button>
-        <button type="button" if.bind="!schema.readonly && !$first && (!schema.min || $index+1 > schema.min)" click.delegate="remove(value)">
+        <button type="button" if.bind="!schema.readonly && !$first && (!schema.min || $index+1 > schema.min)" click.delegate="remove(item)">
           <i class="fa-regular fa-trash-can"></i>
         </button>
       </div>
