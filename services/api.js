@@ -71,7 +71,7 @@ export class ApiService {
               (error) => {
                 this.auth.logout(this.router?.currentInstruction?.config?.name || null);
                 this.routeToLogout();
-                return error;
+                return Promise.reject(error);
               });
             }
           }
