@@ -571,5 +571,23 @@ ka-layout + router-view
   [ka-limitwidth="500"]
     max-width: 500px
 
+[ka-limitlines]
+  display: -webkit-box !important
+  -webkit-box-orient: vertical
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: wrap
+
+[ka-limitlines="1"]
+  -webkit-line-clamp: 1
+[ka-limitlines="2"]
+  -webkit-line-clamp: 2
+[ka-limitlines="3"]
+  -webkit-line-clamp: 3
+[ka-limitlines="4"]
+  -webkit-line-clamp: 4
+[ka-limitlines="5"]
+  -webkit-line-clamp: 5
+
 button[disabled], ka-button[disabled]
   pointer-events: none
