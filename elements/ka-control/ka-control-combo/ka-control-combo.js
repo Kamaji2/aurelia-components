@@ -273,6 +273,10 @@ export class KaControlCombo {
           entry.text = text;
           entry.model = item;
         }
+      }).catch((error) => {
+        if (!error.statusCode === 0) {
+          console.error(error);
+        }
       }));
     }
     Promise.all(promises).finally(() => {
@@ -398,7 +402,13 @@ export class KaControlCombo {
       this.combostack = x.response;
       this._combostack.forEach((c) => (c.selected = this._value && this._value.includes(c.value)));
       // Dispatch resize event on backdrop in order to eventually reposition the drawer
-      setTimeout(() => { this.backdrop.backdropElement.dispatchEvent(new Event('resize')); }, 0);
+      setTimeout(() => {
+        this.backdrop.backdropElement.dispatchEvent(new Event('resize'));
+      }, 0);
+    }).catch((error) => {
+      if (!error.statusCode === 0) {
+        console.error(error);
+      }
     });
     return true;
   }
