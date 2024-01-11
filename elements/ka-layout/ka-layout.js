@@ -32,8 +32,8 @@ export class KaLayout {
     this.layout.aside.hide = () => {
       this.asideHide.call(this);
     };
-    this.layout.loader.show = () => {
-      this.loaderShow.call(this);
+    this.layout.loader.show = (message) => {
+      this.loaderShow.call(this, message);
     };
     this.layout.loader.hide = () => {
       this.loaderHide.call(this);
@@ -118,12 +118,14 @@ export class KaLayout {
     this._collapsed = true;
     this.element.classList.add('collapsed');
   }
-  loaderShow() {
+  loaderShow(message) {
     if (!this.loader) return;
+    this.loaderMessage = message || null;
     this.loader.classList.add('visible');
   }
   loaderHide() {
     if (!this.loader) return;
+    this.loaderMessage = null;
     this.loader.classList.remove('visible');
   }
 
