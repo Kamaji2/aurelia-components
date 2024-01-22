@@ -11,6 +11,7 @@ export class KaLayout {
   _collapsed = false;
   _intervals = [];
 
+  static inject = [Element, LayoutService, Router];
   constructor(element, layout, router) {
     this.element = element;
     this.layout = layout;

@@ -1,12 +1,14 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { customElement, bindable } from 'aurelia-framework';
 
 @customElement('ka-resource')
-@inject(Element)
 export class KaResource {
   @bindable() height = 'full';
+
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }
+
   bind(bindingContext) {
     this.interface = bindingContext && bindingContext.constructor?.name === 'ResourceInterface' ? bindingContext : null;
     if (!this.interface) {

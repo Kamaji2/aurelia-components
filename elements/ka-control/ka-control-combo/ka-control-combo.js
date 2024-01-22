@@ -1,11 +1,10 @@
-import { inject, customElement, bindable, bindingMode, BindingEngine } from 'aurelia-framework';
+import { customElement, bindable, bindingMode, BindingEngine } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
 import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
 require('./ka-control-combo.sass');
 
 @customElement('ka-control-combo')
-@inject(Element, BindingEngine)
 export class KaControlCombo {
   // Basic input control properties
   @bindable() schema = null;
@@ -21,6 +20,7 @@ export class KaControlCombo {
   _valuestack = [];
   preloadedCombostack = [];
 
+  static inject = [Element, BindingEngine];
   constructor(element, binding) {
     this.element = element;
     this.binding = binding;

@@ -1,8 +1,8 @@
-import { inject, customElement } from 'aurelia-framework';
+import { customElement } from 'aurelia-framework';
 
 @customElement('ka-tab')
-@inject(Element)
 export class KaTab {
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

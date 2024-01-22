@@ -1,7 +1,6 @@
-import { inject, customElement, observable } from 'aurelia-framework';
+import { customElement, observable } from 'aurelia-framework';
 
 @customElement('ka-table-pagination')
-@inject(Element)
 export class KaTablePagination {
   schema = {
     limit: {
@@ -32,6 +31,7 @@ export class KaTablePagination {
   @observable() limit;
   @observable() page;
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

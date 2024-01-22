@@ -1,11 +1,11 @@
-import { inject, customElement } from 'aurelia-framework';
+import { customElement } from 'aurelia-framework';
 
 require('./ka-tabs.sass');
 
 @customElement('ka-tabs')
-@inject(Element)
 export class KaTabs {
   tabs = [];
+  static inject = [Element];
   constructor(element) {
     this.element = element;
     this.element.controller = this;

@@ -1,9 +1,8 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { customElement, bindable } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { ToastService } from 'aurelia-components';
 
 @customElement('ka-table-search')
-@inject(Element, I18N, ToastService)
 export class KaTableSearch {
   @bindable() buttonReset = () => {
     this.defaultReset();
@@ -13,6 +12,8 @@ export class KaTableSearch {
     this.defaultSearch();
     console.warn('ka-table-search: buttonSearch function unset, using default!');
   };
+
+  static inject = [Element, I18N, ToastService];
   constructor(element, i18n, toast) {
     this.element = element;
     this.i18n = i18n;

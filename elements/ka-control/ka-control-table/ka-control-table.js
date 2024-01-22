@@ -1,9 +1,8 @@
-import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
+import { customElement, bindable, bindingMode } from 'aurelia-framework';
 
 require('./ka-control-table.sass');
 
 @customElement('ka-control-table')
-@inject(Element)
 export class KaControlsTable {
   // Basic input control properties
   @bindable() schema = null;
@@ -12,6 +11,7 @@ export class KaControlsTable {
   _value = [];
   newValue = {};
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

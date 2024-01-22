@@ -1,16 +1,16 @@
-import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
+import { customElement, bindable, bindingMode } from 'aurelia-framework';
 import { DateTime } from 'luxon';
 import { KaControlBackdropService } from '../ka-control-backdrop/ka-control-backdrop';
 
 require('./ka-control-datetime.sass');
 
 @customElement('ka-control-datetime')
-@inject(Element)
 export class KaControlDate {
   // Basic input control properties
   @bindable() schema = null;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
     this.backdrop = new KaControlBackdropService(this, this.close);

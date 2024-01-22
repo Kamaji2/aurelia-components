@@ -1,8 +1,7 @@
-import { inject } from 'aurelia-framework';
 import { ApiService } from 'aurelia-components';
 
-@inject(ApiService)
 export class AuthService {
+  static inject = [ApiService];
   constructor(api) {
     this.api = api;
     this.api.auth = this.api.auth || this;

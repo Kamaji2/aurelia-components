@@ -1,12 +1,12 @@
-import { inject, bindable, customElement } from 'aurelia-framework';
+import { bindable, customElement } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 
 @customElement('ka-table-sort')
-@inject(Element, I18N)
 export class KaTableSort {
   @bindable() property = null;
   order = null;
 
+  static inject = [Element, I18N];
   constructor(element, i18n) {
     this.element = element;
     this.i18n = i18n;

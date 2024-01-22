@@ -1,14 +1,14 @@
-import { inject, customElement, bindable, InlineViewStrategy } from 'aurelia-framework';
+import { customElement, bindable, InlineViewStrategy } from 'aurelia-framework';
 
 require('./ka-heading.sass');
 
 @customElement('ka-heading')
-@inject(Element)
 export class KaHeading {
   @bindable() level = null;
   @bindable() text = null;
   @bindable() icon = null;
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

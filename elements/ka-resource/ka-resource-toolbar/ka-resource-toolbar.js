@@ -1,9 +1,8 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { customElement, bindable } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { ToastService } from 'aurelia-components';
 
 @customElement('ka-resource-toolbar')
-@inject(Element, I18N, ToastService)
 export class KaResourceToolbar {
   @bindable() close = () => {
     console.warn('ka-resource-toolbar: close function unset!');
@@ -18,6 +17,7 @@ export class KaResourceToolbar {
   };
   @bindable() interface = null;
 
+  static inject = [Element, I18N, ToastService];
   constructor(element, i18n, toast) {
     this.element = element;
     this.i18n = i18n;

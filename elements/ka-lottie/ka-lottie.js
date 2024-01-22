@@ -1,18 +1,20 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { customElement, bindable } from 'aurelia-framework';
 import lottie from 'lottie-web';
 
 require('./ka-lottie.sass');
 
 @customElement('ka-lottie')
-@inject(Element)
 export class KaLottie {
   @bindable() path = null; 
   @bindable() animationData = null;
   @bindable() loop = true; 
-  @bindable() autoplay = true; 
+  @bindable() autoplay = true;
+
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }
+
   attached() {
     let options = {
       container: this.element,

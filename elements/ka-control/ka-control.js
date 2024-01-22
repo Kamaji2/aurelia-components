@@ -1,4 +1,4 @@
-import { inject, customElement, observable, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance } from 'aurelia-framework';
+import { customElement, observable, bindable, bindingMode, BindingEngine, InlineViewStrategy, NewInstance } from 'aurelia-framework';
 import { ValidationController, ValidationRules, validateTrigger } from 'aurelia-validation';
 import { helpers } from 'aurelia-components';
 import { DateTime } from 'luxon';
@@ -6,7 +6,6 @@ import { DateTime } from 'luxon';
 require('./ka-control.sass');
 
 @customElement('ka-control')
-@inject(Element, BindingEngine, NewInstance.of(ValidationController))
 export class KaControl {
   @bindable() name = null;
   @bindable() schema = null;
@@ -20,6 +19,7 @@ export class KaControl {
   observers = []; // array of expression observers
   isRange = false;
 
+  static inject = [Element, BindingEngine, NewInstance.of(ValidationController)];
   constructor(element, binding, validator) {
     this.element = element;
     this.binding = binding;

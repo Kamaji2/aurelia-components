@@ -1,16 +1,16 @@
-import { inject, customElement, bindable, observable, bindingMode } from 'aurelia-framework';
+import { customElement, bindable, observable, bindingMode } from 'aurelia-framework';
 import { DateTime, Info, Interval, Duration } from 'luxon';
 
 require('./ka-datetime.sass');
 
 @customElement('ka-datetime')
-@inject(Element)
 export class KaDatetime {
   @bindable() type = 'date';
   @bindable() utc = true;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) value = null;
   @observable() proxyValue = null;
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
 

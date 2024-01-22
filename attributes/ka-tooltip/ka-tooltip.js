@@ -1,16 +1,17 @@
-import { bindable, inject, customAttribute } from 'aurelia-framework';
+import { bindable, customAttribute } from 'aurelia-framework';
 import { v5 as uuidv5 } from 'uuid';
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 
 require('./ka-tooltip.sass');
 
 @customAttribute('ka-tooltip')
-@inject(Element)
 export class KaTooltipCustomAttribute {
   @bindable({ primaryProperty: true }) value;
   @bindable() style;
   @bindable() event = 'enter'; // enter = mouseenter/mouseleave, down = mousedown/mouseup, click = click
   @bindable() placement = 'top';
+
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

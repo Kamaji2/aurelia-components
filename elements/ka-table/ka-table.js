@@ -1,10 +1,10 @@
-import { inject, customElement, bindable, BindingEngine } from 'aurelia-framework';
+import { customElement, bindable, BindingEngine } from 'aurelia-framework';
 
 @customElement('ka-table')
-@inject(Element, BindingEngine)
 export class KaTable {
   @bindable() height = 'full';
   observers = [];
+  static inject = [Element, BindingEngine];
   constructor(element, binding) {
     this.element = element;
     this.binding = binding;

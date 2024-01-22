@@ -1,10 +1,9 @@
-import { inject } from 'aurelia-framework';
 import { DialogService as AureliaDialogService } from 'aurelia-dialog';
 
 require('./dialog.sass');
 
-@inject(AureliaDialogService)
 export class DialogService {
+  static inject = [AureliaDialogService];
   constructor(AureliaDialogService) {
     this.AureliaDialogService = AureliaDialogService;
   }
@@ -66,9 +65,11 @@ import { DialogController } from 'aurelia-dialog';
     </ux-dialog>
   </template>
 `)
-@inject(TemplatingEngine, ViewResources, Container, DialogController)
+
 export class DialogServiceViewModel {
   viewModelReference = { currentViewModel: null };
+
+  static inject = [TemplatingEngine, ViewResources, Container, DialogController];
   constructor(TemplatingEngine, ViewResources, Container, controller) {
     this.templatingEngine = TemplatingEngine;
     this.viewResources = ViewResources;

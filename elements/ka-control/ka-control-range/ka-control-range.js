@@ -1,9 +1,8 @@
-import { inject, customElement, bindable, bindingMode } from 'aurelia-framework';
+import { customElement, bindable, bindingMode } from 'aurelia-framework';
 
 require('./ka-control-range.sass');
 
 @customElement('ka-control-range')
-@inject(Element)
 export class KaControlRange {
   // Basic input control properties
   @bindable() schema = null;
@@ -13,6 +12,7 @@ export class KaControlRange {
   valueFrom = null;
   valueTo = null;
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

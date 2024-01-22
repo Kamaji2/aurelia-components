@@ -1,9 +1,8 @@
-import { inject } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { HttpClient } from 'aurelia-http-client';
 
-@inject(Router)
 export class ApiService {
+  static inject = [Router];
   /**
    * @deprecated 
    */

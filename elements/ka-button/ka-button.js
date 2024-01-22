@@ -1,9 +1,8 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { customElement, bindable } from 'aurelia-framework';
 
 require('./ka-button.sass');
 
 @customElement('ka-button')
-@inject(Element)
 export class KaButton {
   @bindable() disabled;
   @bindable() icon = null;
@@ -13,6 +12,7 @@ export class KaButton {
 
   _ready = false;
 
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

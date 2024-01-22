@@ -1,8 +1,8 @@
-import { inject, customElement } from 'aurelia-framework';
+import { customElement } from 'aurelia-framework';
 
 @customElement('ka-table-progressbar')
-@inject(Element)
 export class KaTableProgressbar {
+  static inject = [Element];
   constructor(element) {
     this.element = element;
   }

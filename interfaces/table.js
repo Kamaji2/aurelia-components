@@ -395,8 +395,8 @@ export class SearchInterface {
   }
 } */
 /* 
-@inject(CompositionEngine, Container)
 export class TableSidebar {
+  static inject = [CompositionEngine, Container];
   constructor(compositionEngine, container) {
     this.compositionEngine = compositionEngine;
     this.container = container;

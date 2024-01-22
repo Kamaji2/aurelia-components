@@ -5,13 +5,13 @@ import { ToastService } from 'aurelia-components';
 require('./ka-toolicon.sass');
 
 @customElement('ka-toolicon')
-@inject(Element, I18N, ToastService)
 export class KaToolicon {
   @bindable() tool = null;
   @bindable() source = '';
   @bindable() context = '';
   @bindable() icon = null;
-
+  
+  static inject = [Element, I18N, ToastService];
   constructor(element, i18n, toast) {
     this.element = element;
     this.i18n = i18n;
