@@ -83,7 +83,7 @@
     <div if.bind="config.profile" class="ka-layout-profile">
       <i if.bind="!config.profile.picture" class="fa-light fa-face-smile"></i>
       <span if.bind="config.profile.picture" class="picture" style="background-image: url('${config.profile.picture}')"></span>
-      <div>
+      <div class="d-none d-sm-block">
         <span class="name" if.bind="config.profile.name">${config.profile.name}</span>
         <span class="description" if.bind="config.profile.description">${config.profile.description}</span>
       </div>

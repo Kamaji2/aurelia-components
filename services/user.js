@@ -37,7 +37,7 @@ export class UserService {
         .get(endpoint, data)
         .then((xhr) => {
           this.data = xhr.response;
-          resolve(this);
+          return resolve(this);
         })
         .catch(() => {
           reject('user fetch failed');
