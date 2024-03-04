@@ -4,8 +4,8 @@
     <slot></slot>
     <div class="col d-flex align-items-end justify-content-end buttons">
       <slot name="buttons">
-        <ka-button click.delegate="buttonReset()" class="inverted" icon="fa-solid fa-xmark" ka-tooltip="value.bind: 'Reset' | t; placement: left;"></ka-button>
-        <ka-button click.delegate="buttonSearch()" class="inverted" icon="fa-solid fa-magnifying-glass">${'Search'|t}</ka-button>
+        <ka-button data-testid="kaButtonReset" click.delegate="buttonReset()" class="inverted" icon="fa-solid fa-xmark" ka-tooltip="value.bind: 'Reset' | t; placement: left;"></ka-button>
+        <ka-button data-testid="kaButtonSearch" click.delegate="buttonSearch()" class="inverted" icon="fa-solid fa-magnifying-glass">${'Search'|t}</ka-button>
       </slot>
     </div>
   </div>
