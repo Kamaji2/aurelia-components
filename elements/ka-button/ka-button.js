@@ -1,6 +1,6 @@
 import { inject, customElement, bindable } from 'aurelia-framework';
 
-require('./ka-button.sass');
+require('./ka-button.scss');
 
 @customElement('ka-button')
 @inject(Element)

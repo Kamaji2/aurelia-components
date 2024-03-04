@@ -1,0 +1,204 @@
+ka-button {
+  user-select: none;
+  
+  display: inline-flex;
+  position: relative;
+  align-items: flex-start;
+
+  outline: none;
+  cursor: pointer;
+
+  margin: 1rem 0;
+  border: 0;
+  border-radius: var(--ka-button-border-radius, 3px);
+  padding: 0;
+  height: var(--ka-button-height, 3rem);
+  overflow: hidden;
+
+  font-size: var(--ka-button-font-size, 1.4rem);
+  font-weight: var(--ka-button-font-weight, 700);
+  line-height: var(--ka-button-height, 3rem);
+  text-align: center;
+  text-decoration: none;
+  color: transparent;
+
+  background-color: transparent;
+  transition: all 0.5s;
+
+  & + ka-button { margin-left: 1rem; }
+
+  /* PARTS */
+
+  &:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    background-color: transparent;
+    transition: background-color 0.5s;
+  }
+  .ka-button-icon {
+    position: relative;
+    width: var(--ka-button-height, 3rem);
+    line-height: inherit;
+  }
+  .ka-button-icon + .ka-button-label {
+    border-left: 1px solid transparent;
+  }
+  .ka-button-label {
+    position: relative;
+    padding: 0 1rem;
+    transition: opacity 0.5s;
+    &:empty {
+      display: none;
+    }
+  }
+  .busy {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: var(--ka-button-border-radius, 3px);
+    background-color: transparent;
+    &:before, &:after {
+      content: " ";
+      position: absolute;
+      border-radius: 50%;
+      width: 1rem;
+      height: 1rem;
+      top: 50%;
+      background-color: transparent;
+      transform: translate(-50%, -50%);
+      will-change: left, transform;
+    }
+    &:after {
+      animation: left-to-right 0.5s linear infinite
+    }
+    &:before {
+      animation: right-to-left 0.5s linear infinite
+    }
+  }
+
+  /* STATES */
+
+  &.flat {
+    box-shadow: none !important;
+  }
+  &.disabled {
+    &.transparent { opacity: 0.3; }
+    &:not(.transparent) {
+      &.inverted {
+        color: #c0c0c0;
+        box-shadow: inset 0 0 0px 1px #c0c0c0, 0 0 5px rgba(#000000, 0.2), 0 5px 5px -5px rgba(#000000, 0.2)
+      }
+      &:not(.inverted) {
+        color: #ffffff;
+        &:before {
+          background-color: rgba(#c0c0c0, 0.7);
+        }
+      }
+    }
+  }
+  &.active {
+    box-shadow: none;
+    transform: translateY(var(--ka-button-border-radius, 3px));
+  }
+  &.busy {
+    .ka-button-label {
+      opacity: 0;
+    }
+  }
+
+  /* COLOR VARIANTS */
+  @mixin ka-button-colors($key: null) {
+    $selector: '&';
+    @if ($key) { $selector: '&.' + $key; } @else { $key: 'primary'; }
+    $color: var(--ka-#{$key}, var(--#{$key}-color));
+    $color-rgb: var(--ka-#{$key}-rgb, var(--#{$key}-color-rgb));
+
+    #{$selector} {
+      // TRANSPARENT
+      &:not(.inverted).transparent {
+        color: $color;
+        background-color: transparent;
+        box-shadow: 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2);
+        .ka-button-icon + .ka-button-label {
+          padding-left: 0;
+          background-color: transparent;
+        }
+        &:not(.disabled):hover:before { background-color: rgba(255, 255, 255, 0.3); }
+        .busy:before, .busy:after { background-color: #ffffff; }
+      }
+      // SOLID
+      &:not(.inverted):not(.transparent) {
+        color: #ffffff;
+        background-color: $color;
+        box-shadow: 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2);
+        .ka-button-icon + .ka-button-label {
+          border-color: rgba(255, 255, 255, 0.3);
+          background-color: rgba(#ffffff, 0.1);
+        }
+        &:not(.disabled):hover:before { background-color: rgba(255, 255, 255, 0.2); }
+        .busy:before, .busy:after { background-color: #ffffff; }
+      }
+      // INVERTED
+      &:not(.transparent).inverted {
+        color: $color;
+        background-color: #ffffff;
+        box-shadow: inset 0 0 0px 1px rgba($color-rgb, 0.7), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2);
+        .ka-button-icon + .ka-button-label {
+          border-color: rgba($color-rgb, 0.3);
+          background-color: rgba($color-rgb, 0.05);
+        }
+        &:not(.disabled):hover:before { background-color: rgba($color-rgb, 0.1); }
+        .busy:before, .busy:after { background-color: $color; }
+      }
+    }
+  }
+  @include ka-button-colors();
+  @include ka-button-colors('primary');
+  @include ka-button-colors('secondary');
+  @include ka-button-colors('accent');
+  @include ka-button-colors('warning');
+  @include ka-button-colors('success');
+  @include ka-button-colors('error');
+}
+
+@keyframes left-to-right {
+  0% {
+    opacity: 0.5;
+    left: calc(50% - 1rem);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+  100% {
+    opacity: 0.5;
+    left: calc(50% + 1rem);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes right-to-left {
+  0% {
+    opacity: 0.5;
+    left: calc(50% + 1rem);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 0.5;
+    left: calc(50% - 1rem);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
