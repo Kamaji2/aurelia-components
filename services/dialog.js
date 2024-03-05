@@ -48,17 +48,17 @@ import { DialogController } from 'aurelia-dialog';
       <div else ref="placeholder"></div>
 
       <ux-dialog-footer if.bind="type==='alert'">
-        <ka-button click.delegate="controller.ok(model || null)">\${'OK'|t}</ka-button>
+        <ka-button data-testid="kaButtonOk" click.delegate="controller.ok(model || null)">\${'OK'|t}</ka-button>
       </ux-dialog-footer>
 
       <ux-dialog-footer if.bind="type==='confirm'">
-        <ka-button class="inverted" click.delegate="controller.cancel(model || null)">\${'Cancel'|t}</ka-button>
-        <ka-button click.delegate="controller.ok(model || null)">\${'Confirm'|t}</ka-button>
+        <ka-button class="inverted" data-testid="kaButtonCancel" click.delegate="controller.cancel(model || null)">\${'Cancel'|t}</ka-button>
+        <ka-button data-testid="kaButtonConfirm" click.delegate="controller.ok(model || null)">\${'Confirm'|t}</ka-button>
       </ux-dialog-footer>
 
       <ux-dialog-footer if.bind="type==='continue'">
-        <ka-button class="inverted" click.delegate="controller.cancel(model || null)">\${'Cancel'|t}</ka-button>
-        <ka-button click.delegate="controller.ok(model || null)">\${'Continue'|t}</ka-button>
+        <ka-button class="inverted" data-testid="kaButtonCancel" click.delegate="controller.cancel(model || null)">\${'Cancel'|t}</ka-button>
+        <ka-button data-testid="kaButtonOk" click.delegate="controller.ok(model || null)">\${'Continue'|t}</ka-button>
       </ux-dialog-footer>
 
       <div id="ka-dialog-loader" ref="loader"><div></div></div>
