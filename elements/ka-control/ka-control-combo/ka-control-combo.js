@@ -397,10 +397,12 @@ export class KaControlCombo {
     if (this.searchRequest && this.searchRequest.cancel) {
       this.searchRequest.cancel();
     }
+    this.searchPending = true;
     this.searchRequest = this.api.get(endpoint);
     this.searchRequest.then((x) => {
       this.combostack = x.response;
       this._combostack.forEach((c) => (c.selected = this._value && this._value.includes(c.value)));
+      this.searchPending = false;
       // Dispatch resize event on backdrop in order to eventually reposition the drawer
       setTimeout(() => {
         this.backdrop.backdropElement.dispatchEvent(new Event('resize'));
@@ -408,6 +410,7 @@ export class KaControlCombo {
     }).catch((error) => {
       if (!error.statusCode === 0) {
         console.error(error);
+        this.searchPending = false;
       }
     });
     return true;
