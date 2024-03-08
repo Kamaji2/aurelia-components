@@ -5,7 +5,10 @@
     </ul>
   </div>
   <div ref="drawer" class="ka-control-combo-drawer ${schema.datamultiple === true ? 'multiple' : ''}">
-    <input type="text" if.bind="schema.datapreload !== true || preloadedCombostack.length > 8" class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()" keydown.delegate="searchKeyDown($event)" />
+    <template if.bind="schema.datapreload !== true || preloadedCombostack.length > 8">
+      <input type="text"  class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()" keydown.delegate="searchKeyDown($event)" />
+      <i if.bind="searchPending" class="search-loader fa-light fa-spinner-third fa-spin"></i>
+    </template>
     <ul>
       <li repeat.for="item of _combostack" click.delegate="select(item)" class="${item.selected?'selected':''} ${item.model.optgroup?'optgroup':''}" innerhtml.bind="item.text | kaControlComboHighlight:term"></li>
     </ul>
