@@ -131,7 +131,7 @@ ka-button {
           background-color: transparent;
         }
         &:not(.disabled):hover:before { background-color: rgba(255, 255, 255, 0.3); }
-        .busy:before, .busy:after { background-color: #ffffff; }
+        .busy:before, .busy:after { background-color: $color; }
       }
       // SOLID
       &:not(.inverted):not(.transparent) {
