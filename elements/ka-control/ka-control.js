@@ -113,6 +113,7 @@ export class KaControl {
   detached() {
     this.unbindFromResource();
     this.disposeObservers();
+    this.schema = null;
   }
 
   schemaChanged(schema) {

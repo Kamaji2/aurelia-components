@@ -51,6 +51,8 @@ ka-button {
   .ka-button-label {
     position: relative;
     padding: 0 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     transition: opacity 0.5s;
     &:empty {
       display: none;
