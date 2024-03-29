@@ -492,7 +492,7 @@ export class KaControlCombo {
 
 export class kaControlComboHighlightValueConverter {
   toView(text, term) {
-    if (!term) return text;
+    if (!term || !text) return text;
     let index = text.toLowerCase().indexOf(term.toLowerCase());
     if (index >= 0) text = text.substring(0, index) + '<strong>' + text.substring(index, index + term.length) + '</strong>' + text.substring(index + term.length);
     return text;
@@ -500,6 +500,7 @@ export class kaControlComboHighlightValueConverter {
 }
 export class kaControlComboTextifyValueConverter {
   toView(text) {
+    if (!text) return text;
     return text.replace(/(<([^>]+)>)/gi, "");
   }
 }

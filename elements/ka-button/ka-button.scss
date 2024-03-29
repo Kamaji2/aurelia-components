@@ -38,8 +38,10 @@ ka-button {
     left: 0;
     z-index: 0;
     background-color: transparent;
-    transition: background-color 0.5s;
+    transition: background-color 0.6s;
   }
+  &:hover:before { transition: all 0.2s; }
+
   .ka-button-icon {
     position: relative;
     width: var(--ka-button-height, 3rem);
@@ -91,21 +93,6 @@ ka-button {
   &.flat {
     box-shadow: none !important;
   }
-  &.disabled {
-    &.transparent { opacity: 0.3; }
-    &:not(.transparent) {
-      &.inverted {
-        color: #c0c0c0;
-        box-shadow: inset 0 0 0px 1px #c0c0c0, 0 0 5px rgba(#000000, 0.2), 0 5px 5px -5px rgba(#000000, 0.2)
-      }
-      &:not(.inverted) {
-        color: #ffffff;
-        &:before {
-          background-color: rgba(#c0c0c0, 0.7);
-        }
-      }
-    }
-  }
   &.active {
     box-shadow: none;
     transform: translateY(var(--ka-button-border-radius, 3px));
@@ -133,7 +120,10 @@ ka-button {
           padding-left: 0;
           background-color: transparent;
         }
-        &:not(.disabled):hover:before { background-color: rgba(255, 255, 255, 0.3); }
+        &.disabled {
+          color: rgba($color-rgb, 0.3);
+        }
+        &:not(.disabled):hover:before { background-color: rgba(255, 255, 255, 0.5); }
         .busy:before, .busy:after { background-color: $color; }
       }
       // SOLID
@@ -144,6 +134,10 @@ ka-button {
         .ka-button-icon + .ka-button-label {
           border-color: rgba(255, 255, 255, 0.3);
           background-color: rgba(#ffffff, 0.1);
+        }
+        &.disabled {
+          color: rgba(#ffffff, 0.5);
+          &:before { background-color: rgba(#aaaaaa, 0.7); }
         }
         &:not(.disabled):hover:before { background-color: rgba(255, 255, 255, 0.2); }
         .busy:before, .busy:after { background-color: #ffffff; }
@@ -159,6 +153,12 @@ ka-button {
         .ka-button-icon + .ka-button-label {
           border-color: rgba($color-rgb, 0.3);
           background-color: rgba($color-rgb, 0.05);
+        }
+        &.disabled {
+          color: rgba($color-rgb, 0.3);
+          background-color: #f6f6f6;
+          box-shadow: inset 0 0 0px 1px rgba($color-rgb, 0.3), 0 0 5px rgba(#000, 0.2), 0 5px 5px -5px rgba(#000, 0.2);
+
         }
         &:not(.disabled):hover:before { background-color: rgba($color-rgb, 0.1); }
         .busy:before, .busy:after { background-color: $color; }
