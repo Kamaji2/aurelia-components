@@ -168,9 +168,11 @@ ka-button {
   @include ka-button-colors();
   @include ka-button-colors('primary');
   @include ka-button-colors('secondary');
-  @include ka-button-colors('accent');
+  @include ka-button-colors('info');
   @include ka-button-colors('warning');
+  @include ka-button-colors('danger');
   @include ka-button-colors('success');
+  @include ka-button-colors('pending');
   @include ka-button-colors('error');
 }
 

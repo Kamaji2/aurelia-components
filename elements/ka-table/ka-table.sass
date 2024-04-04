@@ -31,7 +31,7 @@ ka-table
         &:nth-child(even)
           background-color: #ffffff66
         &:hover, &:nth-child(even):hover
-          background-color: rgba(var(--accent-color-rgb), 0.05)
+          background-color: rgba(var(--secondary-color-rgb), 0.05)
       td
         padding: 1rem
         line-height: 1.4
@@ -55,6 +55,7 @@ ka-table
           color: inherit
           background: rgba(var(--text-color-rgb), 0.1)
           box-shadow: 0 0 0 1px rgba(var(--text-color-rgb), 0.3)
+          
           &.primary
             background: rgba(var(--primary-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--primary-color-rgb), 0.4)
@@ -65,31 +66,36 @@ ka-table
             box-shadow: 0 0 0 1px rgba(var(--secondary-color-rgb), 0.4)
             i
               color: var(--secondary-color)
-          &.accent
-            background: rgba(var(--accent-color-rgb), 0.2)
-            box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.4)
-            i
-              color: var(--accent-color)
-          &.pending
-            background: rgba(var(--pending-color-rgb), 0.2)
-            box-shadow: 0 0 0 1px rgba(var(--pending-color-rgb), 0.4)
-            i
-              color: var(--pending-color)
           &.success
             background: rgba(var(--success-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--success-color-rgb), 0.4)
             i
               color: var(--success-color)
+          &.pending
+            background: rgba(var(--pending-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--pending-color-rgb), 0.4)
+            i
+              color: var(--pending-color)
           &.error
             background: rgba(var(--error-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--error-color-rgb), 0.4)
             i
               color: var(--error-color)
+          &.info
+            background: rgba(var(--info-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--info-color-rgb), 0.4)
+            i
+              color: var(--info-color)
           &.warning
             background: rgba(var(--warning-color-rgb), 0.2)
             box-shadow: 0 0 0 1px rgba(var(--warning-color-rgb), 0.4)
             i
               color: var(--warning-color)
+          &.danger
+            background: rgba(var(--danger-color-rgb), 0.2)
+            box-shadow: 0 0 0 1px rgba(var(--danger-color-rgb), 0.4)
+            i
+              color: var(--danger-color)
         .badge
           display: inline-block
           border-radius: 2px
@@ -110,21 +116,24 @@ ka-table
           &.secondary
             background: rgba(var(--secondary-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--secondary-color-rgb), 1)
-          &.accent
-            background: rgba(var(--accent-color-rgb), 1)
-            box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 1)
-          &.pending
-            background: rgba(var(--pending-color-rgb), 1)
-            box-shadow: 0 0 0 2px rgba(var(--pending-color-rgb), 1)
           &.success
             background: rgba(var(--success-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--success-color-rgb), 1)
+          &.pending
+            background: rgba(var(--pending-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--pending-color-rgb), 1)
           &.error
             background: rgba(var(--error-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--error-color-rgb), 1)
+          &.info
+            background: rgba(var(--info-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--info-color-rgb), 1)
           &.warning
             background: rgba(var(--warning-color-rgb), 1)
             box-shadow: 0 0 0 2px rgba(var(--warning-color-rgb), 1)
+          &.danger
+            background: rgba(var(--danger-color-rgb), 1)
+            box-shadow: 0 0 0 2px rgba(var(--danger-color-rgb), 1)
 
   &.isLoading
     table tbody td:not(.ka-table-row-tools)
