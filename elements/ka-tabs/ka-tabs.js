@@ -9,8 +9,13 @@ export class KaTabs {
   constructor(element) {
     this.element = element;
     this.element.controller = this;
+    // Slot content mutation observer
+    const observer = new MutationObserver(() => { this.init(); });
+    observer.observe(this.element, { childList: true }); 
   }
-  attached() {
+  
+  init() {
+    this.tabs = [];
     const tabs = this.element.querySelectorAll(':scope > ka-tab');
     tabs.forEach((tab, index) => {
       this.tabs.push({
@@ -21,12 +26,14 @@ export class KaTabs {
         active: false
       });
     });
+    if (!this.tabs.length) return;
     this._initialize = new Promise((resolve) => {
       this.syncSelect(location.hash.replace('#', ''), false, true)
         .then(() => {
           resolve();
         })
         .catch(() => {
+          console.warn('suka', JSON.stringify(this.tabs.length));
           this.syncSelect(this.tabs[0].id, false, false).then(() => {
             resolve();
           });
