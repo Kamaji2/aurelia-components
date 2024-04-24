@@ -1,6 +1,7 @@
 <template>
   <nav>
-    <a repeat.for="tab of tabs" class="${tab.active?'active':''}" click.delegate="select(tab.id)"><i if.bind="tab.icon" class="${tab.icon}"></i>${tab.label}</a>
+    <slot name="nav"></slot>
+    <a repeat.for="tab of tabs" class="${tab.active?'active':''}" click.delegate="select(tab.id)"><i if.bind="tab.icon" class="${tab.icon}"></i><span>${tab.label}</span></a>
   </nav>
   <slot></slot>
 </template>
