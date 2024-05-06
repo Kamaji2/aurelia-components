@@ -114,10 +114,10 @@ ka-control-combo
       text-overflow: ellipsis
       &.optgroup
         color: rgba(var(--text-color-rgb), 0.6)
-      &:not(.optgroup)
+      &:not(.optgroup):not(.readonly)
         &:hover
           background-color: rgba(var(--primary-color-rgb), 0.1)
-      &.selected
+      &:not(.readonly).selected
         color: var(--primary-color)
   &.multiple
     ul
@@ -136,3 +136,7 @@ ka-control-combo
         &.selected::before
           background-color: var(--primary-color)
           box-shadow: inset 0 0 0 1px var(--primary-color), inset 0 0 0 3px #fff
+        &.readonly.selected::before
+          background-color: rgba(var(--text-color-rgb), 0.7)
+          box-shadow: inset 0 0 0 1px var(--text-color), inset 0 0 0 3px #fff
+

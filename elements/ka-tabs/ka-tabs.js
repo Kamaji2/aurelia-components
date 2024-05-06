@@ -33,7 +33,6 @@ export class KaTabs {
           resolve();
         })
         .catch(() => {
-          console.warn('suka', JSON.stringify(this.tabs.length));
           this.syncSelect(this.tabs[0].id, false, false).then(() => {
             resolve();
           });
