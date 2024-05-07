@@ -26,7 +26,7 @@ export class KaControlsList {
         this.add();
       });
     } else {
-      this.value = JSON.stringify(this.itemValues);
+      this.value = this.formatItemValues(this.itemValues);
     }
   }
 
@@ -74,7 +74,7 @@ export class KaControlsList {
     if (!this.itemValues.map((v) => Object.values(v).join('')).join('').length) {
       this.value = null;
     } else {
-      this.value = JSON.stringify(this.itemValues);
+      this.value = this.formatItemValues(this.itemValues);
     }
   }
 
@@ -85,7 +85,7 @@ export class KaControlsList {
       return;
     }
     // Validate value
-    if (!value || value === JSON.stringify(this.itemValues)) {
+    if (!value || value === this.formatItemValues(this.itemValues)) {
       return;
     }
     let _value = value;
@@ -111,6 +111,10 @@ export class KaControlsList {
         data: v
       };
     });
+  }
+
+  formatItemValues(itemValues) {
+    return this.schema.params?.stringify === false ? itemValues : JSON.stringify(itemValues);
   }
 
   add() {
