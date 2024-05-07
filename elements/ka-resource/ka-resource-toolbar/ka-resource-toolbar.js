@@ -1,6 +1,6 @@
 import { inject, customElement, bindable } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { ToastService } from 'aurelia-components';
+import { helpers, ToastService } from 'aurelia-components';
 
 @customElement('ka-resource-toolbar')
 @inject(Element, I18N, ToastService)
@@ -52,20 +52,9 @@ export class KaResourceToolbar {
       let message = xhr.requestMessage.method === 'POST' ? this.i18n.tr('Record successfully created') : this.i18n.tr('Record successfully edited');
       this.toast.show(`${message}!`, 'success');
       this.close({ xhr });
-    }, (error) => {
-      if (error.info?.context === 'sanitization') {
-        this.toast.show(`${this.i18n.tr('Warning')}: ${this.i18n.tr(error.info?.message || error.detail?.message)}!`, 'warning');
-      } else if (error.info?.context === 'validation') {
-        this.toast.show([`${this.i18n.tr('Warning')}: ${this.i18n.tr('Data validation error')}!`, this.i18n.tr(error.info?.message || error.detail?.message)], 'warning');
-      } else if (error.info?.context === 'xhr') {
-        this.toast.show([`${this.i18n.tr('Server error')}!`, this.i18n.tr(error.info?.message || error.detail?.message)], 'error');
-      } else {
-        this.toast.show([`${this.i18n.tr('Error')}!`, this.i18n.tr(error.info?.message || error.detail?.message)], 'error');
-      }
-      console.error(error.name, error.info);
     }).catch((error) => {
-      this.toast.show(`${this.i18n.tr('Error')}!`, 'error');
-      console.error(error);
+      helpers.toastResourceSaveError(this.toast, error, this.i18n);
+      console.error(error, error.info);
     }).finally(() => {
       this.pendingSave = false;
     });

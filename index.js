@@ -213,5 +213,22 @@ export const helpers = {
       if (item.nav) routes = routes.concat(helpers.routesFromNav(item.nav, item));
     }
     return routes;
+  },
+  toastResourceSaveError(toast, error, i18n = { tr: (value) => { return value }}) {
+    if (!toast?.show) {
+      console.error('Helper\'s toastResourceSaveError function requires an instance of toast service to be passed!');
+      return;
+    }
+    const context = error.context || error.info?.context;
+    const message = error.message || error.info?.message || error.detail?.message;
+    if (context === 'sanitization') {
+      return toast.show(`${i18n.tr('Warning')}: ${i18n.tr(message)}!`, 'warning');
+    } else if (context === 'validation') {
+      return toast.show([`${i18n.tr('Warning')}: ${i18n.tr('Data validation error')}!`, i18n.tr(message)], 'warning');
+    } else if (context === 'xhr') {
+      return toast.show([`${i18n.tr('Server error')}!`, i18n.tr(message)], 'error');
+    } else {
+      return toast.show([`${i18n.tr('Error')}!`, i18n.tr(message)], 'error');
+    }
   }
 };
