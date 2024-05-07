@@ -214,6 +214,20 @@ export const helpers = {
     }
     return routes;
   },
+  getXhrJsonResponse(xhr) { // Returns a json object or undefined
+    if (xhr instanceof Object && (xhr.constructor === Object || xhr.constructor.name === 'HttpResponseMessage')) {
+      if (!xhr.response) return;
+      if (xhr.response instanceof Object) return xhr.response;
+      if (typeof xhr.response === 'string' && xhr.response.trim().startsWith('{')) {
+        try {
+          return JSON.parse(xhr.response);
+        } catch (error) {
+          return;
+        }
+      }
+      return;
+    }
+  },
   toastResourceSaveError(toast, error, i18n = { tr: (value) => { return value }}) {
     if (!toast?.show) {
       console.error('Helper\'s toastResourceSaveError function requires an instance of toast service to be passed!');

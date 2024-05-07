@@ -309,17 +309,8 @@ export class ResourceInterface {
     });
   }
   parseError(xhr) {
-    let response;
-    if (!xhr.response) return;
-    if (typeof xhr.response === 'string' || xhr.response.startsWith('{')) {
-      try {
-        response = JSON.parse(xhr.response);
-      } catch (error) {
-        return;
-      }
-    } else {
-      response = xhr.response;
-    }
+    let response = helpers.getXhrJsonResponse(xhr);
+    if (!response) return;
     // Attempt to handle Kamaji API Error
     if (response.errors && response.errors[0] && response.errors[0].msg) {
       // Handle server 4xx error codes
