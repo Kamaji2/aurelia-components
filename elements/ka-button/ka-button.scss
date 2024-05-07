@@ -46,6 +46,7 @@ ka-button {
     position: relative;
     width: var(--ka-button-height, 3rem);
     line-height: inherit;
+    transition: opacity 0.5s;
   }
   .ka-button-icon + .ka-button-label {
     border-left: 1px solid transparent;
@@ -98,6 +99,9 @@ ka-button {
     transform: translateY(var(--ka-button-border-radius, 3px));
   }
   &.busy {
+    .ka-button-icon {
+      opacity: 0;
+    }
     .ka-button-label {
       opacity: 0;
     }
