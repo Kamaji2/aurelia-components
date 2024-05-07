@@ -136,6 +136,33 @@ export const helpers = {
     }
     return object;
   },
+  nullifyEmptyStringAttributes: (object) => {
+    let data = {};
+    for (let [k, v] of Object.entries(object)) {
+      if (v === '') v = null;
+      if (helpers.isObject(v)) {
+        let value = helpers.nullifyEmptyStringAttributes(v);
+        if (value && Object.entries(value).length) data[k] = value;
+      } else {
+        data[k] = v;
+      }
+    }
+    return Object.entries(data).length ? data : null;
+  },
+  removeNullAttributes: (object) => {
+    let data = {};
+    for (let [k, v] of Object.entries(object)) {
+      if (typeof v === 'undefined') continue;
+      if (v === null) continue;
+      if (helpers.isObject(v)) {
+        let value = helpers.removeNullAttributes(v);
+        if (value && Object.entries(value).length) data[k] = value;
+      } else {
+        data[k] = v;
+      }
+    }
+    return Object.entries(data).length ? data : null;
+  },
   deepMerge: (target, ...sources) => {
     target = JSON.parse(JSON.stringify(target));
     if (!sources.length) return target;
