@@ -324,8 +324,7 @@ export class ResourceInterface {
     if (response.errors && response.errors[0] && response.errors[0].msg) {
       // Handle server 4xx error codes
       if (response.errors[0].num && String(response.errors[0].num).match(/^4[0-9]{2}$/)) {
-        let label,
-          field = Object.keys(response.errors[0].arg)[0] || null;
+        let label, field = Object.keys(response.errors[0].arg)[0] || null;
         if (this.controls[field]) {
           label = this.controls[field].schema?.label || this.controls[field].schema?.field || this.controls[field].name || null;
           this.controls[field].setError(response.errors[0].msg);

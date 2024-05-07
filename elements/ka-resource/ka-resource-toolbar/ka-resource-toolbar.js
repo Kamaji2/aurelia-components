@@ -45,9 +45,11 @@ export class KaResourceToolbar {
   defaultCancel() {
     this.close();
   }
+
+  pendingDefaultSave = false;
   defaultSave() {
-    if (this.pendingSave) return;
-    this.pendingSave = true;
+    if (this.pendingDefaultSave) return;
+    this.pendingDefaultSave = true;
     this.interface.save().then((xhr) => {
       let message = xhr.requestMessage.method === 'POST' ? this.i18n.tr('Record successfully created') : this.i18n.tr('Record successfully edited');
       this.toast.show(`${message}!`, 'success');
@@ -56,7 +58,7 @@ export class KaResourceToolbar {
       helpers.toastResourceSaveError(this.toast, error, this.i18n);
       console.error(error, error.info);
     }).finally(() => {
-      this.pendingSave = false;
+      this.pendingDefaultSave = false;
     });
   }
 }
