@@ -28,7 +28,6 @@ export class KaTableProgressbar {
       this.element.classList.remove('visible');
     });
     if (this.interface.isLoading) {
-      console.log('ka-table-progressbar: this.interface.isLoading', this.interface.data);
       this.element.classList.add('visible');
     }
   }

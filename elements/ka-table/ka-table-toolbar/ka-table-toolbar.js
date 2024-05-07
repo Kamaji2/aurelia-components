@@ -62,8 +62,6 @@ export class KaTableToolbar {
       });
       dataRows.push(row);
     });
-    console.log(dataColumns);
-    console.log(dataRows);
     
     // Build CSV
     let csv = [dataColumns.join(';')];

@@ -278,7 +278,6 @@ export class TableSearchInterface {
           };
           let filters = [];
           populateFilters(data || this.data);
-          console.log(filters);
           if (filters.length) params.filters = params.filters ? `(${params.filters})&(${filters.join('&')})` : filters.join('&');
           if (this.storage.getItem(`${this.uuid}-data`) !== JSON.stringify(this.data)) {
             this.storage.setItem(`${this.uuid}-data`, JSON.stringify(this.data));

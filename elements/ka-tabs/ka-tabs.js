@@ -71,7 +71,6 @@ export class KaTabs {
         let parentTab = this.element.closest('ka-tab');
         let parentTabs = this.element.closest('ka-tabs:not(:scope)');
         if (parentTab && parentTabs) {
-          console.log('Select parent tab', parentTab.id);
           parentTabs.controller.select(parentTab.id, false, true);
         }
       }
