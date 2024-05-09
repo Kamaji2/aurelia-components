@@ -20,7 +20,8 @@
   "ignorePatterns": ["*ckeditor*"],
   "globals": {
     "require": "readonly",
-    "ENVIRONMENT": "readonly"
+    "ENVIRONMENT": "readonly",
+    "PLATFORM": "readonly"
   },
   "rules": {
     "indent": ["error", 2],
@@ -40,6 +41,7 @@
     "brace-style": ["error", "1tbs"],
     "nonblock-statement-body-position": ["error", "beside"],
     "no-tabs": ["error"],
-    "newline-per-chained-call": 0
+    "newline-per-chained-call": 0,
+    "no-unused-vars": ["error"]
   }
 }
