@@ -149,19 +149,22 @@ export const helpers = {
     }
     return Object.entries(data).length ? data : null;
   },
-  removeNullAttributes: (object) => {
-    let data = {};
-    for (let [k, v] of Object.entries(object)) {
-      if (typeof v === 'undefined') continue;
-      if (v === null) continue;
-      if (helpers.isObject(v)) {
-        let value = helpers.removeNullAttributes(v);
-        if (value && Object.entries(value).length) data[k] = value;
-      } else {
-        data[k] = v;
-      }
+  removeNullAttributes: (value) => {
+    if (Array.isArray(value)) {
+      value = value.map((item) => helpers.removeNullAttributes(item)).filter((item) => item !== null);
+      return value.length ? value : null;
     }
-    return Object.entries(data).length ? data : null;
+    if (helpers.isObject(value)) {
+      value = structuredClone(value);
+      for (let [key, val] of Object.entries(value)) {
+        val = helpers.removeNullAttributes(val);
+        if (val === null) delete value[key];
+        else value[key] = val;
+      }
+      return Object.entries(value).length ? value : null;
+    }
+    if (value === undefined) return null;
+    return value;
   },
   deepMerge: (target, ...sources) => {
     target = JSON.parse(JSON.stringify(target));
