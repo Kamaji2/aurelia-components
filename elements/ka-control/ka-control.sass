@@ -150,10 +150,20 @@ ka-control
         inset: 0 0 0 0
         background-color: rgba(var(--error-color-rgb), 0.1)
         z-index: -1
-      span:after
-        content: " - "
-      span:last-of-type:after
+      span + span:before
+        content: "-"
+        margin: 0 5px
+      
+      .ka-control-error-scroller
+        display: flex
+        width: fit-content
+        span.clone
           display: none
+      &.scroll .ka-control-error-scroller
+        animation: ka-control-error-scroller infinite 10s linear
+        span.clone
+          display: inline
+
 
     .ka-control-description
       display: block
@@ -211,7 +221,7 @@ ka-control.error
   > div:first-of-type
     background-color: #ffffff
     box-shadow: inset 0 0 0 1px rgba(var(--error-color-rgb), 0.3), 0 0 10px 0 rgba(var(--error-color-rgb), 0.3)
-  > .ka-control-overlay .ka-control-error
+  &:not(.hadFocus) > .ka-control-overlay .ka-control-error
     animation: 4s ka-control-slidedownup
 
 ka-control.readonly
@@ -285,3 +295,9 @@ ka-control.no-label
 
   40%, 60% 
     transform: translateX(4px)
+
+@keyframes ka-control-error-scroller
+  0%
+    transform: translateX(0%)
+  100%
+    transform: translateX(-50%)

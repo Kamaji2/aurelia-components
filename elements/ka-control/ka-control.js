@@ -160,14 +160,17 @@ export class KaControl {
   }
 
   validate() {
+    this.element.classList.remove('error');
+    this.element.classList.remove('hadFocus');
     let validator = this.validator.validate();
     validator.then((result) => {
-      if (result.valid) {
-        this.element.classList.remove('error');
-      } else {
-        this.element.classList.add('error');
+      if (!result.valid) {
+        setTimeout(() => {
+          this.element.classList.add('error');
+        }, 1);
       }
     });
+    this.scrollErrorOverflow();
     return validator;
   }
   setError(message) {
@@ -182,8 +185,22 @@ export class KaControl {
       this.validator.errors = [];
     }
   }
+  scrollErrorOverflow() {
+    setTimeout(()=>{
+      const wrapper = this.element.querySelector('.ka-control-error');
+      const scroller = this.element.querySelector('.ka-control-error-scroller');
+      if (!wrapper || !scroller) return;
+      if (scroller.offsetWidth > wrapper.offsetWidth) {
+        wrapper.classList.add('scroll');
+      } else {
+        wrapper.classList.remove('scroll');
+      }
+    }, 100);
+  }
   focus() {
+    this.element.classList.add('hadFocus');
     this.element.classList.add('focus');
+    this.scrollErrorOverflow();
   }
   blur() {
     this.element.classList.remove('focus');
