@@ -101,6 +101,8 @@ export class KaControl {
     if (this.name && (this.parentContext[this.parentResourceName] || ['ResourceInterface', 'TableSearchInterface'].includes(this.parentContext.constructor?.name))) this.bindToResource();
     // Handle control if not attached to ka-resource
     if (!this.name && this.schema) this.schemaChanged(this.schema);
+    // Handle value collection observer if prefilled with array
+    if (this.value && Array.isArray(this.value)) this.subscribeValueCollectionObserver();
     // Handle buttons configuration
     if (this.element.hasAttribute('buttons')) {
       this.buttons = this.element
@@ -138,6 +140,9 @@ export class KaControl {
     if (this.bindedToResource && this.bindedResource.data && this.checkNested(this.bindedResource.data, this.name.split('.'))) {
       eval(`this.bindedResource.data.${this.name} = value`);
     }
+    if (Array.isArray(value)) {
+      this.subscribeValueCollectionObserver();
+    }
     setTimeout(() => {
       this.element.dispatchEvent(new Event('change', { bubbles: true }));
     }, 100);
@@ -147,7 +152,12 @@ export class KaControl {
     if (value === true) this.element.classList.add('readonly');
     else this.element.classList.remove('readonly');
   }
-
+  subscribeValueCollectionObserver() {
+    if (this.valueCollectionObserver?.dispose) this.valueCollectionObserver?.dispose();
+    this.valueCollectionObserver = this.binding.collectionObserver(this.value).subscribe((splice) => {
+      if (splice[0]?.index > 0) this.valueChanged(this.value);
+    });
+  }
   subscribeObservers() {
     if (this.observers.length) return;
     // Schema properties observing
@@ -157,6 +167,7 @@ export class KaControl {
   }
   disposeObservers() {
     for (let observer of this.observers) observer.dispose();
+    if (this.valueCollectionObserver?.dispose) this.valueCollectionObserver?.dispose();
   }
 
   validate() {
