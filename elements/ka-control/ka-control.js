@@ -153,7 +153,7 @@ export class KaControl {
     else this.element.classList.remove('readonly');
   }
   subscribeValueCollectionObserver() {
-    if (this.valueCollectionObserver?.dispose) this.valueCollectionObserver?.dispose();
+    if (this.valueCollectionObserver?.dispose) this.valueCollectionObserver.dispose();
     this.valueCollectionObserver = this.binding.collectionObserver(this.value).subscribe((splice) => {
       if (splice[0]?.index > 0) this.valueChanged(this.value);
     });
@@ -167,7 +167,7 @@ export class KaControl {
   }
   disposeObservers() {
     for (let observer of this.observers) observer.dispose();
-    if (this.valueCollectionObserver?.dispose) this.valueCollectionObserver?.dispose();
+    if (this.valueCollectionObserver?.dispose) this.valueCollectionObserver.dispose();
   }
 
   validate() {
