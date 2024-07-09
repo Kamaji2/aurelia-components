@@ -27,6 +27,10 @@ export class TableInterface {
     }
   };
 
+  get URL() {
+    return this.queryUrl || null;
+  }
+
   constructor(config) {
     Object.assign(this, config || {});
     this.uuid = uuidv5('tableInterface:' + location.pathname + ':' + helpers.stringify(config), '2af1d572-a35c-4248-a38e-348c560cd468');
@@ -112,6 +116,7 @@ export class TableInterface {
     this.events.dispatchEvent(this.events.load);
     let data = this.parsers.getRequest(Object.fromEntries(new URLSearchParams(query)));
     return this.client.get(`${this.endpoint}`, data).then((xhr) => {
+      this.queryUrl = xhr.requestMessage.url;
       this.data = this.parseResponse(xhr.response);
       this.total = xhr.headers && xhr.headers.headers && xhr.headers.headers['x-total-count'] ? xhr.headers.headers['x-total-count'].value : this.data.length;
       this.storage.setItem(`${this.uuid}-position`, JSON.stringify({ limit: this.limit, offset: this.offset, sort: this.sort }));

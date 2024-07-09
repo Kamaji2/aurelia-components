@@ -2,7 +2,7 @@
   "name": "aurelia-components",
   "description": "Kamaji2 Aurelia Components",
   "author": "Mamoka Srl",
-  "version": "1.6.30",
+  "version": "1.6.31",
   "main": "index.js",
   "repository": {
     "type": "git",

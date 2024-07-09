@@ -136,5 +136,8 @@ ka-table
             box-shadow: 0 0 0 2px rgba(var(--danger-color-rgb), 1)
 
   &.isLoading
+    overflow: hidden
+    pointer-events: none
     table tbody td:not(.ka-table-row-tools)
       filter: blur(2px)
+    
