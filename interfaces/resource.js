@@ -65,6 +65,8 @@ export class ResourceInterface {
     this.events.putFailure = new CustomEvent('putFailure', { detail: { interface: this } });
     this.events.patchSuccess = new CustomEvent('patchSuccess', { detail: { interface: this } });
     this.events.patchFailure = new CustomEvent('patchFailure', { detail: { interface: this } });
+    this.events.deleteSuccess = new CustomEvent('deleteSuccess', { detail: { interface: this } });
+    this.events.deleteFailure = new CustomEvent('deleteFailure', { detail: { interface: this } });
     // Initialize
     this.initialized = this.initialize();
   }
@@ -159,52 +161,44 @@ export class ResourceInterface {
     if (!data && this.data) data = this.data;
     if (!method) method = id || (!id && this.id === undefined) ? 'patch' : 'post';
     return new Promise((resolve, reject) => {
-      this.validate()
-        .then(() => {
-          this.sanitize(data, method)
-            .then((data) => {
-              this.client[method](this.endpoint + (id ? `/${id}` : ''), this.parsers[`${method}Request`](data))
-                .then((xhr) => {
-                  resolve(xhr);
-                })
-                .catch((error) => {
-                  reject(this.parseError(error) || {
-                    context: 'xhr',
-                    message: `${error.statusCode} ${error.statusText}`,
-                    detail: error
-                  });
-                });
-            })
-            .catch((error) => reject(error));
-        })
-        .catch((error) => reject(error));
-    })
-      .then((xhr) => {
-        console.debug(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Success`);
-        this.isLoading = false;
-        // Prepare and dispatch success event
-        this.events[`${method}Success`].detail.xhr = xhr;
-        this.events.dispatchEvent(this.events[`${method}Success`]);
-        return xhr;
-      })
-      .catch((error) => {
-        console.warn(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Failure`);
-        this.isLoading = false;
-        this.isFailed = true;
-        // Prepare and dispatch failure event
-        this.events[`${method}Failure`].detail.xhr = error;
-        this.events.dispatchEvent(this.events[`${method}Failure`]);
-        // Prepare and throw custom ResourceError
-        if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
-          error = {
-            context: 'js',
-            message: `${error.name}: ${error.message}`,
-            detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
-            original: error
-          };
-        }
-        throw new ResourceError(Object.assign({ method }, error));
-      });
+      this.validate().then(() => {
+        this.sanitize(data, method).then((data) => {
+          this.client[method](this.endpoint + (id ? `/${id}` : ''), this.parsers[`${method}Request`](data)).then((xhr) => {
+            resolve(xhr);
+          }).catch((error) => {
+            reject(this.parseError(error) || {
+              context: 'xhr',
+              message: `${error.statusCode} ${error.statusText}`,
+              detail: error
+            });
+          });
+        }).catch((error) => reject(error));
+      }).catch((error) => reject(error));
+    }).then((xhr) => {
+      console.debug(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Success`);
+      this.isLoading = false;
+      // Prepare and dispatch success event
+      this.events[`${method}Success`].detail.xhr = xhr;
+      this.events.dispatchEvent(this.events[`${method}Success`]);
+      return xhr;
+    }).catch((error) => {
+      console.warn(`[ResourceInterface][${this.uuid}] ${method.toUpperCase()} - Failure`);
+      this.isLoading = false;
+      this.isFailed = true;
+      // Prepare and dispatch failure event
+      this.events[`${method}Failure`].detail.xhr = error;
+      this.events.dispatchEvent(this.events[`${method}Failure`]);
+      // Prepare and throw custom ResourceError
+      if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
+        error = {
+          context: 'js',
+          message: `${error.name}: ${error.message}`,
+          detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
+          original: error
+        };
+      }
+      throw new ResourceError(Object.assign({ method }, error));
+    });
   }
   validate(controls = null) {
     let promises = [];
@@ -327,6 +321,47 @@ export class ResourceInterface {
         };
       }
     }
+  }
+  delete(id) {
+    id = id || this.id;
+    if (!id) {
+      return Promise.reject({
+        context: 'xhr',
+        message: `400 Bad Request`,
+        detail: 'Missing record id'
+      });
+    }
+    return this.client.delete(`${this.endpoint}/${id}`).then((xhr) => {
+      console.debug(`[ResourceInterface][${this.uuid}] DELETE - Success`);
+      this.isLoading = false;
+      // Prepare and dispatch success event
+      this.events[`deleteSuccess`].detail.xhr = xhr;
+      this.events.dispatchEvent(this.events[`deleteSuccess`]);
+      return xhr;
+    }).catch((error) => {
+      error = this.parseError(error) || {
+        context: 'xhr',
+        message: `${error.statusCode} ${error.statusText}`,
+        method: `delete`,
+        detail: error
+      };
+      console.warn(`[ResourceInterface][${this.uuid}] DELETE - Failure`);
+      this.isLoading = false;
+      this.isFailed = true;
+      // Prepare and dispatch failure event
+      this.events[`deleteFailure`].detail.xhr = error;
+      this.events.dispatchEvent(this.events[`deleteFailure`]);
+      // Prepare and throw custom ResourceError
+      if (error.name && ['TypeError', 'SyntaxError', 'ReferenceError'].includes(error.name)) {
+        error = {
+          context: 'js',
+          message: `${error.name}: ${error.message}`,
+          detail: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))),
+          original: error
+        };
+      }
+      throw new ResourceError(Object.assign({ method: 'delete' }, error));
+    });
   }
 }
 

@@ -1,11 +1,22 @@
 <template>
+  <header if.bind="initialized">
+    <div class="ka-layout-burger" click.trigger="toggle()" ref="burgerHeader">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+    <div if.bind="config.brand" class="ka-layout-brand">
+      <img src="${config.brand}">
+    </div>
+  </header>
+
   <aside>
-    <div if.bind="initialized" class="ka-layout-burger" click.delegate="toggle()" ref="burgerAside">
-      <i class="fa-light fa-bars"></i>
-    </div>
-    <div if.bind="initialized" class="ka-layout-brand" if.bind="config.brand">
-      <div class="ka-layout-logo" style="background-image: url(${config.brand})"></div>
-    </div>
+    <header if.bind="initialized">
+      <div class="ka-layout-burger" click.trigger="toggle()" ref="burgerAside">
+        <i class="fa-solid fa-arrow-left-from-line"></i>
+      </div>
+      <div if.bind="config.brand" class="ka-layout-brand">
+        <img src="${config.brand}">
+      </div>
+    </header>
 
     <slot name="beforeNav"></slot>
 
@@ -14,49 +25,47 @@
       <!-- Level 01 -->
       <ul>
         <template repeat.for="item of config.navigation.items">
-          <li if.bind="!item.hidden" class="${item.collapsed === true ? 'collapsed' : item.collapsed === false ? 'expanded' : ''}">
+          <li if.bind="!item.hidden" class="${item.collapsed?'collapsed':''} ${item.nav.length?'hasNav':''} ${router.currentInstruction.config.href === item.href ? 'isSelected' : ''}">
             <div>
-              <i class="expand fa-solid fa-chevron-down" click.delegate="expand(item)"></i>
-              <i class="collapse fa-solid fa-chevron-up" click.delegate="collapse(item)"></i>
-
               <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
               <span class="item-label">${item.label}</span>
+              <i if.bind="item.nav.length" class="item-toggler fa-solid fa-caret-down fa-rotate-by" click.trigger="toggleItem(item)"></i>
               <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
 
-              <a if.bind="item.href" href="${item.href}" class="item-link ${router.currentInstruction.config.href === item.href ? 'selected' : ''}"></a>
-              <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
-              <a if.bind="!item.href && item.collapsed" href="#" class="item-link expand" click.delegate="expand(item)"></a>
-              <a if.bind="!item.href && !item.collapsed" href="#" class="item-link collapse" click.delegate="collapse(item)"></a>
+              <template if.bind="!item.nav.length">
+                <a if.bind="item.href" href="${item.href}" class="item-link"></a>
+                <a if.bind="!item.href && item.callback && callbacks[item.callback]" href="#" class="item-link" click.trigger="callbacks[item.callback]()"></a>
+              </template>
+              <a else href="#" class="item-link" click.trigger="toggleItem(item)"></a>
+
             </div>
 
             <!-- Level 02 -->
-            <ul if.bind="item.nav.length && !item.collapsed">
+            <ul if.bind="item.nav.length">
               <template repeat.for="item of item.nav">
-                <li if.bind="!item.hidden" class="${item.collapsed === true ? 'collapsed' : item.collapsed === false ? 'expanded' : ''}">
+                <li if.bind="!item.hidden" class="${item.collapsed?'collapsed':''} ${item.nav.length?'hasNav':''} ${router.currentInstruction.config.href === item.href ? 'isSelected' : ''}">
                   <div>
-                    <i class="expand fa-solid fa-chevron-down" click.delegate="expand(item)"></i>
-                    <i class="collapse fa-solid fa-chevron-up" click.delegate="collapse(item)"></i>
-
                     <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
                     <span class="item-label">${item.label}</span>
+                    <i if.bind="item.nav.length" class="item-toggler fa-solid fa-caret-down fa-rotate-by" click.trigger="toggleItem(item)"></i>
                     <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
-
-                    <a if.bind="item.href" href="${item.href}" class="item-link ${router.currentInstruction.config.href === item.href ? 'selected' : ''}"></a>
-                    <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
-                    <a if.bind="!item.href && item.collapsed" href="#" class="item-link expand" click.delegate="expand(item)"></a>
-                    <a if.bind="!item.href && !item.collapsed" href="#" class="item-link collapse" click.delegate="collapse(item)"></a>
+                    <template if.bind="!item.nav.length">
+                      <a if.bind="item.href" href="${item.href}" class="item-link"></a>
+                      <a if.bind="!item.href && item.callback && callbacks[item.callback]" href="#" class="item-link" click.trigger="callbacks[item.callback]()"></a>
+                    </template>
+                    <a else href="#" class="item-link" click.trigger="toggleItem(item)"></a>
                   </div>
 
                   <!-- Level 03 -->
-                  <ul if.bind="item.nav.length && !item.collapsed">
+                  <ul if.bind="item.nav.length">
                     <template repeat.for="item of item.nav">
-                      <li if.bind="!item.hidden">
+                      <li if.bind="!item.hidden" class="${router.currentInstruction.config.href === item.href ? 'isSelected' : ''}">
                         <div>
                           <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
                           <span class="item-label">${item.label}</span>
                           <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
-                          <a if.bind="item.href" href="${item.href}" class="item-link ${router.currentInstruction.config.href === item.href ? 'selected' : ''}"></a>
-                          <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
+                          <a if.bind="item.href" href="${item.href}" class="item-link"></a>
+                          <a if.bind="!item.href && item.callback && callbacks[item.callback]" href="#" class="item-link" click.trigger="callbacks[item.callback]()"></a>
                         </div>
                       </li>
                     </template>
@@ -70,60 +79,10 @@
     </nav>
 
     <slot name="afterNav"></slot>
+
+    
   </aside>
 
-  <header if.bind="initialized">
-    <div class="ka-layout-burger" click.delegate="toggle()" ref="burgerHeader">
-      <i class="fa-light fa-bars"></i>
-    </div>
-    <h1 if.bind="router.currentInstruction.config.title">${router.currentInstruction.config.title}</h1>
-    <span else style="flex: 1"></span>
-
-    <!-- Profile -->
-    <div if.bind="config.profile" class="ka-layout-profile">
-      <i if.bind="!config.profile.picture" class="fa-light fa-face-smile"></i>
-      <span if.bind="config.profile.picture" class="picture" style="background-image: url('${config.profile.picture}')"></span>
-      <div class="d-none d-sm-block">
-        <span class="name" if.bind="config.profile.name">${config.profile.name}</span>
-        <span class="description" if.bind="config.profile.description">${config.profile.description}</span>
-      </div>
-      <a if.bind="config.profile.href" href="${config.profile.href}">Modifica profilo</a>
-    </div>
-
-    <!-- Header menù -->
-    <nav if.bind="config.toolbar.items.length" class="ka-layout-toolbar">
-      <ul>
-        <template repeat.for="item of config.toolbar.items">
-          <li if.bind="!item.hidden">
-            <div>
-              <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
-              <span class="item-label">${item.label}</span>
-              <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
-
-              <a if.bind="item.href" href="${item.href}" class="item-link"></a>
-              <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
-              <a if.bind="!item.href && !item.call" href="#" class="item-link" click.trigger="subtool($index, $event)"></a>
-            </div>
-
-            <!-- Sub menù -->
-            <ul if.bind="!item.href && !item.call && item.nav" data-subtool="${$index}">
-              <template repeat.for="item of item.nav">
-                <li if.bind="!item.hidden">
-                  <div>
-                    <i if.bind="item.icon" class="item-icon ${item.icon}"></i>
-                    <span class="item-label">${item.label}</span>
-                    <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
-
-                    <a if.bind="item.href" href="${item.href}" class="item-link"></a>
-                  </div>
-                </li>
-              </template>
-            </ul>
-          </li>
-        </template>
-      </ul>
-    </nav>
-  </header>
 
   <div id="ka-layout-loader" ref="loader">
     <div></div>

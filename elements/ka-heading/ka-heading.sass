@@ -1,48 +1,50 @@
 // Vars
-$headerHeight: 5rem
-$borderColor: #e0e0e0
+$headerHeight: var(--ac-layout-header-height, 5rem)
 
 ka-heading
   margin: 0
   display: flex
+  gap: var(--ac-layout-spacing-unit)
   align-items: center
   width: 100%
-  height: $headerHeight
-  color: var(--primary-color)
-  background-color: #ffffff
-  box-shadow: inset 0 1px 0 $borderColor, inset 0 -1px 0 $borderColor, 0 -5px 10px -5px rgba(0,0,0,0.2)
+  color: var(--ac-ui-text-color)
+  &.primary
+    color: var(--primary-color)
   &.secondary
     color: var(--secondary-color)
-  &.accent
-    color: var(--accent-color)
   &.warning
     color: var(--warning-color)
   
+  & + ka-heading
+    margin-top: calc(0px - var(--ac-layout-spacing-unit))
+  
   > i.icon
     display: block
-    width: $headerHeight
-    font-size: 2rem
+    font-size: max(min(calc(1rem + 2.0vw), 2.0rem), 1.6rem)
     line-height: $headerHeight
     text-align: center
-    box-shadow: inset -1px 0 0 $borderColor
-  > h2, > h3, > h4, > h5
-    flex-grow: 1
-    margin: 0 1rem 0 1rem
+  > h1, > h2, > h3, > h4
+    flex: 1 1 100%
+    margin: 0
     padding: 0
+    letter-spacing: -0.075rem
     text-decoration: none
+  > h1 
+    font-size: max(min(calc(1rem + 3.1vw), 3.0rem), 2.0rem)
+    font-weight: 800
   > h2 
-    font-size: max(min(calc(1rem + 0.9vw), 2rem), 1.4rem)
+    font-size: max(min(calc(1rem + 2.0vw), 2.0rem), 1.6rem)
+    font-weight: 700
   > h3
-    font-size: max(min(calc(1rem + 0.9vw), 1.8rem), 1.4rem)
+    font-size: max(min(calc(1rem + 1.7vw), 1.7rem), 1.5rem)
+    font-weight: 600
   > h4
-    font-size: max(min(calc(1rem + 0.9vw), 1.6rem), 1.4rem)
-  > h5
-    font-size: max(min(calc(1rem + 0.9vw), 1.4rem), 1.4rem)
+    font-size: max(min(calc(1rem + 1.4vw), 1.4rem), 1.4rem)
+    font-weight: 600
   
   > div
     display: flex
     align-items: center
-    gap: 1rem
-    margin-right: 1rem
+    gap: var(--ac-layout-spacing-unit)
     ka-button
       margin: 0

@@ -1,6 +1,6 @@
 import { inject, customElement } from 'aurelia-framework';
 
-require('./ka-tabs.sass');
+require('./ka-tabs.scss');
 
 @customElement('ka-tabs')
 @inject(Element)
@@ -10,7 +10,9 @@ export class KaTabs {
     this.element = element;
     this.element.controller = this;
     // Slot content mutation observer
-    const observer = new MutationObserver(() => { this.init(); });
+    const observer = new MutationObserver(() => {
+      this.init();
+    });
     observer.observe(this.element, { childList: true }); 
   }
   

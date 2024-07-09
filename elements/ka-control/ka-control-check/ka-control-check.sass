@@ -1,33 +1,35 @@
+$inputHeight: var(--ac-control-input-height, var(--ac-ui-unit, 3.5rem))
+
 ka-control-check
   position: relative
-  min-height: 3rem
+  min-height: $inputHeight
   display: flex
   input[type="checkbox"]
     display: block
     flex-shrink: 0
     flex-grow: 0
-    margin: 8px 0 0
+    margin: calc(($inputHeight / 2) / 2) 0 0
     border: 0
     border-radius: 1px
-    width: 1.4rem
-    height: 1.4rem
+    width: calc($inputHeight / 2)
+    height: calc($inputHeight / 2)
     background: transparent
-    box-shadow: inset 0 0 0 1px var(--text-color)
+    box-shadow: inset 0 0 0 1px var(--ac-ui-text-color)
     &:focus
       box-shadow: inset 0 0 0 1px var(--primary-color), 0 0 10px 0 rgba(var(--primary-color-rgb), 0.3), 0 0 5px 0 rgba(var(--primary-color-rgb), 0.3)
     &:checked
       background-color: var(--primary-color)
-      box-shadow: inset 0 0 0 1px var(--text-color), inset 0 0 0 3px #fff
+      box-shadow: inset 0 0 0 1px var(--ac-ui-text-color), inset 0 0 0 3px #fff
     &:checked:focus
       box-shadow: inset 0 0 0 1px var(--primary-color), inset 0 0 0 3px #fff, 0 0 10px 0 rgba(var(--primary-color-rgb), 0.3), 0 0 5px 0 rgba(var(--primary-color-rgb), 0.3)
   .description
     display: inline-block
-    margin-top: calc(1.5rem - (1.4rem * 1.4)/2)
+    margin-top: calc(($inputHeight / 2) / 2)
     padding-left: 1rem
     max-width: 100%
     overflow: hidden
     line-height: 1.4
     font-size: 1.4rem
-    color: var(--text-color)
+    color: var(--ac-ui-text-color)
     text-overflow: ellipsis
     cursor: pointer

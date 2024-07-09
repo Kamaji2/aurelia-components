@@ -5,15 +5,15 @@ ka-table-toolbar
   left: 0
   z-index: 2
   display: block
-  background: #fff
-  box-shadow: 0 1px 0 0 #e0e0e0
+  background: var(--ac-ui-background-color)
+  box-shadow: 0 -1px 0 var(--ac-ui-border-color), 0 1px 0 var(--ac-ui-border-color)
   button
     appearance: none
     position: relative
     margin: 0
     border: none
     padding: 0
-    color: rgba(var(--text-color-rgb), 0.5)
+    color: var(--secondary-color)
     width: 4rem
     height: 4rem
     font-size: 2rem
@@ -22,10 +22,8 @@ ka-table-toolbar
     cursor: pointer
     transition: all 0.5s  
     &:not(.disabled):hover
-      color: var(--text-color)
+      color: var(--ac-ui-text-color)
       background: rgba(var(--primary-color-rgb), 0.05)
-    &:not(.disabled):only-child:hover 
-      //box-shadow: 1px 0 0 0 #e0e0e0
     &.search-active
       color: var(--primary-color)
       position: relative
@@ -35,15 +33,15 @@ ka-table-toolbar
         left: 0
         padding: 0 0 2rem 2rem
         font-size: 1rem
-        color: rgba(var(--text-color-rgb), 0.5)
+        color: rgba(var(--ac-ui-text-color-rgb), 0.5)
         &:hover
           color: var(--primary-color)
   > .row
     height: 4rem
     .buttons-left > button
-      box-shadow: 1px 0 0 0 #e0e0e0
+      box-shadow: 1px 0 0 0 var(--ac-ui-border-color)
     .buttons-right > button
-      box-shadow: -1px 0 0 0 #e0e0e0
+      box-shadow: -1px 0 0 0 var(--ac-ui-border-color)
     .buttons-right > ka-button
       margin: 0 1rem 0 0
 

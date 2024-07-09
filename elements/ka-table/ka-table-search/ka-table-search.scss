@@ -1,0 +1,54 @@
+ka-table-search {
+  display: block;
+  flex: 0 0 auto;
+  position: relative;
+  border-radius: calc(var(--ac-ui-border-radius) * 2);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--ac-ui-background-color);
+  box-shadow: var(--ac-layout-shadow);
+  form, form.row {
+    --bs-gutter-x: var(--ac-layout-spacing-unit);
+    --bs-gutter-y: var(--ac-layout-spacing-unit);
+    --padding-top: 0;
+    --padding-bottom: var(--ac-layout-spacing-unit);
+    --padding-x: calc(var(--ac-layout-spacing-unit) - (var(--ac-layout-spacing-unit) / 2));
+    
+    display: flex;
+    align-content: flex-start;
+    margin: 0;
+    border: 0;
+    padding: var(--padding-top) var(--padding-x) var(--padding-bottom);
+    height: 100%;
+    @media only screen and (min-width: 576px) {
+      --padding-top: calc((var(--ac-layout-spacing-unit) * 2) - var(--ac-layout-spacing-unit));
+      --padding-bottom: calc(var(--ac-layout-spacing-unit) * 2);
+      --padding-x: calc((var(--ac-layout-spacing-unit) * 2) - (var(--ac-layout-spacing-unit) / 2));
+    }
+  }
+  .buttons {
+    display: flex;
+    gap: var(--ac-layout-spacing-unit);
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex: 1 0 0%;
+  }
+  @keyframes slide-up {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+      transform: translateY(-100%);
+      display: none;
+    }
+  };
+  @keyframes slide-down {
+    0% {
+      display: block;
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(0%);
+    }
+  };
+}

@@ -1,12 +1,13 @@
 <template>
-  <require from="./ka-table-search.sass"></require>
-  <div class="row px-3 py-2 gx-3">
+  <require from="./ka-table-search.scss"></require>
+  <form autocomplete="off" action="javascript:void(0)" class="row">
     <slot></slot>
-    <div class="col d-flex align-items-end justify-content-end buttons">
+    <div class="buttons">
       <slot name="buttons">
-        <ka-button data-testid="kaButtonReset" click.delegate="buttonReset()" class="inverted" icon="fa-solid fa-xmark" ka-tooltip="value.bind: 'Reset' | t; placement: left;"></ka-button>
-        <ka-button data-testid="kaButtonSearch" click.delegate="buttonSearch()" class="inverted" icon="fa-solid fa-magnifying-glass">${'Search'|t}</ka-button>
+        <ka-button if.bind="extends" data-testid="kaButtonToggle" click.trigger="buttonToggle()" class="secondary inverted flat" icon="fa-solid ${!interface.extended?'fa-angle-down':'fa-angle-up'}" ka-tooltip="value.bind: !interface.extended?'Advanced search':'Simple search' | t; placement: left;"></ka-button>
+        <ka-button data-testid="kaButtonReset" click.trigger="buttonReset()" class="secondary inverted flat" icon="fa-solid fa-eraser" ka-tooltip="value.bind: 'Reset' | t; placement: left;"></ka-button>
+        <ka-button data-testid="kaButtonSearch" click.trigger="buttonSearch()" class="secondary inverted flat" icon="fa-solid fa-magnifying-glass">${'Search'|t}</ka-button>
       </slot>
     </div>
-  </div>
+  </form>
 </template>

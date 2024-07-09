@@ -11,6 +11,8 @@ export { UserService } from './services/user';
 export { DialogService } from './services/dialog';
 export { ToastService } from './services/toast';
 
+require('./variables.scss');
+
 export function configure(config, callback) {
   config = new AureliaComponentsConfiguration(config);
   if (callback instanceof Function) {
@@ -91,6 +93,7 @@ export class AureliaComponentsConfiguration {
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-pagination/ka-table-pagination')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-progressbar/ka-table-progressbar')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-search/ka-table-search')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-filters/ka-table-filters')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-sort/ka-table-sort')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-toolbar/ka-table-toolbar')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/elements/ka-table/ka-table-row-tools/ka-table-row-tools')]);

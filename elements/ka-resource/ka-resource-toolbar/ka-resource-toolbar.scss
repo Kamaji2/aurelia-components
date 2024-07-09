@@ -1,0 +1,36 @@
+ka-resource-toolbar {
+  --bs-gutter-x: var(--ac-layout-spacing-unit);
+  --bs-gutter-y: var(--ac-layout-spacing-unit);
+  --padding-x: calc(var(--ac-layout-spacing-unit) - (var(--ac-layout-spacing-unit) / 2));
+  --padding-y: var(--ac-layout-spacing-unit);
+    
+  display: flex;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  gap: var(--bs-gutter-y);
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+
+  margin: var(--padding-y) calc(0px - var(--padding-x)) calc(0px - var(--padding-y)) !important;
+  padding: var(--padding-y) var(--padding-x) var(--padding-y) !important;
+  width: auto !important;
+  max-width: none !important;
+
+  background-color: var(--ac-ui-background-color);
+  box-shadow: 0 -1px 0 0 var(--ac-ui-border-color);
+  @media only screen and (min-width: 576px) {
+    --padding-y: calc(var(--ac-layout-spacing-unit) * 2);
+    --padding-x: calc((var(--ac-layout-spacing-unit) * 2) - (var(--ac-layout-spacing-unit) / 2));
+  }
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ac-layout-spacing-unit);
+    padding: 0 calc(var(--bs-gutter-x) * .5);
+    &.buttons-right {
+      justify-content: end;
+    }
+  }
+}

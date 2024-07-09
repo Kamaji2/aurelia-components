@@ -3,7 +3,7 @@ import { ValidationController, ValidationRules, validateTrigger } from 'aurelia-
 import { helpers } from 'aurelia-components';
 import { DateTime } from 'luxon';
 
-require('./ka-control.sass');
+require('./ka-control.scss');
 
 @customElement('ka-control')
 @inject(Element, BindingEngine, NewInstance.of(ValidationController))

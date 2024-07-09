@@ -1,9 +1,9 @@
 import { inject, customElement, bindable } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { helpers, ToastService } from 'aurelia-components';
+import { helpers, DialogService, ToastService } from 'aurelia-components';
 
 @customElement('ka-resource-toolbar')
-@inject(Element, I18N, ToastService)
+@inject(Element, I18N, DialogService, ToastService)
 export class KaResourceToolbar {
   @bindable() close = () => {
     console.warn('ka-resource-toolbar: close function unset!');
@@ -16,11 +16,16 @@ export class KaResourceToolbar {
     console.warn('ka-resource-toolbar: buttonSave function unset, using default!');
     this.defaultSave();
   };
+  @bindable() buttonDelete = () => {
+    console.warn('ka-resource-toolbar: buttonDelete function unset, using default!');
+    this.defaultDelete();
+  };
   @bindable() interface = null;
 
-  constructor(element, i18n, toast) {
+  constructor(element, i18n, dialog, toast) {
     this.element = element;
     this.i18n = i18n;
+    this.dialog = dialog;
     this.toast = toast;
   }
   bind(bindingContext) {
@@ -59,6 +64,30 @@ export class KaResourceToolbar {
       console.error(error, error.info);
     }).finally(() => {
       this.pendingDefaultSave = false;
+    });
+  }
+
+  pendingdefaultDelete = false;
+  defaultDelete() {
+    if (this.pendingdefaultDelete) return;
+    this.pendingdefaultDelete = true;
+    this.dialog.confirm({
+      title: this.i18n.tr('Warning'),
+      body: this.i18n.tr('confirm_delete')
+    }).whenClosed((response) => {
+      if (!response.wasCancelled) {
+        this.interface.delete().then((xhr) => {
+          this.toast.show(`${this.i18n.tr('Record successfully deleted')}!`, 'success');
+          this.close({ xhr });
+        }).catch((error) => {
+          helpers.toastResourceSaveError(this.toast, error, this.i18n);
+          console.error(error, error.info);
+        }).finally(() => {
+          this.pendingdefaultDelete = false;
+        });
+      } else {
+        this.pendingdefaultDelete = false;
+      }
     });
   }
 }

@@ -20,30 +20,8 @@ export class KaResource {
     this.element.id = this.uuid;
   }
   attached() {
-    const resizeHandler = () => {
-      let element = document.querySelector(`#${this.uuid}`);
-      if (!element) return;
-
-      if (this.height === 'full') {
-        element.classList.remove('overflowed');
-        element.style.height = null;
-
-        let container = (element.closest('ux-dialog-body') || element.closest('router-view')).getBoundingClientRect();
-        if (element.getBoundingClientRect().bottom > container.bottom) {
-          element.classList.add('overflowed');
-          element.style.height = parseInt(container.bottom - element.getBoundingClientRect().top) + 'px';
-        }
-      }
-    };
-    window[`resize-handler-${this.uuid}`] = resizeHandler;
-    window.addEventListener('resize', window[`resize-handler-${this.uuid}`]);
-    setTimeout(() => {
-      resizeHandler();
-    }, 1000);
   }
 
   detached() {
-    window.removeEventListener('resize', window[`resize-handler-${this.uuid}`]);
-    delete window[`resize-handler-${this.uuid}`];
   }
 }

@@ -1,31 +1,42 @@
+$labelHeight: calc(var(--ac-ui-unit) / 1.6);
+$labelFontSize: calc(var(--ac-ui-unit) / 3.07692308);
+$buttonHeight: var(--ac-ui-unit);
+$labelFontSize: calc(var(--ac-ui-unit) / 2.85714286);
+$iconFontSize: calc(var(--ac-ui-unit) / 2.5);
+
+/*
+--ac-button-font-size
+--ac-button-font-weight
+*/
+
+
 ka-button {
   user-select: none;
   
   display: inline-flex;
+  flex: 0 0 auto;
   position: relative;
   align-items: flex-start;
 
   outline: none;
   cursor: pointer;
 
-  margin: 1rem 0;
+  margin: 0;
   border: 0;
-  border-radius: var(--ka-button-border-radius, 3px);
+  border-radius: var(--ac-ui-border-radius);
   padding: 0;
-  height: var(--ka-button-height, 3rem);
+  height: $buttonHeight;
   overflow: hidden;
 
-  font-size: var(--ka-button-font-size, 1.4rem);
-  font-weight: var(--ka-button-font-weight, 700);
-  line-height: var(--ka-button-height, 3rem);
+  font-size: $labelFontSize;
+  font-weight: 600;
+  line-height: $buttonHeight;
   text-align: center;
   text-decoration: none;
   color: transparent;
 
   background-color: transparent;
   transition: all 0.5s;
-
-  & + ka-button { margin-left: 1rem; }
 
   /* PARTS */
 
@@ -44,7 +55,8 @@ ka-button {
 
   .ka-button-icon {
     position: relative;
-    width: var(--ka-button-height, 3rem);
+    width: $buttonHeight;
+    font-size: $iconFontSize;
     line-height: inherit;
     transition: opacity 0.5s;
   }
@@ -53,7 +65,7 @@ ka-button {
   }
   .ka-button-label {
     position: relative;
-    padding: 0 1rem;
+    padding: 0 calc(var(--ac-ui-unit) / 4);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -68,14 +80,14 @@ ka-button {
     right: 0;
     bottom: 0;
     left: 0;
-    border-radius: var(--ka-button-border-radius, 3px);
+    border-radius: var(--ac-ui-border-radius);
     background-color: transparent;
     &:before, &:after {
       content: " ";
       position: absolute;
       border-radius: 50%;
-      width: 1rem;
-      height: 1rem;
+      width: var(--ac-layout-spacing-unit);
+      height: var(--ac-layout-spacing-unit);
       top: 50%;
       background-color: transparent;
       transform: translate(-50%, -50%);
@@ -96,7 +108,7 @@ ka-button {
   }
   &.active {
     box-shadow: none;
-    transform: translateY(var(--ka-button-border-radius, 3px));
+    transform: translateY(var(--ac-ui-border-radius));
   }
   &.busy {
     .ka-button-icon {
@@ -110,9 +122,9 @@ ka-button {
   /* COLOR VARIANTS */
   @mixin ka-button-colors($key: null) {
     $selector: '&';
-    @if ($key) { $selector: '&.' + $key; } @else { $key: 'primary'; }
-    $color: var(--ka-#{$key}, var(--#{$key}-color));
-    $color-rgb: var(--ka-#{$key}-rgb, var(--#{$key}-color-rgb));
+    @if ($key) { $selector: '&.' + $key; } @else { $key: 'ui-foreground-color'; }
+    $color: var(--ac-#{$key}, var(--#{$key}-color));
+    $color-rgb: var(--ac-#{$key}-rgb, var(--#{$key}-color-rgb));
 
     #{$selector} {
       // TRANSPARENT
@@ -172,18 +184,16 @@ ka-button {
   @include ka-button-colors();
   @include ka-button-colors('primary');
   @include ka-button-colors('secondary');
-  @include ka-button-colors('info');
   @include ka-button-colors('warning');
   @include ka-button-colors('danger');
-  @include ka-button-colors('success');
   @include ka-button-colors('pending');
-  @include ka-button-colors('error');
+  @include ka-button-colors('success');
 }
 
 @keyframes left-to-right {
   0% {
     opacity: 0.5;
-    left: calc(50% - 1rem);
+    left: calc(50% - var(--ac-layout-spacing-unit));
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
@@ -193,14 +203,14 @@ ka-button {
   }
   100% {
     opacity: 0.5;
-    left: calc(50% + 1rem);
+    left: calc(50% + var(--ac-layout-spacing-unit));
     transform: translate(-50%, -50%) scale(1);
   }
 }
 @keyframes right-to-left {
   0% {
     opacity: 0.5;
-    left: calc(50% + 1rem);
+    left: calc(50% + var(--ac-layout-spacing-unit));
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
@@ -210,7 +220,7 @@ ka-button {
   }
   100% {
     opacity: 0.5;
-    left: calc(50% - 1rem);
+    left: calc(50% - var(--ac-layout-spacing-unit));
     transform: translate(-50%, -50%) scale(1);
   }
 }

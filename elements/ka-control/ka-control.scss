@@ -1,0 +1,366 @@
+$labelHeight: calc(var(--ac-ui-unit) / 1.6);
+$labelFontSize: calc(var(--ac-ui-unit) / 3.07692308);
+$inputHeight: var(--ac-ui-unit);
+$inputFontSize: calc(var(--ac-ui-unit) / 2.85714286);
+
+ka-control-range {
+  display: block;
+  position: relative;
+  flex: 1 1 0;
+}
+ka-control-combo,
+ka-control-text,
+ka-control-date,
+ka-control-datetime,
+ka-control-time,
+ka-control-file,
+ka-control-number,
+ka-control-password,
+ka-control-textarea,
+ka-control-editor,
+ka-control-list,
+ka-control-check {
+  display: block;
+  position: relative;
+  flex: 1 1 0;
+  input,
+  textarea {
+    display: block;
+    outline: none;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+  .display-value,
+  .display-value[disabled] {
+    outline: none;
+    border: 1px solid rgba(var(--ac-ui-text-color-rgb), 0.5);
+    border-radius: 2px;
+    padding: 0 0 0 calc($inputHeight / 4);
+    width: 100%;
+    height: $inputHeight;
+    font-family: inherit;
+    font-size: $inputFontSize;
+    line-height: $inputHeight;
+    color: var(--ac-ui-text-color);
+    box-shadow: inset 0 0 3px rgba(var(--ac-ui-text-color-rgb), 0.3);
+    transition: all 0.5s;
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      background: transparent !important;
+      background-color: transparent !important;
+      transition: background-color 5000s ease-in-out 5000s !important;
+    }
+  }
+}
+ka-control {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  width: 100%;
+  vertical-align: middle;
+  font-family: inherit;
+  > label {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: $labelHeight;
+    overflow: hidden;
+    font-size: $labelFontSize;
+    font-weight: 500;
+    line-height: $labelHeight;
+    text-overflow: ellipsis;
+    color: var(--ac-ui-text-color);
+    white-space: nowrap;
+    transition: all 0.5s;
+  }
+  > div:first-of-type {
+    border-radius: var(--ac-ui-border-radius);
+    display: flex;
+    flex-wrap: wrap;
+    background: #FFFFFF;
+    box-shadow: inset 0 0 0 1px var(--ac-ui-border-color), inset 0 0 4px 0 var(--ac-ui-border-color);
+    transition: all 0.5s;
+  }
+  &:not(.ka-control-check) {
+    > div:first-of-type {
+      height: $inputHeight;
+      overflow: hidden;
+    }
+  }
+  &:not(.focus):not(.error):not(.readonly):not(.undefined):not(.ka-control-check):hover {
+    > div:first-of-type {
+      box-shadow: inset 0 0 0 1px var(--ac-ui-border-color), 0 5px 10px -5px var(--ac-ui-border-color);
+    }
+  }
+  input {
+    background: none;
+  }
+  .display-value,
+  .display-value[disabled] {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .ka-control-buttons {
+    display: flex;
+    button,
+    button:focus {
+      position: relative;
+      appearance: none;
+      display: block;
+      margin: 0;
+      outline: 0;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      width: $inputHeight;
+      height: $inputHeight;
+      font-size: $inputFontSize;
+      color: var(--ac-ui-text-color);
+      line-height: $inputHeight;
+      text-align: center;
+      background: transparent;
+      transition: all 0.5s;
+      i {
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+        transition: all 0.5s;
+      }
+    }
+    button:hover i {
+      transform: scale(0.7);
+    }
+    button + button {
+      box-shadow: inset 1px 0 0 0 var(--ac-ui-border-color);
+    }
+  }
+  .ka-control-overlay {
+    width: 100%;
+    .ka-control-error {
+      display: block;
+      position: absolute;
+      z-index: 100;
+      margin-top: -1px;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      padding: 0 0.5rem;
+      width: 100%;
+      height: 0;
+      overflow: hidden;
+      font-size: 1.1rem;
+      line-height: 2rem;
+      color: var(--danger-color);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background-color: #ffffff;
+      box-shadow: 0 5px 10px -5px rgba(0,0,0, 0.2);
+      box-shadow: inset 0 0 0 1px rgba(var(--danger-color-rgb), 0.3), 0 10px 10px -8px rgba(var(--danger-color-rgb), 0.3), 10px 0 10px -8px rgba(var(--danger-color-rgb), 0.3), -10px 0 10px -8px rgba(var(--danger-color-rgb), 0.3);
+      opacity: 0;
+      transition: height 0.2s, opacity 0.2s;
+      pointer-events: none;
+      &:before {
+        content: " ";
+        position: absolute;
+        inset: 0 0 0 0;
+        background-color: rgba(var(--danger-color-rgb), 0.1);
+        z-index: -1;
+      }
+      span + span:before {
+        content: "-";
+        margin: 0 5px;
+      }
+      .ka-control-error-scroller {
+        display: flex;
+        width: fit-content;
+        span.clone {
+          display: none;
+        }
+      }
+      &.scroll .ka-control-error-scroller {
+        animation: ka-control-error-scroller infinite 10s linear;
+        span.clone {
+          display: inline;
+        }
+      }
+    }
+    .ka-control-description {
+      display: block;
+      position: absolute;
+      z-index: 100;
+      margin-top: -1px;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      padding: 0 0.5rem;
+      width: 100%;
+      height: 0;
+      overflow: hidden;
+      font-size: 1.1rem;
+      line-height: 2rem;
+      color: var(--primary-color);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background-color: #ffffff;
+      box-shadow: 0 5px 10px -5px rgba(0,0,0, 0.2);
+      box-shadow: inset 0 0 0 1px rgba(var(--primary-color-rgb), 0.3), 0 10px 10px -8px rgba(var(--primary-color-rgb), 0.3), 10px 0 10px -8px rgba(var(--primary-color-rgb), 0.3), -10px 0 10px -8px rgba(var(--primary-color-rgb), 0.3);
+      opacity: 0;
+      transition: height 0.2s, opacity 0.2s;
+      pointer-events: none;
+      &:before {
+        content: " ";
+        position: absolute;
+        inset: 0 0 0 0;
+        background-color: rgba(var(--primary-color-rgb), 0.1);
+        z-index: -1;
+      }
+    }
+  }
+}
+ka-control.undefined {
+  > label {
+    color: var(--ac-ui-border-color);
+  }
+  > div:first-of-type {
+    height: $inputHeight;
+    background: var(--ac-ui-background-color);
+    .ka-control-buttons {
+      display: none;
+    }
+  }
+}
+ka-control.focus {
+  > div:first-of-type {
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px var(--ac-ui-border-color), 0 5px 10px -5px var(--ac-ui-border-color);
+  }
+  &:not(.error) > .ka-control-overlay .ka-control-description {
+    height: 2rem;
+    opacity: 1;
+  }
+  &.error > .ka-control-overlay .ka-control-error {
+    height: 2rem;
+    opacity: 1;
+  }
+}
+ka-control.error {
+  > label {
+    color: var(--danger-color);
+    animation: ka-control-shake 0.7s;
+  }
+  > div:first-of-type {
+    background-color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(var(--danger-color-rgb), 0.3), 0 0 10px 0 rgba(var(--danger-color-rgb), 0.3);
+  }
+  &:not(.hadFocus) > .ka-control-overlay .ka-control-error {
+    animation: 4s ka-control-slidedownup;
+  }
+}
+ka-control.readonly {
+  > div:first-of-type {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--ac-ui-background-color), inset 0 0 4px 0 var(--ac-ui-border-color);
+  }
+}
+ka-control.ka-control-check {
+  > div:first-of-type {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+ka-control.ka-control-number {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+ka-control.ka-control-range {
+  > div > .ka-control-buttons .button-dropdown {
+    display: none;
+  }
+  > div > .ka-control-buttons button:after {
+    content: unset;
+    display: none;
+  }
+  > div > .ka-control-buttons .button-clear:after {
+    content: " ";
+    display: block;
+  }
+}
+ka-control.ka-control-combo {
+  &:not(.error) > div:hover + .ka-control-overlay .ka-control-description {
+    display: block;
+  }
+}
+ka-control.show-label-overflow {
+  > label {
+    overflow: visible;
+  }
+}
+ka-control.no-label {
+  > label {
+    display: none;
+  }
+}
+@keyframes ka-control-slidedown {
+  from {
+    opacity: 0;
+    height: 0;
+  }
+  to {
+    opacity: 1;
+    height: 2rem;
+  }
+}
+
+@keyframes ka-control-slidedownup {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+  5% {
+    opacity: 1;
+    height: 2rem;
+  }
+  95% {
+    opacity: 1;
+    height: 2rem;
+  }
+  100% {
+    opacity: 0;
+    height: 0;
+  }
+}
+
+@keyframes ka-control-shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes ka-control-error-scroller {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+};

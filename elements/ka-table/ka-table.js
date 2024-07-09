@@ -31,23 +31,33 @@ export class KaTable {
     const resizeHandler = () => {
       let element = document.querySelector(`#${this.uuid}`);
       if (!element) return;
-
+      /*
       if (this.height === 'full') {
         element.style.height = null;
-        let container = (element.closest('ux-dialog-body') || element.closest('router-view')).getBoundingClientRect();
-        element.style.height = parseInt(container.bottom - element.getBoundingClientRect().top) + 'px';
+        const container = (element.closest('ux-dialog-body') || element.closest('router-view'));
+        const containerBounds = container.getBoundingClientRect();
+        const containerBottomPadding = parseFloat(getComputedStyle(container).getPropertyValue('padding-bottom'));
+        element.style.height = parseInt(containerBounds.bottom - containerBottomPadding - element.getBoundingClientRect().top) + 'px';
       }
+      */
+      console.log('scroll');
       element.querySelectorAll('tbody td.ka-table-row-tools:last-child').forEach(function (element) {
         var floater = element.querySelector('.floater');
         var table = element.closest('ka-table');
         if (!floater) return;
+        floater.classList.add('float');
+        floater.classList.remove('collapsed');
         var h = element.getBoundingClientRect().height;
         var w = floater.getBoundingClientRect().width;
         if (table && floater && h && w) {
           table.scrollLeft = 0;
-          floater.classList.add('float');
           floater.style.height = h + 'px';
           element.style.minWidth = element.style.width = w + 'px';
+          if (w > (table.getBoundingClientRect().width / 3)) {
+            floater.classList.add('collapsed');
+          } else {
+            floater.classList.remove('collapsed');
+          }
         }
       });
     };
@@ -56,6 +66,7 @@ export class KaTable {
     window.addEventListener('resize', window[`resize-handler-${this.uuid}`]);
     // Scroll event listener
     this.element.addEventListener('scroll', (event) => {
+      console.log('scroll');
       event.target.querySelectorAll('.floater.float').forEach((floater) => {
         floater.style.transform = `translateX(${event.target.scrollLeft}px)`;
       });

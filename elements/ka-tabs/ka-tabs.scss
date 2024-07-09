@@ -1,0 +1,183 @@
+$paddingUnit: var(--ac-layout-spacing-unit);
+$tabsHeight: var(--ac-tabs-height, calc(var(--ac-ui-unit) * 1.25));
+
+ka-tabs {
+  display: block;
+  position: relative;
+  align-content: flex-start;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  > nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 0;
+    border: none;
+    padding: 0.5rem 0.5rem 0;
+    height: $tabsHeight;
+    a {
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      outline: none;
+      margin-top: calc(var(--ac-layout-spacing-unit) / 2);
+      border: 0.1rem solid var(--ac-ui-border-color);
+      border-bottom-width: 0;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+      padding: 0 1.5rem;
+      max-width: fit-content;
+      height: calc($tabsHeight - var(--ac-layout-spacing-unit));
+      overflow: hidden;
+
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.1rem;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: rgba(var(--ac-ui-text-color-rgb), 0.5);
+
+      background: var(--ac-ui-background-color);
+      transition: all .4s !important;
+
+      @media screen and (max-width: 576px) {
+        i + span {
+          display: none;
+        }
+      }
+      @media screen and (max-width: 992px) {
+        font-size: 1rem;
+        letter-spacing: 0;
+      }
+
+      > span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      &:hover {
+        color: var(--primary-color);
+      }
+      & + a {
+        margin-left: .5rem;
+      }
+      &.active {
+        margin-top: 0;
+        height: calc(var(--ac-tabs-height, $tabsHeight) - 0.5rem);
+        color: var(--primary-color);
+        background: linear-gradient(0deg, var(--ac-ui-background-color) 0%, #ffffff 50%);
+        //box-shadow: -5px 0 5px -5px #b0b0b099, 5px 0 5px -5px #b0b0b099;
+      }
+      i {
+        position: relative;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        margin-left: -1.5rem;
+        width: calc(var(--ac-tabs-height, $tabsHeight) - 1.4rem);
+        height: 100%;
+        font-size: calc(var(--ac-tabs-height, $tabsHeight) / 3.12);
+        @media screen and (max-width: 576px) {
+          margin: 0;
+          width: 100%;
+          &:after {
+            display: none;
+          }
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 1px;
+          background: linear-gradient(180deg, rgba(var(--ac-ui-border-color-rgb), 0.7) 0%, transparent 100%);
+        }
+      }
+      &.detached {
+        margin-bottom: 0.5rem;
+        border-bottom-width: 1px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        height: calc(var(--ac-tabs-height, $tabsHeight) - 1.5rem);
+        background: transparent;
+        &.active {
+          margin-bottom: 0.5rem;
+          height: calc(var(--ac-tabs-height, $tabsHeight) - 1rem);
+          background: #ffffff;
+        }
+        i:after {
+          background: rgba(var(--ac-ui-border-color-rgb), 0.7);
+        }
+      }
+      &.transparent {
+        border: 0;
+        background: transparent;
+        &.active {
+          background: transparent;
+        }
+      }
+    }
+    &::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      content: "";
+      background: linear-gradient(0deg, rgba(var(--ac-ui-border-color-rgb), 0.5) 0%, transparent 20%), linear-gradient(0deg, rgba(var(--ac-ui-border-color-rgb), 0.7) 0%, transparent 5%);
+    }
+  }
+  > ka-tab {
+    display: flex;
+    flex-direction: column;
+    gap: $paddingUnit;
+
+    position: absolute;
+    top: var(--ac-tabs-height, $tabsHeight);
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-radius: calc(var(--ac-ui-border-radius) * 2);
+    padding: $paddingUnit;
+    overflow-x: hidden;
+    overflow-y: auto;
+    opacity: 0;
+    background-color: var(--ac-ui-background-color);
+    box-shadow: var(--ac-layout-shadow);
+
+    &.previous {
+      left: -100%;
+      right: 100%;
+      transition: left 0.3s ease-out, right 0.3s ease-out, opacity 0s 0.3s;
+    }
+    &.current {
+      opacity: 1;
+      transition: left 0.3s ease-out, right 0.3s ease-out, opacity 0s;
+    }
+    &.next {
+      left: 100%;
+      right: -100%;
+      transition: left 0.3s ease-out, right 0.3s ease-out, opacity 0s 0.3s;
+    }
+  }
+}
+@media (min-width: 576px) {
+  ka-tabs {
+    > ka-tab {
+      gap: calc($paddingUnit * 2);
+      padding: calc($paddingUnit * 2);
+    }
+  }
+}

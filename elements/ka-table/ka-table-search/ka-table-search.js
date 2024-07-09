@@ -5,6 +5,11 @@ import { ToastService } from 'aurelia-components';
 @customElement('ka-table-search')
 @inject(Element, I18N, ToastService)
 export class KaTableSearch {
+  @bindable() extends;
+  @bindable() buttonToggle = () => {
+    this.defaultToggle();
+    console.warn('ka-table-search: buttonToggle function unset, using default!');
+  };
   @bindable() buttonReset = () => {
     this.defaultReset();
     console.warn('ka-table-search: buttonReset function unset, using default!');
@@ -20,6 +25,7 @@ export class KaTableSearch {
   }
   bind(bindingContext) {
     this.interface = bindingContext && bindingContext.constructor?.name === 'TableSearchInterface' ? bindingContext : null;
+    this.interface.element = this.element;
     if (!this.interface) {
       console.error('ka-table-search: missing table search interface!');
       return;
@@ -32,6 +38,9 @@ export class KaTableSearch {
     this.element.id = this.uuid;
   }
 
+  defaultToggle() {
+    this.interface.extended = !this.interface.extended;
+  }
   defaultReset() {
     this.interface.reset();
   }

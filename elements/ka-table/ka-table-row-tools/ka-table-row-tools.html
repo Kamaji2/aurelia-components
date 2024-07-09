@@ -1,6 +1,9 @@
 <template>
-  <require from="./ka-table-row-tools.sass"></require>
+  <require from="./ka-table-row-tools.scss"></require>
   <div class="floater">
-    <slot></slot>
+    <button class="menu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+    <div class="buttons" ref="menu">
+      <slot></slot>
+    </div>
   </div>
 </template>

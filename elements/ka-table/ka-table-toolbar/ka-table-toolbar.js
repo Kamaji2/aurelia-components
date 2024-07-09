@@ -5,7 +5,8 @@ import { DateTime } from 'luxon';
 @inject(Element)
 export class KaTableToolbar {
   @bindable() buttonSearch = () => {
-    console.warn('ka-table-toolbar: buttonSearch function unset!');
+    console.warn('ka-table-toolbar: buttonSearch function unset, using default!');
+    this.defaultSearch();
   };
   @bindable() buttonDownload = () => {
     console.warn('ka-table-toolbar: buttonDownload function unset, using default!');
@@ -35,7 +36,11 @@ export class KaTableToolbar {
       this.buttons = this.element.getAttribute('buttons').split(',');
     }
   }
-
+  defaultSearch() {
+    if (!this.interface.searchInterface) return;
+    console.log(this.interface.searchInterface);
+    this.interface.searchInterface.element.classList.toggle('collapsed');
+  }
   defaultDownload() {
     if (!this.interface.data.length) return;
     // Prepare data

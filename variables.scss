@@ -1,0 +1,38 @@
+@function hexToRGB($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+:root {
+  --ac-ui-unit: 4rem;
+  --ac-ui-border-radius: 3px;
+  --ac-ui-border-color: #e0e0e0;
+  --ac-ui-border-color-rgb: #{hexToRGB(#e0e0e0)};
+  --ac-ui-text-color: #404040;
+  --ac-ui-text-color-rgb: #{hexToRGB(#404040)};
+  --ac-ui-foreground-color: #909090;
+  --ac-ui-foreground-color-rgb: #{hexToRGB(#909090)};
+  --ac-ui-background-color: #fafafa;
+  --ac-ui-background-color-rgb: #{hexToRGB(#fafafa)};
+  
+  --ac-layout-spacing-unit: 1rem;
+  --ac-layout-shadow: 0 0 0 1px var(--ac-ui-border-color), 0 5px 20px var(--ac-ui-border-color);
+
+  @media only screen and (min-width: 576px) {
+    --ac-ui-unit: 3.5rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

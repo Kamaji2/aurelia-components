@@ -2,7 +2,7 @@ import { inject, customElement } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { LayoutService, helpers } from 'aurelia-components';
 
-require('./ka-layout.sass');
+require('./ka-layout.scss');
 
 @customElement('ka-layout')
 @inject(Element, LayoutService, Router)
@@ -10,6 +10,7 @@ export class KaLayout {
   config = null;
   _collapsed = false;
   _intervals = [];
+  callbacks = {};
 
   constructor(element, layout, router) {
     this.element = element;
@@ -52,6 +53,7 @@ export class KaLayout {
   }
 
   configure(config) {
+    this.callbacks = config.navigation?.callbacks;
     this.config = helpers.deepMerge({
       brand: null,
       user: { roles: [] },
@@ -68,7 +70,7 @@ export class KaLayout {
     const setHiddens = (items) => {
       let hiddens = true;
       for (let item of items) {
-        if (authorized(item) && !item.hidden && (item.href || item.call)) {
+        if (authorized(item) && !item.hidden && (item.href || item.callback)) {
           item.hidden = false;
         } else if (authorized(item) && !item.hidden && item.nav) {
           item.hidden = setHiddens(item.nav);
@@ -144,10 +146,8 @@ export class KaLayout {
     // Toggle class visible
     subtool.parentElement.classList.toggle('visible');
   }
-  expand(item) {
-    item.collapsed = false;
-  }
-  collapse(item) {
-    item.collapsed = true;
+  toggleItem(item) {
+    console.log(item)
+    item.collapsed = !item.collapsed;
   }
 }

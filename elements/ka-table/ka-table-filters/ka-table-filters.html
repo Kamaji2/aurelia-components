@@ -1,0 +1,18 @@
+<template>
+  <require from="./ka-table-filters.scss"></require>
+  <ka-button data-testid="kaButtonOpenFilters" disabled.bind="isModalOpen" click.trigger="openFilters()" class="inverted secondary flat" icon="fa-solid fa-sliders">${'Filter'|t}</ka-button>
+  <template repeat.for="filter of activeFilters">
+    <div class="ka-table-filters-tag">
+      <a href="#" click.trigger="removeFilter(filter.name)"><i class="fa-solid fa-xmark"></i></a>
+      <strong>${filter.label|t}</strong>
+      <span>${filter.value}</span>
+    </div>
+  </template>
+  <ka-button if.bind="activeFilters.length" data-testid="kaButtonClearFilters" click.trigger="clearFilters()" class="transparent flat">${'Clear filters'|t}</ka-button>
+  <div class="ka-table-filters-buttons">
+  </div>
+  <div class="ka-table-filters-modal ${isModalOpen?'open':''}">
+    <slot></slot>
+  </div>
+  <div if.bind="isModalOpen" class="ka-table-filters-backdrop" click.trigger="closeFilters()"></div>
+</template>

@@ -1,11 +1,12 @@
 <template>
-  <require from="./ka-resource-toolbar.sass"></require>
-  <div class="row">
-    <div class="col-auto buttons buttons-left"><slot name="buttons-left"></slot></div>
-    <div class="col buttons buttons-right">
-      <slot></slot>
-      <ka-button if.bind="buttons.includes('cancel')" data-testid="kaButtonCancel" click.delegate="buttonCancel()" icon="fa-solid fa-xmark" class="inverted"> ${'Cancel'|t} </ka-button>
-      <ka-button if.bind="buttons.includes('save')" data-testid="kaButtonSave" click.delegate="buttonSave()" busy.bind="pendingDefaultSave" icon="fa-solid fa-check"> ${'Save'|t} </ka-button>
-    </div>
+  <require from="./ka-resource-toolbar.scss"></require>
+  <div class="buttons buttons-left">
+    <slot name="buttons-left"></slot>
+    <ka-button if.bind="buttons.includes('delete') && interface.id" data-testid="kaButtonCancel" click.trigger="buttonDelete()" icon="fa-regular fa-trash-can" class="danger inverted"> ${'Delete'|t} </ka-button>
+  </div>
+  <div class="buttons buttons-right">
+    <slot></slot>
+    <ka-button if.bind="buttons.includes('cancel')" data-testid="kaButtonCancel" click.trigger="buttonCancel()" icon="fa-solid fa-xmark" class="primary inverted"> ${'Cancel'|t} </ka-button>
+    <ka-button if.bind="buttons.includes('save')" data-testid="kaButtonSave" click.trigger="buttonSave()" busy.bind="pendingDefaultSave" icon="fa-solid fa-check" class="primary"> ${'Save'|t} </ka-button>
   </div>
 </template>

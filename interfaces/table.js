@@ -108,6 +108,9 @@ export class TableInterface {
     if (this.limit) query.set('limit', this.limit);
     if (this.offset) query.set('offset', this.offset);
 
+    // Workaround Kamaji's dinstinct bug
+    if (query.has('filters') && query.get('filters').includes('~~')) query.set('distinct', true);
+
     // Finally make the api call
     this.events.dispatchEvent(this.events.load);
     let data = this.parsers.getRequest(Object.fromEntries(new URLSearchParams(query)));
