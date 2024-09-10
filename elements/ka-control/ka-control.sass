@@ -40,6 +40,9 @@ ka-control-check
     color: var(--text-color)
     box-shadow: inset 0 0 3px rgba(var(--text-color-rgb), 0.3)
     transition: all 0.5s
+    &::placeholder
+      color: rgba(var(--text-color-rgb), 0.5)
+      font-style: italic
     &:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus
       background: transparent !important
       background-color: transparent !important
