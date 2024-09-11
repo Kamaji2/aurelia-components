@@ -60,10 +60,14 @@ export class ApiService {
             });
           }
           if (msg.statusCode === 401) {
+            const requestedUrl = msg.requestMessage.url;
+            if (this.isAuthenticationUrl(requestedUrl) || this.isRefreshUrl(requestedUrl)) {
+              return Promise.reject(msg);
+            }
             if (this.auth && !this.auth.refreshToken) {
               this.auth.logout(this.router?.currentInstruction?.config?.name || null);
               this.routeToLogout();
-            } else if (this.auth && this.auth.refreshToken && !msg.requestMessage.url.startsWith(this.baseUrl + this.auth.endpoints.refresh)) {
+            } else if (this.auth && this.auth.refreshToken) {
               return this.auth.refresh().then(() => {
                 msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
                 return this.client.send(msg.requestMessage);
@@ -130,5 +134,12 @@ export class ApiService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  isAuthenticationUrl(url) {
+    return url === this.baseUrl + this.auth.endpoints.authentication;
+  }
+  isRefreshUrl(url) {
+    return url === this.baseUrl + this.auth.endpoints.refresh;
   }
 }
