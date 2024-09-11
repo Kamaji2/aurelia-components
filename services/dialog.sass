@@ -11,7 +11,10 @@ body
       min-height: 100%
       height: unset !important
       > div
-        padding: 3rem
+        padding: 1rem
+        min-width: unset
+        @media only screen and (min-width: 576px)
+          padding: 3rem
 
     ux-dialog
       position: relative
@@ -19,9 +22,14 @@ body
       flex-direction: column
       border-radius: 5px
       border: 0
+      min-width: unset
+      width: 100%
       max-height: calc(100vh - 6rem)
       overflow: hidden
       box-shadow: 0 5px 15px rgba(#000, 0.2)
+      @media only screen and (min-width: 576px)
+        width: fit-content
+        min-width: 300px
       &.xs
         max-width: 200px
       &.sm
