@@ -43,6 +43,7 @@ ka-button {
   &:hover:before { transition: all 0.2s; }
 
   .ka-button-icon {
+    flex: 0 0 auto;
     position: relative;
     width: var(--ka-button-height, 3rem);
     line-height: inherit;
@@ -52,10 +53,12 @@ ka-button {
     border-left: 1px solid transparent;
   }
   .ka-button-label {
+    flex: 1 1 auto;
     position: relative;
     padding: 0 1rem;
     overflow: hidden;
     white-space: nowrap;
+    text-align: left;
     text-overflow: ellipsis;
     transition: opacity 0.5s;
     &:empty {
