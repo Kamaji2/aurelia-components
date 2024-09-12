@@ -9,7 +9,7 @@ if [ -z "$MESSAGE" ]; then
     exit 1
 fi
 echo
-echo -n "Type of release (major, minor, patch - dafaults to patch): "; read RELEASE
+echo -n "Type of release (major, minor, patch - defaults to patch): "; read RELEASE
 if [ -z "$RELEASE" ]; then
     RELEASE='patch'
 fi

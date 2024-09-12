@@ -60,22 +60,21 @@ export class ApiService {
             });
           }
           if (msg.statusCode === 401) {
+            if (!this.auth) return Promise.reject(msg);
             const requestedUrl = msg.requestMessage.url;
-            if (this.isAuthenticationUrl(requestedUrl) || this.isRefreshUrl(requestedUrl)) {
-              return Promise.reject(msg);
-            }
-            if (this.auth && !this.auth.refreshToken) {
-              this.auth.logout(this.router?.currentInstruction?.config?.name || null);
+            const referrerFragment = !this.isAuthenticationUrl(requestedUrl) ? this.router?.currentInstruction?.fragment : null;
+            console.debug(`[ApiService] referrerFragment = ${referrerFragment}`);
+            if (!this.auth.refreshToken) {
+              this.auth.logout(referrerFragment);
               this.routeToLogout();
-            } else if (this.auth && this.auth.refreshToken) {
+            } else if (!this.isRefreshUrl(requestedUrl)) {
               return this.auth.refresh().then(() => {
                 msg.requestMessage.headers.add('Authorization', 'Bearer ' + this.auth.accessToken);
                 return this.client.send(msg.requestMessage);
-              },
-              (error) => {
-                this.auth.logout(this.router?.currentInstruction?.config?.name || null);
+              }).catch((error) => {
+                this.auth.logout(referrerFragment);
                 this.routeToLogout();
-                return Promise.reject(error);
+                throw error;
               });
             }
           }
@@ -140,6 +139,6 @@ export class ApiService {
     return url === this.baseUrl + this.auth.endpoints.authentication;
   }
   isRefreshUrl(url) {
-    return url === this.baseUrl + this.auth.endpoints.refresh;
+    return url.startsWith(this.baseUrl + this.auth.endpoints.refresh);
   }
 }
