@@ -1,4 +1,4 @@
-import { inject, customElement, bindable } from 'aurelia-framework';
+import { bindable, inject, customElement } from 'aurelia-framework';
 import { DateTime } from 'luxon';
 
 @customElement('ka-table-toolbar')
@@ -9,14 +9,16 @@ export class KaTableToolbar {
   };
   @bindable() buttonDownload = () => {
     console.warn('ka-table-toolbar: buttonDownload function unset, using default!');
-    this.defaultDownload();
+    this.downloadCsv();
   };
   @bindable() buttonAdd = () => {
     console.warn('ka-table-toolbar: buttonAdd function unset!');
   };
+
   constructor(element) {
     this.element = element;
   }
+
   bind(bindingContext) {
     this.interface = bindingContext && bindingContext.constructor?.name === 'TableInterface' ? bindingContext : null;
     if (!this.interface) {
@@ -36,6 +38,9 @@ export class KaTableToolbar {
     }
   }
 
+  /**
+   * @deprecated
+   */
   defaultDownload() {
     if (this.pendingDefaultDownload) return;
     this.pendingDefaultDownload = true;
@@ -81,15 +86,15 @@ export class KaTableToolbar {
         if (!dataRows.length) {
           throw new Error('ka-table-toolbar: defaultDownload() failed due to missing rows!');
         }
-        
+
         // Build CSV
         let csv = [dataColumns.join(';')];
         dataRows.forEach((row) => {
           csv.push(row.join(';'));
         });
         csv = csv.join('\n');
-        let blob = new Blob([csv], { type: 'text/csv' });
-        let anchor = document.createElement('a');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const anchor = document.createElement('a');
         anchor.download = DateTime.now().toFormat('yyyy-MM-dd') + '_' + this.interface.endpoint.replace(/[^a-zA-Z0-9]/g, '') + '.csv';
         anchor.href = window.URL.createObjectURL(blob);
         document.body.appendChild(anchor);
@@ -100,12 +105,16 @@ export class KaTableToolbar {
         this.interface.data = tableRows;
 
       }, 250);
-      
+
     }).catch((error) => {
       console.error(error);
     }).finally(() => {
       this.pendingDefaultDownload = false;
       this.interface.isLoading = false;
     });
+  }
+
+  downloadCsv() {
+    this.interface.exportInterface?.export();
   }
 }

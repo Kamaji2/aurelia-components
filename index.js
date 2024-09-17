@@ -2,7 +2,7 @@ import { PLATFORM } from 'aurelia-pal';
 import PACKAGE from './package.json';
 
 export { ResourceInterface } from './interfaces/resource';
-export { TableInterface, TableSearchInterface } from './interfaces/table';
+export { TableInterface, TableExportInterface, TableSearchInterface } from './interfaces/table';
 
 export { ApiService } from './services/api';
 export { LayoutService } from './services/layout';
@@ -104,8 +104,9 @@ export class AureliaComponentsConfiguration {
     console.debug(`%cDEBUG [${PACKAGE.name}-v${PACKAGE.version}] Loading value converters`, 'color:#8b64cf;');
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/date')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/datetime')]);
-    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/striphtml')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/join')]);
     this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/stringify')]);
+    this.config.globalResources([PLATFORM.moduleName('aurelia-components/converters/striphtml')]);
   }
 
   apply() {}

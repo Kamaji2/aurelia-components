@@ -1,4 +1,5 @@
 import { helpers } from 'aurelia-components';
+import { Parser } from 'aurelia-framework';
 import { v5 as uuidv5 } from 'uuid';
 import { DateTime } from 'luxon';
 
@@ -146,6 +147,7 @@ export class TableInterface {
     return response;
   }
 }
+
 export class TableSearchInterface {
   controls = {};
   schema = {};
@@ -243,10 +245,10 @@ export class TableSearchInterface {
         .then(() => {
           const populateFilters = (data, path = []) => {
             for (let [k, v] of Object.entries(data)) {
-              
+
               let pk = path.concat(k).join('.');
 
-              let schema = this.schema; 
+              let schema = this.schema;
               schema = eval(`schema.${pk}`);
               let control = this.controls[pk];
 
@@ -309,143 +311,109 @@ export class TableSearchInterface {
     }
   }
 }
-/* 
-export class SearchInterface {
-  active = false; // Used for highlighting search icon on table
-  inizialized = false;
-  configurables = ['name', 'table', 'schema', 'data'];
-  controls = {}; // Contains auto-referenced controls
-  last = { params: {} } // Reference to last search query
+
+export class TableExportInterface {
+  _exporting = false;
 
   constructor(config) {
-    // Thisify config
-    for (let attribute of this.configurables) {
-      if (typeof config[attribute] !== 'undefined') {
-        this[attribute] = config[attribute];
-      } else if (typeof this[attribute] === 'undefined') throw new Error(`SearchInterface construct fail! Missing required configuration attribute '${attribute}'`);
-    }
-    // Get session stored data
-    this.data = JSON.parse(this.storage.getItem(`${this.name}-data`)) || this.data || {};
-    // Self reference inside TableInterface
-    if (this.table) this.table.searchInterface = this;
+    const configJson = helpers.stringify(config);
+
+    this._config = JSON.parse(configJson); // keep a copy of original config
+
+    this.storage = ENVIRONMENT.APP_STORAGE && window[ENVIRONMENT.APP_STORAGE] ? window[ENVIRONMENT.APP_STORAGE] : localStorage;
+
+    Object.assign(this, {
+      uuid: uuidv5('tableExportInterface:' + location.pathname + ':' + configJson, '2af1d572-a35c-4248-a38e-348c560cd468'),
+      data: JSON.parse(this.storage.getItem(`${this.uuid}-data`)) || {},
+    }, config);
+
+    this._initialize = this.initialize();
+
+    this._parser = new Parser();
   }
 
   initialize() {
-    let promises = []; // promises.push(this.api.get());
-    return Promise.all(promises).then(xhrs => {
-      this.initialized = true;
-    }).catch(error => {
-      console.error('SearchInterface initialization failed', error);
-    });
-  }
+    if (this._initialize) return this._initialize;
 
-  validate(controls = null) {
-    let promises = [];
-    controls = controls || Object.values(this.controls);
-    console.log('Controls to validate', controls);
-    controls.forEach(control => {
-      if (control) { // Control can be null if in the meantime view removes it (eg: with an if.bind)
-        console.log('Validate control', control);
-        if (control.setError) control.setError(); // Reset in case control is a ka-control (not ka-input) and there is already an error manually attached to the control
-        promises.push(new Promise((resolve, reject) => { control.validate().then(result => { if (result.valid) resolve(); else reject('Control didn\'t pass validation'); }).catch(error => reject(error)); }));
-      }
-    });
-    return Promise.all(promises);
-  }
-
-  search() {
-    if (!this.initialized) return Promise.reject('SearchInterface was not yet initialized when the search() function was called!');
-    let params = {};
     return new Promise((resolve, reject) => {
-      this.validate().then(() => {
-        for (let [k,v] of Object.entries(this.data)) {
-          if (v && v !== 'null' && this.schema[k]?.query) {
-            if (this.schema[k].control === 'date' && this.schema[k].query.includes('-gte')) {
-              v = moment.utc(v).local().startOf('day').utc().format();
-            } else if (this.schema[k].control === 'date' && this.schema[k].query.includes('-lte')) {
-              v = moment.utc(v).local().endOf('day').utc().format();
-            }
-            params[this.schema[k].query] = encodeURIComponent(v);
-          }
-        }
-        if (Object.keys(params).length) {
-          this.storage.setItem(`${this.name}-data`, JSON.stringify(this.data));
-          this.table.offset = 0;
-          this.active = true;
-          this.last.params = params;
-          this.table.load(params).then(xhr => resolve(xhr)).catch(error => reject(error));
-        } else {
-          this.storage.setItem(`${this.name}-data`, JSON.stringify(this.data));
-          this.table.offset = 0;
-          this.active = false;
-          this.last.params = {};
-          this.table.load({}).then(xhr => resolve(xhr)).catch(error => reject(error)); //return this.reset(); // Not sure what it is for...
-        }
-      }).catch(error => reject(error));
+      if (!this.table) return reject("missing table reference, interface won't work as expected");
+      this.table.exportInterface = this; // self reference inside TableInterface
+      resolve();
+    }).then(() => {
+      console.debug(`[TableExportInterface][${this.uuid}] Initialized`);
+    }).catch((error) => {
+      console.warn(`[TableExportInterface][${this.uuid}] Initialization failed: ${error}`);
     });
   }
 
-  reset(soft = false) {
-    for (let key of Object.keys(this.data)) { this.data[key] = null; }
-    if (!soft) {
-      this.storage.removeItem(`${this.name}-data`);
-      this.table.offset = 0;
-      this.active = false;
-      this.last.params = {};
-      return this.table.load({});
-    } else {
-      return Promise.resolve();
-    }
+  export() {
+    if (this._exporting) return console.warn('Another export is already in progress');
+
+    this._exporting = true;
+
+    return this.downloadCsv(this).finally(() => { this._exporting = false; });
   }
-} */
-/* 
-@inject(CompositionEngine, Container)
-export class TableSidebar {
-  constructor(compositionEngine, container) {
-    this.compositionEngine = compositionEngine;
-    this.container = container;
+
+  createCsvString(rows) {
+    const csv = [];
+
+    rows.forEach((row) => {
+      csv.push(row.map((value) => `"${value.replaceAll('"', '""')}"`).join(','));
+    });
+
+    return csv.join("\n");
   }
-  open(params) {
-    if (this.isOpen) return this.close();
 
-    // Add backdrop
-    this.backdrop = document.createElement('div');
-    this.backdrop.classList.add('md-table-backdrop');
-    this.backdrop.addEventListener('click', event => { if (event.target === this.backdrop) this.close(); });
-    document.getElementsByTagName('body')[0].insertBefore(this.backdrop, document.getElementsByTagName('body')[0].children[0]);
+  async downloadCsv({ columns = [], url = null, limit = 0, offset = 0 } = {}) {
+    const fetchUrl = new URL(url || this.table.URL);
 
-    // Add sidebar
-    this.sidebar = document.createElement('div');
-    this.sidebar.classList.add('md-table-sidebar', 'off');
-    this.backdrop.appendChild(this.sidebar);
+    if (limit === null) fetchUrl.searchParams.delete('limit');
+    else if (parseInt(limit) > 0) fetchUrl.searchParams.set('limit', limit);
 
-    // Compose
-    this.context = {
-      container: this.container.createChild(),
-      viewModel: params.viewModel,
-      model: params.viewModelParams,
-      host: this.sidebar,
-      bindingContext: null,
-      viewResources: null,
-      viewSlot: new ViewSlot(this.sidebar, true)
-    };
-    this.compositionEngine.compose(this.context).then(composition => {
-      this.composition = composition;
-      this.composition.viewModel.close = () => { this.close(); };
-      this.context.viewSlot.attached();
-      // Timeout used for css transition
-      setTimeout(() => { this.sidebar.classList.remove('off'); }, 100);
-      this.isOpen = true;
+    if (offset === null) fetchUrl.searchParams.delete('offset');
+    else if (parseInt(offset) > 0) fetchUrl.searchParams.set('offset', offset);
+
+    const records = await this.fetchData(fetchUrl);
+
+    const rows = [
+      columns.map((field) => field.name),
+    ];
+    records.forEach((record) => {
+      const row = [];
+      columns.forEach(({ value }) => {
+        row.push(value.replaceAll(/\$\{(.*?)\}/g, (match, expr) => {
+          return this._parser.parse(expr).evaluate({
+            bindingContext: record,
+          }, {
+            valueConverters: (name) => this.valueConverters[name],
+          });
+        }));
+      });
+      rows.push(row);
+    });
+
+    const csv = this.createCsvString(rows);
+    this.startCsvDownload(csv);
+
+    return Promise.resolve();
+  }
+
+  async fetchData(url) {
+    return await this.table.client.client.get(url.toString()).then((xhr) => {
+      return xhr.response;
+    }, (err) => {
+      console.error(err);
+      throw err;
     });
   }
-  close() {
-    // Timeout used for css transition
-    this.sidebar.classList.add('off');
-    setTimeout(() => {
-      document.getElementsByTagName('body')[0].removeChild(this.backdrop);
-      this.context.viewSlot.detached();
-      this.isOpen = false;
-    }, 500);
+
+  startCsvDownload(csv) {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const anchor = document.createElement('a');
+    anchor.download = DateTime.now().toFormat('yyyy-MM-dd') + '_' + this.table.endpoint.replace(/[^a-zA-Z0-9]/g, '') + '.csv';
+    anchor.href = window.URL.createObjectURL(blob);
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
   }
 }
- */
