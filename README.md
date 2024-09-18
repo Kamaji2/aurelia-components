@@ -21,6 +21,9 @@ Button with icon + button with icon and text
 ## Attributes
 ## Services
 ## Interfaces
+- [TableInterface](./doc/TableInterface.md)
+- [TableExportInterface](./doc/TableExportInterface.md)
+- [TableSearchInterface](./doc/TableSearchInterface.md)
 ## Value converters
 <ka-control name="resourceName:fieldName"></ka-control>
 <ka-control name="fieldName"></ka-control>
