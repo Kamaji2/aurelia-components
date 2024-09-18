@@ -18,7 +18,7 @@
         <i class="fa-light fa-magnifying-glass"></i>
         <i if.bind="search.active" class="material-icons with-filter" click.delegate="reset($event)">do_not_disturb</i>
       </button>
-      <button if.bind="buttons.includes('download')" data-testid="buttonDownload" click.delegate="buttonDownload()" ka-tooltip="value.bind: 'Download all rows' | t; placement: right;">
+      <button if.bind="buttons.includes('download')" data-testid="buttonDownload" click.delegate="buttonDownload()" ka-tooltip="value.bind: 'Export all rows' | t; placement: right;">
         <i class="fa-light fa-arrow-down-to-bracket"></i>
       </button>
       <button if.bind="buttons.includes('add')" data-testid="buttonAdd" click.delegate="buttonAdd()" ka-tooltip="value.bind: 'Add' | t; placement: left;">

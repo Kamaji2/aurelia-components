@@ -1,22 +1,26 @@
-import { bindable, inject, customElement } from 'aurelia-framework';
-import { DateTime } from 'luxon';
+import { inject, customElement, bindable } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
+import { ToastService } from 'aurelia-components';
+
 
 @customElement('ka-table-toolbar')
-@inject(Element)
+@inject(Element, I18N, ToastService)
 export class KaTableToolbar {
   @bindable() buttonSearch = () => {
     console.warn('ka-table-toolbar: buttonSearch function unset!');
   };
   @bindable() buttonDownload = () => {
     console.warn('ka-table-toolbar: buttonDownload function unset, using default!');
-    this.downloadCsv();
+    this.defaultDownload();
   };
   @bindable() buttonAdd = () => {
     console.warn('ka-table-toolbar: buttonAdd function unset!');
   };
 
-  constructor(element) {
+  constructor(element, i18n, toast) {
     this.element = element;
+    this.i18n = i18n;
+    this.toast = toast;
   }
 
   bind(bindingContext) {
@@ -38,83 +42,18 @@ export class KaTableToolbar {
     }
   }
 
-  /**
-   * @deprecated
-   */
+  pendingDefaultDownload = false;
   defaultDownload() {
     if (this.pendingDefaultDownload) return;
     this.pendingDefaultDownload = true;
-    this.interface.isLoading = true;
-
-    let url = new URL(this.interface.URL);
-    url.searchParams.delete('limit');
-    url.searchParams.delete('offset');
-
-    this.interface.client.client.get(url.toString()).then((xhr) => {
-      // Backup and replace table rows
-      const tableRows = structuredClone(this.interface.data);
-      this.interface.data = xhr.response;
-
-      setTimeout(() => {
-        // Prepare data
-        const tableElement = this.element.closest('ka-table').querySelector('table');
-        const dataColumns = [];
-        const dataRows = [];
-        let dataColumnsMap = {};
-        tableElement.querySelectorAll('thead tr:first-of-type th').forEach((th, index) => {
-          if (th.innerText.trim().length) {
-            dataColumnsMap[index] = true;
-            dataColumns.push(th.innerText.trim());
-          } else {
-            dataColumnsMap[index] = false;
-          }
-        });
-        if (!Object.keys(dataColumnsMap).length) {
-          throw new Error('ka-table-toolbar: defaultDownload() failed due to missing column headers!');
-        }
-        tableElement.querySelectorAll('tbody tr').forEach((tr) => {
-          let row = [];
-          tr.querySelectorAll('td').forEach((td, index) => {
-            if (dataColumnsMap[index]) {
-              let value = (td.innerText.trim().match(/^.*$/m)||[''])[0];
-              if (value.match(/;|"/)) value = `"${value.replaceAll('"', '""')}"`; // Escape csv special chars
-              row.push(value);
-            }
-          });
-          dataRows.push(row);
-        });
-        if (!dataRows.length) {
-          throw new Error('ka-table-toolbar: defaultDownload() failed due to missing rows!');
-        }
-
-        // Build CSV
-        let csv = [dataColumns.join(';')];
-        dataRows.forEach((row) => {
-          csv.push(row.join(';'));
-        });
-        csv = csv.join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const anchor = document.createElement('a');
-        anchor.download = DateTime.now().toFormat('yyyy-MM-dd') + '_' + this.interface.endpoint.replace(/[^a-zA-Z0-9]/g, '') + '.csv';
-        anchor.href = window.URL.createObjectURL(blob);
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-
-        // Restore table rows
-        this.interface.data = tableRows;
-
-      }, 250);
-
+    this.toast.show(`${this.i18n.tr('Exporting rows in progress')}...`, 'loading', true);
+    this.interface.exportInterface?.export().then(() => {
+      this.toast.show(`${this.i18n.tr('Rows successfully exported')}!`, 'success');
     }).catch((error) => {
+      this.toast.show(`${this.i18n.tr('An error occured while exporting rows')}!`, 'error');
       console.error(error);
     }).finally(() => {
       this.pendingDefaultDownload = false;
-      this.interface.isLoading = false;
     });
-  }
-
-  downloadCsv() {
-    this.interface.exportInterface?.export();
   }
 }
