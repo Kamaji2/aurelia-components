@@ -62,7 +62,7 @@ export class ApiService {
           if (msg.statusCode === 401) {
             if (!this.auth) return Promise.reject(msg);
             const requestedUrl = msg.requestMessage.url;
-            const referrerFragment = !this.isAuthenticationUrl(requestedUrl) ? this.router?.currentInstruction?.fragment : null;
+            const referrerFragment = this.getRouteFragment(requestedUrl);
             console.debug(`[ApiService] referrerFragment = ${referrerFragment}`);
             if (!this.auth.refreshToken) {
               this.auth.logout(referrerFragment);
@@ -140,5 +140,11 @@ export class ApiService {
   }
   isRefreshUrl(url) {
     return url.startsWith(this.baseUrl + this.auth.endpoints.refresh);
+  }
+  getRouteFragment(url) {
+    if (this.isAuthenticationUrl(url)) return null;
+    const fragment = this.router?.currentInstruction?.fragment || null;
+    if (['login', 'logout'].includes(fragment.replace(/[^\w]/g, ''))) return null;
+    return fragment;
   }
 }
