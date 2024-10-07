@@ -6,7 +6,7 @@
   </div>
   <div ref="drawer" class="ka-control-combo-drawer ${schema.datamultiple === true ? 'multiple' : ''}">
     <template if.bind="schema.datapreload !== true || preloadedCombostack.length > 8">
-      <input type="text"  class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="search()" keydown.delegate="searchKeyDown($event)" />
+      <input type="text"  class="search" placeholder="Cerca" ref="searchInput" value.bind="term" keyup.delegate="searchKeyUp($event)" keydown.delegate="searchKeyDown($event)" />
       <i if.bind="searchPending" class="search-loader fa-light fa-spinner-third fa-spin"></i>
     </template>
     <ul>

@@ -413,6 +413,15 @@ export class KaControlCombo {
     });
     return true;
   }
+  searchKeyUp() {
+    if (this.searchDebounceTimeout) {
+      clearTimeout(this.searchDebounceTimeout);
+    }
+    this.searchDebounceTimeout = setTimeout(() => {
+      this.search();
+    }, 800);
+    return true;
+  }
   searchKeyDown($event) {
     if (['Enter', 'Tab'].includes($event.key)) {
       $event.preventDefault();
