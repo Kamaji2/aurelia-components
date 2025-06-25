@@ -29,6 +29,6 @@
         <span class="clone" repeat.for="error of validator.errors">${error}</span>
       </div>
     </div>
-    <div class="ka-control-description" if.bind="!schema.readonly && schema.control !=='check' && schema.description">${schema.description}</div>
+    <div class="ka-control-description" if.bind="!schema.readonly && schema.control !=='check' && schema.description">${schema.description | t}</div>
   </div>
 </template>
