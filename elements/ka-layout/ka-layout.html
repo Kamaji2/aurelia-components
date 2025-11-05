@@ -115,6 +115,7 @@
                     <b if.bind="item.badge && item.badge.value" class="item-badge">${item.badge.value}</b>
 
                     <a if.bind="item.href" href="${item.href}" class="item-link"></a>
+                    <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
                   </div>
                 </li>
               </template>
