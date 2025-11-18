@@ -25,8 +25,8 @@
 
               <a if.bind="item.href" href="${item.href}" class="item-link ${router.currentInstruction.config.href === item.href ? 'selected' : ''}"></a>
               <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
-              <a if.bind="!item.href && item.collapsed" href="#" class="item-link expand" click.delegate="expand(item)"></a>
-              <a if.bind="!item.href && !item.collapsed" href="#" class="item-link collapse" click.delegate="collapse(item)"></a>
+              <a if.bind="!item.href && !item.call && item.collapsed" href="#" class="item-link expand" click.delegate="expand(item)"></a>
+              <a if.bind="!item.href && !item.call && !item.collapsed" href="#" class="item-link collapse" click.delegate="collapse(item)"></a>
             </div>
 
             <!-- Level 02 -->
@@ -43,8 +43,8 @@
 
                     <a if.bind="item.href" href="${item.href}" class="item-link ${router.currentInstruction.config.href === item.href ? 'selected' : ''}"></a>
                     <a if.bind="!item.href && item.call" href="#" class="item-link" click.delegate="item.call()"></a>
-                    <a if.bind="!item.href && item.collapsed" href="#" class="item-link expand" click.delegate="expand(item)"></a>
-                    <a if.bind="!item.href && !item.collapsed" href="#" class="item-link collapse" click.delegate="collapse(item)"></a>
+                    <a if.bind="!item.href && !item.call && item.collapsed" href="#" class="item-link expand" click.delegate="expand(item)"></a>
+                    <a if.bind="!item.href && !item.call && !item.collapsed" href="#" class="item-link collapse" click.delegate="collapse(item)"></a>
                   </div>
 
                   <!-- Level 03 -->

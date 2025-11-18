@@ -59,6 +59,9 @@ export class KaLayout {
       navigation: { items: [] },
       toolbar: { items: [] }
     }, config || {});
+    // The following is a hack to alow use of "call" functions on menu items
+    this.config.navigation = Object.assign({}, config.navigation);
+    this.config.toolbar = Object.assign({}, config.toolbar);
 
     const authorized = (item) => {
       let userRoles = this.config.user ? this.config.user.role || this.config.user.roles || [] : [];
